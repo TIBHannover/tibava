@@ -1,6 +1,8 @@
 version: "3.4"
 
 services:
+  analyser_torch_serve:
+    image: pytorch/torchserve:0.5.3-cpu
   analyser_redis:
     image: redis:6.2.1
     network_mode: host
