@@ -16,61 +16,13 @@ services:
     volumes:
       - type: bind
         source: ./analyser
-        target: /app
+        target: /app/analyser
       - type: bind
         source: ./data/media/
         target: /media
-  analyser_celery:
-    image: analyser_celery
-    network_mode: host
-    build:
-      context: ./analyser
-      dockerfile: ./Dockerfile_celery
-    volumes:
-      - type: bind
-        source: ./analyser
-        target: /app
-      - type: bind
-        source: ./data/media/
-        target: /media
-  shotdetection:
-    image: shotdetection
-    build:
-      context: ./analyser/shotdetection
-      dockerfile: ./Dockerfile
-    network_mode: host
-    volumes:
-      - type: bind
-        source: ./analyser/shotdetection
-        target: /app
-      - type: bind
-        source: ./data/tmp
-        target: /media
-      - type: bind
-        source: ./data/models
-        target: /models
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - capabilities: [ gpu ]
-    # facedetection:
-    #   image: facedetection
-    #   # networks:
-    #   #   - tibava
-    #   build:
-    #     context: facedetection
-    #     dockerfile: ./Dockerfile
-    #   network_mode: host
-    #   # ports:
-    #   #   - 5002:5002
-    #   volumes:
-    #     - type: bind
-    #       source: ./facedetection
-    #       target: /app
-    #     - type: bind
-    #       source: ./media_grpc
-    #       target: /media
+    
+    environment:
+      - PYTHONPATH=/app
 
   postgres:
     image: postgres:13.2
