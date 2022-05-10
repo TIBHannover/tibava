@@ -20,7 +20,9 @@ services:
       - type: bind
         source: ./data/media/
         target: /media
-    
+      - type: bind
+        source: ./data/analyser/
+        target: /data
     environment:
       - PYTHONPATH=/app
 
