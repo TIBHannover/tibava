@@ -1,12 +1,22 @@
 version: "3.4"
 
 services:
-  analyser_torch_serve:
-    image: pytorch/torchserve:0.5.3-cpu
-  analyser_redis:
-    image: redis:6.2.1
-    network_mode: host
-    command: --port 6379
+  analyser_redisai:
+    image: redislabs/redisai:edge-gpu-bionic
+    ports:
+      - "127.0.0.1:6379:6379"
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - capabilities: [ gpu ]
+
+    # analyser_torch_serve:
+    #   image: pytorch/torchserve:0.5.3-cpu
+    # analyser_redis:
+    #   image: redis:6.2.1
+    #   network_mode: host
+    #   command: --port 6379
   analyser:
     image: analyser
     network_mode: host
@@ -23,6 +33,9 @@ services:
       - type: bind
         source: ./data/analyser/
         target: /data
+      - type: bind
+        source: ./data/models/
+        target: /models
     environment:
       - PYTHONPATH=/app
 
