@@ -66,19 +66,22 @@ services:
       context: ./backend
     volumes:
       - type: bind
+        source: ./analyser
+        target: /app/analyser
+      - type: bind
+        source: ./backend/
+        target: /app/backend
+      - type: bind
         source: ./data/media/
         target: /media
-      - type: bind
-        source: ./backend
-        target: /backend
       - type: bind
         source: ./data/predictions
         target: /predictions
 
-    working_dir: /backend/
+    working_dir: /app/backend/
     environment:
-      - PYTHONPATH=/backend/
-      - TIBAVA_BACKEND_CONFIG=/backend/config.json
+      - PYTHONPATH=/app:/app/backend/
+      - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
     command: celery -A tibava worker -l INFO
 
   backend:
@@ -89,19 +92,22 @@ services:
     network_mode: "host"
     volumes:
       - type: bind
-        source: ./data/media/
-        target: /media
+        source: ./analyser
+        target: /app/analyser
       - type: bind
         source: ./backend/
-        target: /backend
+        target: /app/backend
+      - type: bind
+        source: ./data/media/
+        target: /media
       - type: bind
         source: ./data/predictions
         target: /predictions
 
-    working_dir: /backend/
+    working_dir: /app/backend/
     environment:
-      - PYTHONPATH=/backend/
-      - TIBAVA_BACKEND_CONFIG=/backend/config.json
+      - PYTHONPATH=/app/backend/:/app
+      - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
     command: python3 manage.py runserver  0.0.0.0:8000
 
     depends_on:
