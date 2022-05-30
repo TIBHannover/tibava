@@ -11,12 +11,6 @@ services:
     #       devices:
     #         - capabilities: [ gpu ]
 
-    # analyser_torch_serve:
-    #   image: pytorch/torchserve:0.5.3-cpu
-    # analyser_redis:
-    #   image: redis:6.2.1
-    #   network_mode: host
-    #   command: --port 6379
   analyser:
     image: analyser
     network_mode: host
@@ -82,6 +76,10 @@ services:
     environment:
       - PYTHONPATH=/app:/app/backend/
       - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
+      - GRPC_ENABLE_FORK_SUPPORT=1
+      - GRPC_POLL_STRATEGY=poll
+      # - GRPC_VERBOSITY=debug
+      # - GRPC_TRACE=all
     command: celery -A tibava worker -l INFO
 
   backend:
