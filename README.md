@@ -30,11 +30,13 @@
 
 2. Run `install.sh` to download and extract models:
     ```sh
-    wget https://tib.eu/cloud/s/t6MfTpHgmNccrA6/download/models.tar.gz
-    tar -xf models.tar.gz --directory data
+    mkdir -p data/models
+    wget https://tib.eu/cloud/s/T6cKP4gok8ARWGS/download/models.tar.gz
+    tar -xf models.tar.gz --directory data/models
     mkdir -p data/tmp
     mkdir -p data/predictions/thumbnails
     mkdir -p data/media
+    mkdir -p data/analyser
     ```
 
 3. Build and start the container:
