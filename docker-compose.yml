@@ -1,12 +1,16 @@
 version: "3.4"
 
 services:
-  analyser_torch_serve:
-    image: pytorch/torchserve:0.5.3-cpu
-  analyser_redis:
-    image: redis:6.2.1
-    network_mode: host
-    command: --port 6379
+  analyser_redisai:
+    image: redislabs/redisai:edge-gpu-bionic
+    ports:
+      - "127.0.0.1:6379:6379"
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - capabilities: [ gpu ]
+
   analyser:
     image: analyser
     network_mode: host
@@ -16,61 +20,18 @@ services:
     volumes:
       - type: bind
         source: ./analyser
-        target: /app
+        target: /app/analyser
       - type: bind
         source: ./data/media/
         target: /media
-  analyser_celery:
-    image: analyser_celery
-    network_mode: host
-    build:
-      context: ./analyser
-      dockerfile: ./Dockerfile_celery
-    volumes:
       - type: bind
-        source: ./analyser
-        target: /app
+        source: ./data/analyser/
+        target: /data
       - type: bind
-        source: ./data/media/
-        target: /media
-  shotdetection:
-    image: shotdetection
-    build:
-      context: ./analyser/shotdetection
-      dockerfile: ./Dockerfile
-    network_mode: host
-    volumes:
-      - type: bind
-        source: ./analyser/shotdetection
-        target: /app
-      - type: bind
-        source: ./data/tmp
-        target: /media
-      - type: bind
-        source: ./data/models
+        source: ./data/models/
         target: /models
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - capabilities: [ gpu ]
-    # facedetection:
-    #   image: facedetection
-    #   # networks:
-    #   #   - tibava
-    #   build:
-    #     context: facedetection
-    #     dockerfile: ./Dockerfile
-    #   network_mode: host
-    #   # ports:
-    #   #   - 5002:5002
-    #   volumes:
-    #     - type: bind
-    #       source: ./facedetection
-    #       target: /app
-    #     - type: bind
-    #       source: ./media_grpc
-    #       target: /media
+    environment:
+      - PYTHONPATH=/app
 
   postgres:
     image: postgres:13.2
@@ -99,19 +60,26 @@ services:
       context: ./backend
     volumes:
       - type: bind
+        source: ./analyser
+        target: /app/analyser
+      - type: bind
+        source: ./backend/
+        target: /app/backend
+      - type: bind
         source: ./data/media/
         target: /media
-      - type: bind
-        source: ./backend
-        target: /backend
       - type: bind
         source: ./data/predictions
         target: /predictions
 
-    working_dir: /backend/
+    working_dir: /app/backend/
     environment:
-      - PYTHONPATH=/backend/
-      - TIBAVA_BACKEND_CONFIG=/backend/config.json
+      - PYTHONPATH=/app:/app/backend/
+      - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
+      - GRPC_ENABLE_FORK_SUPPORT=1
+      - GRPC_POLL_STRATEGY=poll
+      # - GRPC_VERBOSITY=debug
+      # - GRPC_TRACE=all
     command: celery -A tibava worker -l INFO
 
   backend:
@@ -122,19 +90,22 @@ services:
     network_mode: "host"
     volumes:
       - type: bind
-        source: ./data/media/
-        target: /media
+        source: ./analyser
+        target: /app/analyser
       - type: bind
         source: ./backend/
-        target: /backend
+        target: /app/backend
+      - type: bind
+        source: ./data/media/
+        target: /media
       - type: bind
         source: ./data/predictions
         target: /predictions
 
-    working_dir: /backend/
+    working_dir: /app/backend/
     environment:
-      - PYTHONPATH=/backend/
-      - TIBAVA_BACKEND_CONFIG=/backend/config.json
+      - PYTHONPATH=/app/backend/:/app
+      - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
     command: python3 manage.py runserver  0.0.0.0:8000
 
     depends_on:
@@ -151,7 +122,7 @@ services:
         source: ./frontend/
         target: /frontend
       - type: bind
-        source: ./data/predictions/thumbnails/
+        source: ./data/predictions/
         target: /thumbnails
       - type: bind
         source: ./data/media/
