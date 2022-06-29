@@ -31,7 +31,7 @@
 2. Run `install.sh` to download and extract models:
     ```sh
     mkdir -p data/models
-    wget https://tib.eu/cloud/s/T6cKP4gok8ARWGS/download/models.tar.gz
+    wget https://tib.eu/cloud/s/xMSkqTnZeJZNyf8/download/models.tar.gz
     tar -xf models.tar.gz --directory data/models
     mkdir -p data/tmp
     mkdir -p data/predictions/thumbnails
