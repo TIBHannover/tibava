@@ -3,8 +3,12 @@ version: "3.4"
 services:
   analyser_redisai:
     image: redislabs/redisai:edge-gpu-bionic
+
     ports:
       - "127.0.0.1:6379:6379"
+    command: /usr/local/bin/redis-server --loadmodule /usr/lib/redis/modules/redisai.so --bind 0.0.0.0
+    # networks:
+    #   - analyser
     # deploy:
     #   resources:
     #     reservations:
@@ -13,10 +17,10 @@ services:
 
   analyser:
     image: analyser
-    network_mode: host
     build:
       context: ./analyser
       dockerfile: ./Dockerfile
+
     volumes:
       - type: bind
         source: ./analyser
@@ -32,10 +36,9 @@ services:
         target: /models
     environment:
       - PYTHONPATH=/app
-
+      - GRPC_DNS_RESOLVER=native
   postgres:
     image: postgres:13.2
-    network_mode: "host"
     volumes:
       - ./data/db/:/var/lib/postgresql/data
     environment:
@@ -45,17 +48,16 @@ services:
 
   memcached:
     image: memcached:1.6.10-buster
-    network_mode: "host"
     command: -I 32m
 
   backend_redis:
     image: redis:6.2.1
-    network_mode: host
-    command: --port 6380
+    command: /usr/local/bin/redis-server --port 6380 --bind 0.0.0.0
+    ports:
+      - "127.0.0.1:6380:6380"
 
   backend_celery:
     image: backend_celery
-    network_mode: host
     build:
       context: ./backend
     volumes:
@@ -87,7 +89,6 @@ services:
     build:
       context: ./backend
 
-    network_mode: "host"
     volumes:
       - type: bind
         source: ./analyser
@@ -116,7 +117,6 @@ services:
     image: frontend
     build:
       context: ./frontend
-    network_mode: "host"
     volumes:
       - type: bind
         source: ./frontend/
