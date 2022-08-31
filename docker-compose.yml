@@ -73,6 +73,9 @@ services:
       - type: bind
         source: ./data/predictions
         target: /predictions
+      - type: bind
+        source: ./data/tmp
+        target: /tmp
 
     working_dir: /app/backend/
     environment:
@@ -104,6 +107,9 @@ services:
       - type: bind
         source: ./data/predictions
         target: /predictions
+      - type: bind
+        source: ./data/tmp
+        target: /tmp
 
     working_dir: /app/backend/
     environment:
