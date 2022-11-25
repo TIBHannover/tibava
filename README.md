@@ -31,12 +31,8 @@
 2. Run `install.sh` to download and extract models:
     ```sh
     mkdir -p data/models
-<<<<<<< Updated upstream
-    wget https://tib.eu/cloud/s/sqcJN2x8r9L6fRw/download/models.tar.gz
-=======
-    wget https://tib.eu/cloud/s/9L83Y3q7qnrXkxH/download/models.tar.gz
-    wget https://tib.eu/cloud/s/awE6aFQ48yYEZHd/download/models_gpu.tar.gz
->>>>>>> Stashed changes
+    wget https://tib.eu/cloud/s/Nk2RrfTwaQ2mNxn/download/models.tar.gz
+    #wget https://tib.eu/cloud/s/awE6aFQ48yYEZHd/download/models_gpu.tar.gz
     tar -xf models.tar.gz --directory data/models
     mkdir -p data/tmp
     mkdir -p data/predictions/thumbnails
