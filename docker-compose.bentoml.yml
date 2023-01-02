@@ -1,0 +1,143 @@
+version: "3.4"
+
+services:
+  inference:
+    image: bentoml
+    build:
+      context: ./inference-bentoml
+      dockerfile: ./Dockerfile
+    volumes:
+      - type: bind
+        source: ./data/bentoml/
+        target: /root/bentoml
+    # ports:
+    #   - "127.0.0.1:6379:6379"
+    # command: /usr/local/bin/redis-server --loadmodule /usr/lib/redis/modules/redisai.so --bind 0.0.0.0
+
+  analyser:
+    image: analyser
+    build:
+      context: ./analyser
+      dockerfile: ./Dockerfile
+
+    ports:
+      - "127.0.0.1:50051:50051"
+    volumes:
+      - type: bind
+        source: ./analyser
+        target: /app/analyser
+      - type: bind
+        source: ./data/media/
+        target: /media
+      - type: bind
+        source: ./data/analyser/
+        target: /data
+      - type: bind
+        source: ./data/models/
+        target: /models
+    environment:
+      - PYTHONPATH=/app
+      - GRPC_DNS_RESOLVER=native
+    command: "python3 /app/analyser/server.py --config config.bentoml.yml -v"
+  postgres:
+    image: postgres:13.2
+    volumes:
+      - ./data/db/:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=tibava
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  memcached:
+    image: memcached:1.6.10-buster
+    command: -I 32m
+
+  backend_redis:
+    image: redis:6.2.1
+    command: /usr/local/bin/redis-server --port 6380 --bind 0.0.0.0
+    ports:
+      - "127.0.0.1:6380:6380"
+
+  backend_celery:
+    image: backend_celery
+    build:
+      context: ./backend
+    volumes:
+      - type: bind
+        source: ./analyser
+        target: /app/analyser
+      - type: bind
+        source: ./backend/
+        target: /app/backend
+      - type: bind
+        source: ./data/media/
+        target: /media
+      - type: bind
+        source: ./data/predictions
+        target: /predictions
+      - type: bind
+        source: ./data/tmp
+        target: /tmp
+
+    working_dir: /app/backend/
+    environment:
+      - PYTHONPATH=/app:/app/backend/
+      - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
+      - GRPC_ENABLE_FORK_SUPPORT=1
+      - GRPC_POLL_STRATEGY=poll
+      # - GRPC_VERBOSITY=debug
+      # - GRPC_TRACE=all
+    command: celery -A tibava worker -l INFO
+
+  backend:
+    image: backend
+    build:
+      context: ./backend
+    ports:
+      - 8000:8000
+
+    volumes:
+      - type: bind
+        source: ./analyser
+        target: /app/analyser
+      - type: bind
+        source: ./backend/
+        target: /app/backend
+      - type: bind
+        source: ./data/media/
+        target: /media
+      - type: bind
+        source: ./data/predictions
+        target: /predictions
+      - type: bind
+        source: ./data/tmp
+        target: /tmp
+
+    working_dir: /app/backend/
+    environment:
+      - PYTHONPATH=/app/backend/:/app
+      - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
+    command: python3 manage.py runserver  0.0.0.0:8000
+
+    depends_on:
+      - postgres
+      - memcached
+
+  frontend:
+    image: frontend
+    ports:
+      - 8080:8080
+      - 80:80
+    build:
+      context: ./frontend
+    volumes:
+      - type: bind
+        source: ./frontend/
+        target: /frontend
+      - type: bind
+        source: ./data/predictions/
+        target: /thumbnails
+      - type: bind
+        source: ./data/media/
+        target: /media
+    working_dir: /frontend

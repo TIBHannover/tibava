@@ -7,3 +7,6 @@
 [submodule "analyser"]
 	path = analyser
 	url = git@github.com:TIBHannover/tibava-analyser.git
+[submodule "inference-bentoml"]
+	path = inference-bentoml
+	url = git@github.com:SpringsteinM/tibava-inference-bentoml.git
