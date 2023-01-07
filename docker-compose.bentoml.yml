@@ -41,9 +41,9 @@ services:
         source: ./data/models/
         target: /models
     environment:
-      - PYTHONPATH=/app
+      - PYTHONPATH=/app/analyser
       - GRPC_DNS_RESOLVER=native
-    command: "python3 /app/analyser/server.py --config config.bentoml.yml -v"
+    command: "python3 /app/analyser/analyser/server.py --config config.bentoml.yml -v"
   postgres:
     image: postgres:13.2
     volumes:
