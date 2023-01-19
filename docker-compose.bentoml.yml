@@ -86,7 +86,7 @@ services:
 
     working_dir: /app/backend/
     environment:
-      - PYTHONPATH=/app:/app/backend/
+      - PYTHONPATH=/app:/app/backend/:/app/analyser
       - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
       - GRPC_ENABLE_FORK_SUPPORT=1
       - GRPC_POLL_STRATEGY=poll
@@ -120,7 +120,7 @@ services:
 
     working_dir: /app/backend/
     environment:
-      - PYTHONPATH=/app/backend/:/app
+      - PYTHONPATH=/app:/app/backend:/app/analyser
       - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
     command: python3 manage.py runserver  0.0.0.0:8000
 
