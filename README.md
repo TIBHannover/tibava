@@ -33,6 +33,7 @@
     mkdir -p data/models
     wget https://tib.eu/cloud/s/Nk2RrfTwaQ2mNxn/download/models.tar.gz
     #wget https://tib.eu/cloud/s/awE6aFQ48yYEZHd/download/models_gpu.tar.gz
+    https://tib.eu/cloud/s/bNmg6k3PtrJEmQr/download/bentoml_cuda.tar.gz
     tar -xf models.tar.gz --directory data/models
     mkdir -p data/tmp
     mkdir -p data/predictions/thumbnails
