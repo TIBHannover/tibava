@@ -1,19 +1,23 @@
 version: "3.4"
 
 services:
-  analyser_redisai:
-    image: redislabs/redisai:edge-gpu-bionic
-
-    ports:
-      - "127.0.0.1:6379:6379"
-    command: /usr/local/bin/redis-server --loadmodule /usr/lib/redis/modules/redisai.so --bind 0.0.0.0
-    # networks:
-    #   - analyser
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - capabilities: [ gpu ]
+  inference:
+    image: bentoml
+    build:
+      context: ./inference-bentoml
+      dockerfile: ./Dockerfile
+    volumes:
+      - type: bind
+        source: ./data/bentoml/
+        target: /root/bentoml
+    # ports:
+    #   - "127.0.0.1:6379:6379"
+    # command: /usr/local/bin/redis-server --loadmodule /usr/lib/redis/modules/redisai.so --bind 0.0.0.0
+    #   deploy:
+    #     resources:
+    #       reservations:
+    #         devices:
+    #           - capabilities: [ gpu ]
 
   analyser:
     image: analyser
@@ -37,8 +41,9 @@ services:
         source: ./data/models/
         target: /models
     environment:
-      - PYTHONPATH=/app
+      - PYTHONPATH=/app/analyser
       - GRPC_DNS_RESOLVER=native
+    command: "python3 /app/analyser/analyser/server.py --config config.bentoml.yml -v"
   postgres:
     image: postgres:13.2
     volumes:
@@ -81,7 +86,7 @@ services:
 
     working_dir: /app/backend/
     environment:
-      - PYTHONPATH=/app:/app/backend/
+      - PYTHONPATH=/app:/app/backend/:/app/analyser
       - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
       - GRPC_ENABLE_FORK_SUPPORT=1
       - GRPC_POLL_STRATEGY=poll
@@ -115,7 +120,7 @@ services:
 
     working_dir: /app/backend/
     environment:
-      - PYTHONPATH=/app/backend/:/app
+      - PYTHONPATH=/app:/app/backend:/app/analyser
       - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
     command: python3 manage.py runserver  0.0.0.0:8000
 
