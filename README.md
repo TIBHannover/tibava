@@ -31,14 +31,19 @@
 2. Run `install.sh` to download and extract models:
     ```sh
     mkdir -p data/models
-    wget https://tib.eu/cloud/s/Nk2RrfTwaQ2mNxn/download/models.tar.gz
-    #wget https://tib.eu/cloud/s/awE6aFQ48yYEZHd/download/models_gpu.tar.gz
-    https://tib.eu/cloud/s/bNmg6k3PtrJEmQr/download/bentoml_cuda.tar.gz
-    tar -xf models.tar.gz --directory data/models
     mkdir -p data/tmp
     mkdir -p data/predictions/thumbnails
     mkdir -p data/media
     mkdir -p data/analyser
+    mkdir -p data/bentoml
+    wget https://tib.eu/cloud/s/YXfqS8s9sspDMMe/download/models.tar.gz
+    tar -xf models.tar.gz --directory data/models
+    # CPU only
+    wget https://tib.eu/cloud/s/sGgweyaxjE8e5ie/download/bentoml.tar.gz
+    tar -xf bentoml.tar.gz --directory data/bentoml
+    # GPU only
+    wget https://tib.eu/cloud/s/EnQB67NsN7Y7MFX/download/bentoml_cuda.tar.gz
+    tar -xf bentoml_cuda.tar.gz --directory data/bentoml
     ```
 
 3. Build and start the container:

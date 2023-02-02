@@ -10,14 +10,19 @@ services:
       - type: bind
         source: ./data/bentoml/
         target: /root/bentoml
-    # ports:
-    #   - "127.0.0.1:6379:6379"
-    # command: /usr/local/bin/redis-server --loadmodule /usr/lib/redis/modules/redisai.so --bind 0.0.0.0
-    #   deploy:
-    #     resources:
-    #       reservations:
-    #         devices:
-    #           - capabilities: [ gpu ]
+      # environment:
+      # - GRPC_DNS_RESOLVER=native
+      # - GRPC_ENABLE_FORK_SUPPORT=1
+      # - GRPC_POLL_STRATEGY=poll
+      # - GRPC_TRACE=all
+      # ports:
+      #   - "127.0.0.1:6379:6379"
+      # command: /usr/local/bin/redis-server --loadmodule /usr/lib/redis/modules/redisai.so --bind 0.0.0.0
+      #   deploy:
+      #     resources:
+      #       reservations:
+      #         devices:
+      #           - capabilities: [ gpu ]
 
   analyser:
     image: analyser
@@ -43,6 +48,9 @@ services:
     environment:
       - PYTHONPATH=/app/analyser
       - GRPC_DNS_RESOLVER=native
+      #- GRPC_TRACE=call_error,connectivity_state,pick_first,round_robin,glb
+      # - GRPC_ENABLE_FORK_SUPPORT=1
+      # - GRPC_POLL_STRATEGY=poll
     command: "python3 /app/analyser/analyser/server.py --config config.bentoml.yml -v"
   postgres:
     image: postgres:13.2
