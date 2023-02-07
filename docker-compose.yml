@@ -1,6 +1,12 @@
 version: "3.4"
 
 services:
+
+  analyser_redis:
+    image: redis:6.2.1
+    command: /usr/local/bin/redis-server --port 6379 --bind 0.0.0.0
+    ports:
+      - "127.0.0.1:6379:6379"
   inference:
     image: bentoml
     build:
@@ -52,6 +58,11 @@ services:
       # - GRPC_ENABLE_FORK_SUPPORT=1
       # - GRPC_POLL_STRATEGY=poll
     command: "python3 /app/analyser/analyser/server.py --config config.bentoml.yml -v"
+
+    depends_on:
+      - analyser_redis
+      - inference
+
   postgres:
     image: postgres:13.2
     volumes:
