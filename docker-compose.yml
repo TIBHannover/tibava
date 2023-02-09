@@ -7,6 +7,10 @@ services:
     command: /usr/local/bin/redis-server --port 6379 --bind 0.0.0.0
     ports:
       - "127.0.0.1:6379:6379"
+    volumes:
+      - type: bind
+        source: ./data/cache/
+        target: /data/
   inference:
     image: bentoml
     build:
