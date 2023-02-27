@@ -20,6 +20,12 @@ services:
       - type: bind
         source: ./data/bentoml/
         target: /root/bentoml
+      - type: bind
+        source: ./inference-bentoml
+        target: /app/inference
+    environment:
+      - PYTHONPATH=/app/inference
+    
       # environment:
       # - GRPC_DNS_RESOLVER=native
       # - GRPC_ENABLE_FORK_SUPPORT=1
