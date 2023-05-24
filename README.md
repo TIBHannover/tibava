@@ -36,11 +36,12 @@
     mkdir -p data/media
     mkdir -p data/analyser
     mkdir -p data/bentoml
-    wget https://tib.eu/cloud/s/YXfqS8s9sspDMMe/download/models.tar.gz
-    tar -xf models.tar.gz --directory data/models
+    mkdir -p data/backend_cache
+    wget https://tib.eu/cloud/s/2z3ocpRaMbjnRrF/download/models.tar.gz
+    tar -xf models.tar.gz --directory data/
     # CPU only
-    wget https://tib.eu/cloud/s/sGgweyaxjE8e5ie/download/bentoml.tar.gz
-    tar -xf bentoml.tar.gz --directory data/bentoml
+    wget https://tib.eu/cloud/s/97gHoN2Tga6ziK2/download/bentoml.tar.gz
+    tar -xf bentoml.tar.gz --directory data/
     # GPU only
     wget https://tib.eu/cloud/s/EnQB67NsN7Y7MFX/download/bentoml_cuda.tar.gz
     tar -xf bentoml_cuda.tar.gz --directory data/bentoml

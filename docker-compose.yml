@@ -25,7 +25,6 @@ services:
         target: /app/inference
     environment:
       - PYTHONPATH=/app/inference
-    
       # environment:
       # - GRPC_DNS_RESOLVER=native
       # - GRPC_ENABLE_FORK_SUPPORT=1
@@ -110,6 +109,9 @@ services:
         source: ./data/predictions
         target: /predictions
       - type: bind
+        source: ./data/backend_cache
+        target: /cache
+      - type: bind
         source: ./data/tmp
         target: /tmp
 
@@ -143,6 +145,9 @@ services:
       - type: bind
         source: ./data/predictions
         target: /predictions
+      - type: bind
+        source: ./data/backend_cache
+        target: /cache
       - type: bind
         source: ./data/tmp
         target: /tmp
