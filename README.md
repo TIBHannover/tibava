@@ -40,7 +40,7 @@
     wget https://tib.eu/cloud/s/2z3ocpRaMbjnRrF/download/models.tar.gz
     tar -xf models.tar.gz --directory data/
     # CPU only
-    wget https://tib.eu/cloud/s/97gHoN2Tga6ziK2/download/bentoml.tar.gz
+    wget https://tib.eu/cloud/s/MnkZjS87DZKa79Z/download/bentoml.tar.gz
     tar -xf bentoml.tar.gz --directory data/
     # GPU only
     wget https://tib.eu/cloud/s/EnQB67NsN7Y7MFX/download/bentoml_cuda.tar.gz
