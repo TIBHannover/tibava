@@ -1,42 +1,76 @@
 version: "3.4"
 
 services:
-  analyser_redisai:
-    image: redislabs/redisai:1.2.7-gpu-centos8
-    ports:
-      - "127.0.0.1:6379:6379"
-    command: /usr/local/bin/redis-server --loadmodule /usr/lib/redis/modules/redisai.so --bind 0.0.0.0
-    # networks:
-    #   - analyser
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - capabilities: [ gpu ]
+  inference_ray:
+    environment:
+      - HF_HOME=/models
 
-  analyser:
-    image: analyser
     build:
-      context: ./analyser
+      context: ./analyser/inference_ray
       dockerfile: ./Dockerfile
 
     volumes:
       - type: bind
-        source: ./analyser
-        target: /app/analyser
+        source: ./analyser/data_python/src/
+        target: /app/analyser/data
+      - type: bind
+        source: ./analyser/inference_ray/src
+        target: /app/analyser/inference
+      - type: bind
+        source: ./analyser/utils_python/src
+        target: /app/analyser/utils
+      - type: bind
+        source: ./analyser/analyser_interface_python/src
+        target: /app/analyser/proto
+      - type: bind
+        source: ./data/data/
+        target: /data/
       - type: bind
         source: ./data/media/
-        target: /media
-      - type: bind
-        source: ./data/analyser/
-        target: /data
+        target: /media/
       - type: bind
         source: ./data/models/
-        target: /models
-    environment:
-      - PYTHONPATH=/app
-      - GRPC_DNS_RESOLVER=native
-    command: "python3 /app/analyser/server.py --config config.gpu.yml -v"
+        target: /models/
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+
+  analyser:
+    build:
+      context: ./analyser/analyser_python
+      dockerfile: ./Dockerfile
+
+    volumes:
+      - type: bind
+        source: ./analyser/analyser_python/src/
+        target: /app/analyser/analyser
+      - type: bind
+        source: ./analyser/data_python/src/
+        target: /app/analyser/data
+      - type: bind
+        source: ./analyser/inference_ray/src
+        target: /app/analyser/inference
+      - type: bind
+        source: ./analyser/utils_python/src
+        target: /app/analyser/utils
+      - type: bind
+        source: ./analyser/analyser_interface_python/src
+        target: /app/analyser/proto
+      - type: bind
+        source: ./data/data/
+        target: /data/
+      - type: bind
+        source: ./data/media/
+        target: /media/
+      - type: bind
+        source: ./data/cache/
+        target: /cache/
+
   postgres:
     image: postgres:13.2
     volumes:
@@ -62,8 +96,17 @@ services:
       context: ./backend
     volumes:
       - type: bind
-        source: ./analyser
-        target: /app/analyser
+        source: ./analyser/analyser_interface_python/src
+        target: /app/analyser/proto
+      - type: bind
+        source: ./analyser/utils_python/src
+        target: /app/analyser/utils
+      - type: bind
+        source: ./analyser/data_python/src/
+        target: /app/analyser/data
+      - type: bind
+        source: ./analyser/analyser_python/src/
+        target: /app/analyser/analyser
       - type: bind
         source: ./backend/
         target: /app/backend
@@ -73,6 +116,12 @@ services:
       - type: bind
         source: ./data/predictions
         target: /predictions
+      - type: bind
+        source: ./data/backend_cache
+        target: /cache
+      - type: bind
+        source: ./data/tmp
+        target: /tmp
 
     working_dir: /app/backend/
     environment:
@@ -93,8 +142,17 @@ services:
 
     volumes:
       - type: bind
-        source: ./analyser
-        target: /app/analyser
+        source: ./analyser/analyser_interface_python/src
+        target: /app/analyser/proto
+      - type: bind
+        source: ./analyser/utils_python/src
+        target: /app/analyser/utils
+      - type: bind
+        source: ./analyser/data_python/src/
+        target: /app/analyser/data
+      - type: bind
+        source: ./analyser/analyser_python/src/
+        target: /app/analyser/analyser
       - type: bind
         source: ./backend/
         target: /app/backend
@@ -104,6 +162,12 @@ services:
       - type: bind
         source: ./data/predictions
         target: /predictions
+      - type: bind
+        source: ./data/backend_cache
+        target: /cache
+      - type: bind
+        source: ./data/tmp
+        target: /tmp
 
     working_dir: /app/backend/
     environment:
