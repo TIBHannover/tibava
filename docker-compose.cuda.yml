@@ -7,7 +7,7 @@ services:
 
     build:
       context: ./analyser/inference_ray
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile.cuda
 
     volumes:
       - type: bind
