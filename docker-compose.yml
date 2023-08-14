@@ -23,7 +23,7 @@ services:
         source: ./analyser/analyser_interface_python/src
         target: /app/analyser/proto
       - type: bind
-        source: ./data/data/
+        source: ./data/analyser
         target: /data/
       - type: bind
         source: ./data/media/
@@ -54,7 +54,7 @@ services:
         source: ./analyser/analyser_interface_python/src
         target: /app/analyser/proto
       - type: bind
-        source: ./data/data/
+        source: ./data/analyser
         target: /data/
       - type: bind
         source: ./data/media/
