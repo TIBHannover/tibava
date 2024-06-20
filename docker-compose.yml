@@ -4,6 +4,7 @@ services:
   inference_ray:
     environment:
       - HF_HOME=/models
+      - NUMBA_CACHE_DIR=/tmp
 
     build:
       context: ./analyser/inference_ray
