@@ -116,6 +116,11 @@ services:
         source: ./data/tmp
         target: /tmp
 
+    depends_on:
+      - postgres
+      
+    restart: always
+
     working_dir: /app/backend/
     environment:
       - PYTHONPATH=/app:/app/backend/
@@ -161,6 +166,7 @@ services:
       - type: bind
         source: ./data/tmp
         target: /tmp
+        
 
     working_dir: /app/backend/
     environment:
@@ -171,6 +177,9 @@ services:
     depends_on:
       - postgres
       - memcached
+      - backend_celery
+
+    restart: always
 
   frontend:
     image: frontend
