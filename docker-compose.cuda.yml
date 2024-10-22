@@ -4,6 +4,7 @@ services:
   inference_ray:
     environment:
       - HF_HOME=/models
+      - TORCH_HOME=/models
       - PYANNOTE_CACHE=/models/pyannote
       - NUMBA_CACHE_DIR=/tmp
 
