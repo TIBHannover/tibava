@@ -28,7 +28,7 @@
     cd tibava
     ```
 
-2. Run `install.sh` to download and extract models:
+2. Download and extract models:
     ```sh
     mkdir data/cache
     mkdir data/analyser
@@ -36,7 +36,7 @@
     mkdir data/tmp
     mkdir data/predictions
     mkdir data/backend_cache
-    wget wget https://tib.eu/cloud/s/xLXEEsf99KPYcoW/download/models.tar.gz
+    wget https://tib.eu/cloud/s/kAe3TXPfsBpwtwk/download/models.tar.gz
     tar -xf models.tar.gz --directory data/
     ```
 
