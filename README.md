@@ -118,13 +118,13 @@ sudo docker-compose exec frontend npm run serve
    1. Add plugin to a group in `frontend/src/components/ModalPlugin.vue` with:
    ```
    {
-           name: this.$t("modal.plugin.your_plugin_name.plugin_name"),
-           description: this.$t("modal.plugin.your_plugin_name.plugin_description"),
-           icon: "your_plugin_icon", // from https://pictogrammers.com/library/mdi/
-           plugin: "your_plugin_name",
-           id: 0, // unique integers in ascending order
-           parameters: [], // parameters to control adjustable plugin behaviour (lookup types in other plugins)
-           optional_parameters: [], // parameters in an extendable window
+        name: this.$t("modal.plugin.your_plugin_name.plugin_name"),
+        description: this.$t("modal.plugin.your_plugin_name.plugin_description"),
+        icon: "your_plugin_icon", // from https://pictogrammers.com/library/mdi/
+        plugin: "your_plugin_name",
+        id: 0, // unique integers in ascending order
+        parameters: [], // parameters to control adjustable plugin behaviour (lookup types in other plugins)
+        optional_parameters: [], // parameters in an extendable window
    }
    ```
    2. Add plugin name, description... in `frontend/src/locales/en.json`:
