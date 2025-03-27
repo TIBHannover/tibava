@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="224.00955mm"
-   height="43.392265mm"
-   viewBox="0 0 224.00955 43.392265"
+   width="761.52429mm"
+   height="147.78954mm"
+   viewBox="0 0 761.52429 147.78953"
    version="1.1"
    id="svg1"
    inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
@@ -24,9 +24,9 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="1.1162388"
-     inkscape:cx="421.5048"
-     inkscape:cy="39.418089"
+     inkscape:zoom="0.55182437"
+     inkscape:cx="1611.9259"
+     inkscape:cy="119.60327"
      inkscape:window-width="2242"
      inkscape:window-height="1453"
      inkscape:window-x="0"
@@ -36,8 +36,8 @@
     <inkscape:grid
        id="grid1"
        units="mm"
-       originx="-24.999997"
-       originy="-24.999997"
+       originx="-24.835286"
+       originy="-24.829693"
        spacingx="0.99999998"
        spacingy="1"
        empcolor="#0099e5"
@@ -271,208 +271,212 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-24.999997,-24.999997)">
+     transform="translate(-24.835287,-24.829694)">
     <g
-       id="g5">
+       id="g5"
+       transform="matrix(3.4062639,0,0,3.4410825,-61.076989,-61.960771)"
+       style="stroke-width:0.321297;stroke-dasharray:none">
       <rect
-         style="fill:#ffffff;stroke:#505050;stroke-width:0.765002;paint-order:markers stroke fill"
+         style="fill:#ffffff;stroke:#505050;stroke-width:0.321297;stroke-dasharray:none;paint-order:markers stroke fill"
          id="rect1"
          width="29.235003"
          height="42.627258"
          x="25.382498"
          y="25.382502"
-         rx="1"
-         ry="0.99999988" />
+         rx="0.29357678"
+         ry="0.2906062" />
       <text
          xml:space="preserve"
-         style="font-size:2.82223px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.765;paint-order:markers stroke fill"
+         style="font-size:2.82223px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.321297;stroke-dasharray:none;paint-order:markers stroke fill"
          x="25.726244"
          y="28.144894"
          id="text1"><tspan
            sodipodi:role="line"
            id="tspan1"
-           style="fill:#000000;stroke:none;stroke-width:0.765"
+           style="fill:#000000;stroke:none;stroke-width:0.321297;stroke-dasharray:none"
            x="25.726244"
            y="28.144894">Frontend</tspan></text>
       <rect
-         style="fill:#ffffff;stroke:#505050;stroke-width:0.765002;paint-order:markers stroke fill"
+         style="fill:#ffffff;stroke:#505050;stroke-width:0.321297;stroke-dasharray:none;paint-order:markers stroke fill"
          id="rect1-6"
          width="29.235003"
          height="42.627258"
          x="90.052345"
          y="25.382498"
-         rx="1"
-         ry="0.99999982" />
+         rx="0.29357678"
+         ry="0.29060617" />
       <text
          xml:space="preserve"
-         style="font-size:2.82223px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.765;paint-order:markers stroke fill"
+         style="font-size:2.82223px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.321297;stroke-dasharray:none;paint-order:markers stroke fill"
          x="90.396095"
          y="28.144894"
          id="text1-0"><tspan
            sodipodi:role="line"
            id="tspan1-6"
-           style="fill:#000000;stroke:none;stroke-width:0.765"
+           style="fill:#000000;stroke:none;stroke-width:0.321297;stroke-dasharray:none"
            x="90.396095"
            y="28.144894">Backend</tspan></text>
       <g
          id="g2"
-         transform="translate(-26.345905)">
+         transform="translate(-26.345905)"
+         style="stroke-width:0.321297;stroke-dasharray:none">
         <rect
-           style="fill:#ffffff;stroke:#505050;stroke-width:0.765002;paint-order:markers stroke fill"
+           style="fill:#ffffff;stroke:#505050;stroke-width:0.321297;stroke-dasharray:none;paint-order:markers stroke fill"
            id="rect1-6-8"
            width="29.235003"
            height="29.234997"
            x="181.0681"
            y="25.3825"
-           rx="1"
-           ry="0.99999982" />
+           rx="0.29357678"
+           ry="0.29060617" />
         <text
            xml:space="preserve"
-           style="font-size:2.82223px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.765;paint-order:markers stroke fill"
+           style="font-size:2.82223px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.321297;stroke-dasharray:none;paint-order:markers stroke fill"
            x="181.41185"
            y="28.144894"
            id="text1-0-7"><tspan
              sodipodi:role="line"
              id="tspan1-6-9"
-             style="fill:#000000;stroke:none;stroke-width:0.765"
+             style="fill:#000000;stroke:none;stroke-width:0.321297;stroke-dasharray:none"
              x="181.41185"
              y="28.144894">Analyser</tspan></text>
       </g>
       <g
-         id="g1">
+         id="g1"
+         style="stroke-width:0.321297;stroke-dasharray:none">
         <rect
-           style="fill:#ffffff;stroke:#505050;stroke-width:0.765002;paint-order:markers stroke fill"
+           style="fill:#ffffff;stroke:#505050;stroke-width:0.321297;stroke-dasharray:none;paint-order:markers stroke fill"
            id="rect1-6-8-3"
            width="29.235003"
            height="29.234997"
            x="219.39204"
            y="25.3825"
-           rx="1"
-           ry="0.99999982" />
+           rx="0.29357678"
+           ry="0.29060617" />
         <text
            xml:space="preserve"
-           style="font-size:2.82223px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.765;paint-order:markers stroke fill"
+           style="font-size:2.82223px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.321297;stroke-dasharray:none;paint-order:markers stroke fill"
            x="219.73579"
            y="28.144894"
            id="text1-0-7-7"><tspan
              sodipodi:role="line"
              id="tspan1-6-9-5"
-             style="fill:#000000;stroke:none;stroke-width:0.765"
+             style="fill:#000000;stroke:none;stroke-width:0.321297;stroke-dasharray:none"
              x="219.73579"
              y="28.144894">Inference[Ray]</tspan></text>
       </g>
       <path
-         style="fill:#000000;stroke:#000000;stroke-width:0.265;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy);paint-order:markers stroke fill"
+         style="fill:#000000;stroke:#000000;stroke-width:0.321297;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy);paint-order:markers stroke fill"
          d="m 55,30.102952 h 34.669844 v -0.05926"
          id="path4" />
       <path
-         style="fill:#000000;stroke:#000000;stroke-width:0.265;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2);paint-order:markers stroke fill"
+         style="fill:#000000;stroke:#000000;stroke-width:0.321297;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2);paint-order:markers stroke fill"
          d="m 119.80235,30.102952 h 34.66984 v -0.05926"
          id="path4-3" />
       <path
-         style="fill:#000000;stroke:#000000;stroke-width:0.265;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2-6);paint-order:markers stroke fill"
+         style="fill:#000000;stroke:#000000;stroke-width:0.321297;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2-6);paint-order:markers stroke fill"
          d="m 154.60469,34.967575 h -34.66984 v -0.05926"
          id="path4-3-4" />
       <path
-         style="fill:#000000;stroke:#000000;stroke-width:0.265;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2-6-50);paint-order:markers stroke fill"
+         style="fill:#000000;stroke:#000000;stroke-width:0.321297;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2-6-50);paint-order:markers stroke fill"
          d="M 89.93484,48.773458 H 55.265003 v -0.05926"
          id="path4-3-4-72" />
       <path
-         style="fill:#000000;stroke:#000000;stroke-width:0.265;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2-6-5);paint-order:markers stroke fill"
+         style="fill:#000000;stroke:#000000;stroke-width:0.321297;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2-6-5);paint-order:markers stroke fill"
          d="M 219.27454,34.967575 H 184.6047 v -0.05926"
          id="path4-3-4-7" />
       <path
-         style="fill:#000000;stroke:#000000;stroke-width:0.265;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2-2);paint-order:markers stroke fill"
+         style="fill:#000000;stroke:#000000;stroke-width:0.321297;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2-2);paint-order:markers stroke fill"
          d="m 184.4722,30.102952 h 34.66984 v -0.05926"
          id="path4-3-9" />
       <text
          xml:space="preserve"
-         style="font-size:2.82223px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.264999;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;paint-order:markers stroke fill"
+         style="font-size:2.82223px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.321297;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;paint-order:markers stroke fill"
          x="65.234123"
          y="28.32128"
          id="text5"><tspan
            sodipodi:role="line"
            id="tspan5"
-           style="fill:#000000;stroke:none;stroke-width:0.265"
+           style="fill:#000000;stroke:none;stroke-width:0.321297;stroke-dasharray:none"
            x="65.234123"
            y="28.32128">run_plugin</tspan></text>
       <text
          xml:space="preserve"
-         style="font-size:2.82223px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.264999;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;paint-order:markers stroke fill"
+         style="font-size:2.82223px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.321297;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;paint-order:markers stroke fill"
          x="121.96207"
          y="28.32128"
          id="text5-5"><tspan
            sodipodi:role="line"
            id="tspan5-0"
-           style="fill:#000000;stroke:none;stroke-width:0.265"
+           style="fill:#000000;stroke:none;stroke-width:0.321297;stroke-dasharray:none"
            x="121.96207"
            y="28.32128">clip_image_embedding</tspan></text>
       <text
          xml:space="preserve"
-         style="font-size:2.82223px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.264999;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;paint-order:markers stroke fill"
+         style="font-size:2.82223px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.321297;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;paint-order:markers stroke fill"
          x="186.63193"
          y="28.571358"
          id="text5-5-6"><tspan
            sodipodi:role="line"
            id="tspan5-0-3"
-           style="fill:#000000;stroke:none;stroke-width:0.265"
+           style="fill:#000000;stroke:none;stroke-width:0.321297;stroke-dasharray:none"
            x="186.63193"
            y="28.571358">clip_image_embedding</tspan></text>
       <path
-         style="fill:#000000;stroke:#000000;stroke-width:0.265;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2-25);paint-order:markers stroke fill"
+         style="fill:#000000;stroke:#000000;stroke-width:0.321297;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2-25);paint-order:markers stroke fill"
          d="m 119.80235,43.908835 h 34.66984 v -0.05926"
          id="path4-3-8" />
       <path
-         style="fill:#000000;stroke:#000000;stroke-width:0.265;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2-6-7);paint-order:markers stroke fill"
+         style="fill:#000000;stroke:#000000;stroke-width:0.321297;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2-6-7);paint-order:markers stroke fill"
          d="m 154.60469,48.773458 h -34.66984 v -0.05926"
          id="path4-3-4-8" />
       <path
-         style="fill:#000000;stroke:#000000;stroke-width:0.265;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2-6-5-4);paint-order:markers stroke fill"
+         style="fill:#000000;stroke:#000000;stroke-width:0.321297;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2-6-5-4);paint-order:markers stroke fill"
          d="M 219.27454,48.773458 H 184.6047 v -0.05926"
          id="path4-3-4-7-4" />
       <path
-         style="fill:#000000;stroke:#000000;stroke-width:0.265;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2-2-0);paint-order:markers stroke fill"
+         style="fill:#000000;stroke:#000000;stroke-width:0.321297;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2-2-0);paint-order:markers stroke fill"
          d="m 184.4722,43.908835 h 34.66984 v -0.05926"
          id="path4-3-9-3" />
       <text
          xml:space="preserve"
-         style="font-size:2.82223px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.264999;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;paint-order:markers stroke fill"
+         style="font-size:2.82223px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.321297;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;paint-order:markers stroke fill"
          x="130.46968"
          y="42.127163"
          id="text5-5-1"><tspan
            sodipodi:role="line"
            id="tspan5-0-4"
-           style="fill:#000000;stroke:none;stroke-width:0.265"
+           style="fill:#000000;stroke:none;stroke-width:0.321297;stroke-dasharray:none"
            x="130.46968"
            y="42.127163">clip_probs</tspan></text>
       <path
-         style="fill:#000000;stroke:#000000;stroke-width:0.265;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2-25-7);paint-order:markers stroke fill"
+         style="fill:#000000;stroke:#000000;stroke-width:0.321297;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2-25-7);paint-order:markers stroke fill"
          d="m 55.292097,58.728131 h 34.66984 v -0.05926"
          id="path4-3-8-7" />
       <path
-         style="fill:#000000;stroke:#000000;stroke-width:0.265;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2-6-7-1);paint-order:markers stroke fill"
+         style="fill:#000000;stroke:#000000;stroke-width:0.321297;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;marker-end:url(#ArrowWideHeavy-2-6-7-1);paint-order:markers stroke fill"
          d="m 90.094437,63.592754 h -34.66984 v -0.05926"
          id="path4-3-4-8-6" />
       <text
          xml:space="preserve"
-         style="font-size:2.82223px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.264999;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;paint-order:markers stroke fill"
+         style="font-size:2.82223px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.321297;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;paint-order:markers stroke fill"
          x="64.503159"
          y="56.946461"
          id="text5-5-1-7"><tspan
            sodipodi:role="line"
            id="tspan5-0-4-3"
-           style="fill:#000000;stroke:none;stroke-width:0.265"
+           style="fill:#000000;stroke:none;stroke-width:0.321297;stroke-dasharray:none"
            x="64.503159"
            y="56.946461">get_timeline</tspan></text>
       <text
          xml:space="preserve"
-         style="font-size:2.82223px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.264999;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;paint-order:markers stroke fill"
+         style="font-size:2.82223px;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.321297;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:1.9;stroke-dasharray:none;paint-order:markers stroke fill"
          x="195.13953"
          y="42.377243"
          id="text5-5-6-9"><tspan
            sodipodi:role="line"
            id="tspan5-0-3-2"
-           style="fill:#000000;stroke:none;stroke-width:0.265"
+           style="fill:#000000;stroke:none;stroke-width:0.321297;stroke-dasharray:none"
            x="195.13953"
            y="42.377243">clip_probs</tspan></text>
     </g>
