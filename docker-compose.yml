@@ -141,8 +141,8 @@ services:
     working_dir: /app/backend/src/backend/
     environment:
       - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
-      - GRPC_ENABLE_FORK_SUPPORT=1
-      - GRPC_POLL_STRATEGY=poll
+      # - GRPC_ENABLE_FORK_SUPPORT=1
+      # - GRPC_POLL_STRATEGY=poll
       # - GRPC_VERBOSITY=debug
       # - GRPC_TRACE=all
     command: uv run --package backend celery -A tibava worker -l INFO
