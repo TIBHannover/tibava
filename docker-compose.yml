@@ -1,28 +1,15 @@
-version: "3.4"
-
 services:
   inference_ray:
+    image: ghcr.io/astral-sh/uv:debian
+
     environment:
       - HF_HOME=/models
       - NUMBA_CACHE_DIR=/tmp
 
-    build:
-      context: ./analyser/inference_ray
-      dockerfile: ./Dockerfile
-
     volumes:
       - type: bind
-        source: ./analyser/data_python/src/
-        target: /app/analyser/data
-      - type: bind
-        source: ./analyser/inference_ray/src
-        target: /app/analyser/inference
-      - type: bind
-        source: ./analyser/utils_python/src
-        target: /app/analyser/utils
-      - type: bind
-        source: ./analyser/analyser_interface_python/src
-        target: /app/analyser/proto
+        source: ./data/inference_ray_venv
+        target: /app/.venv
       - type: bind
         source: ./data/analyser
         target: /data/
@@ -32,28 +19,45 @@ services:
       - type: bind
         source: ./data/models/
         target: /models/
+      - type: bind
+        source: ./inference_ray
+        target: /app/inference_ray
+      - type: bind
+        source: ./analyser
+        target: /app/analyser
+      - type: bind
+        source: ./packages
+        target: /app/packages
+      - type: bind
+        source: ./backend
+        target: /app/backend
+      - type: bind
+        source: ./pyproject.toml
+        target: /app/pyproject.toml
+      - type: bind
+        source: ./.python-version
+        target: /app/.python-version
+
+    working_dir: /app/
+
+    command: uv run --package inference_ray serve run /app/inference_ray/deploy.yml
 
   analyser:
-    build:
-      context: ./analyser/analyser_python
-      dockerfile: ./Dockerfile
+    image: ghcr.io/astral-sh/uv:debian
 
     volumes:
       - type: bind
-        source: ./analyser/analyser_python/src/
-        target: /app/analyser/analyser
+        source: ./data/analyser_venv
+        target: /app/.venv
       - type: bind
-        source: ./analyser/data_python/src/
-        target: /app/analyser/data
+        source: ./inference_ray
+        target: /app/inference_ray
       - type: bind
-        source: ./analyser/inference_ray/src
-        target: /app/analyser/inference
+        source: ./analyser
+        target: /app/analyser
       - type: bind
-        source: ./analyser/utils_python/src
-        target: /app/analyser/utils
-      - type: bind
-        source: ./analyser/analyser_interface_python/src
-        target: /app/analyser/proto
+        source: ./packages
+        target: /app/packages
       - type: bind
         source: ./data/analyser
         target: /data/
@@ -63,9 +67,19 @@ services:
       - type: bind
         source: ./data/cache/
         target: /cache/
+      - type: bind
+        source: ./pyproject.toml
+        target: /app/pyproject.toml
+      - type: bind
+        source: ./.python-version
+        target: /app/.python-version
+
+    working_dir: /app/
+
+    command: uv run --package analyser analyser/src/analyser/server.py -v -c analyser/config.yml
 
   postgres:
-    image: postgres:13.2
+    image: postgres:14.17
     volumes:
       - ./data/db/:/var/lib/postgresql/data
     environment:
@@ -77,29 +91,28 @@ services:
     image: memcached:1.6.10-buster
     command: -I 32m
 
-  backend_redis:
-    image: redis:6.2.1
-    command: /usr/local/bin/redis-server --port 6380 --bind 0.0.0.0
+  valkey:
+    image: valkey/valkey:8.1.1-alpine
+    command: /usr/local/bin/valkey-server --port 6380 --bind 0.0.0.0
     ports:
       - "127.0.0.1:6380:6380"
 
-  backend_celery:
-    image: backend_celery
-    build:
-      context: ./backend
+  celery:
+    image: ghcr.io/astral-sh/uv:debian
+
     volumes:
       - type: bind
-        source: ./analyser/analyser_interface_python/src
-        target: /app/analyser/proto
+        source: ./data/celery_venv
+        target: /app/.venv
       - type: bind
-        source: ./analyser/utils_python/src
-        target: /app/analyser/utils
+        source: ./inference_ray
+        target: /app/inference_ray
       - type: bind
-        source: ./analyser/data_python/src/
-        target: /app/analyser/data
+        source: ./analyser
+        target: /app/analyser
       - type: bind
-        source: ./analyser/analyser_python/src/
-        target: /app/analyser/analyser
+        source: ./packages
+        target: /app/packages
       - type: bind
         source: ./backend/
         target: /app/backend
@@ -115,42 +128,43 @@ services:
       - type: bind
         source: ./data/tmp
         target: /tmp
+      - type: bind
+        source: ./pyproject.toml
+        target: /app/pyproject.toml
+      - type: bind
+        source: ./.python-version
+        target: /app/.python-version
 
     depends_on:
       - postgres
-      
-    restart: always
 
-    working_dir: /app/backend/
+    working_dir: /app/backend/src/backend/
     environment:
-      - PYTHONPATH=/app:/app/backend/
       - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
       - GRPC_ENABLE_FORK_SUPPORT=1
       - GRPC_POLL_STRATEGY=poll
       # - GRPC_VERBOSITY=debug
       # - GRPC_TRACE=all
-    command: celery -A tibava worker -l INFO
+    command: uv run --package backend celery -A tibava worker -l INFO
 
   backend:
-    image: backend
-    build:
-      context: ./backend
+    image: ghcr.io/astral-sh/uv:debian
     ports:
       - 8000:8000
 
     volumes:
       - type: bind
-        source: ./analyser/analyser_interface_python/src
-        target: /app/analyser/proto
+        source: ./data/backend_venv
+        target: /app/.venv
       - type: bind
-        source: ./analyser/utils_python/src
-        target: /app/analyser/utils
+        source: ./inference_ray
+        target: /app/inference_ray
       - type: bind
-        source: ./analyser/data_python/src/
-        target: /app/analyser/data
+        source: ./analyser
+        target: /app/analyser
       - type: bind
-        source: ./analyser/analyser_python/src/
-        target: /app/analyser/analyser
+        source: ./packages
+        target: /app/packages
       - type: bind
         source: ./backend/
         target: /app/backend
@@ -166,20 +180,22 @@ services:
       - type: bind
         source: ./data/tmp
         target: /tmp
-        
+      - type: bind
+        source: ./pyproject.toml
+        target: /app/pyproject.toml
+      - type: bind
+        source: ./.python-version
+        target: /app/.python-version
 
-    working_dir: /app/backend/
+    working_dir: /app/
     environment:
-      - PYTHONPATH=/app/backend/:/app
       - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
-    command: python3 manage.py runserver  0.0.0.0:8000
+    command: uv run --package backend python3 backend/src/backend/manage.py runserver 0.0.0.0:8000
 
     depends_on:
       - postgres
       - memcached
-      - backend_celery
-
-    restart: always
+      - celery
 
   frontend:
     image: frontend

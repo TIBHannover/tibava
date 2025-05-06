@@ -1,0 +1,420 @@
+{
+  "welcome": {
+    "title": "TIB AV-Analytics",
+    "text": "Welcome to the TIB AV-Analytics (TIB-AV-A) video analysis platform for scholarly video analysis and film science.",
+    "demo_title": "Video Demonstration",
+    "demo_text": "We are currently preparing a video that demonstrates the features of TIB-AV-A and explains how to use it to simplify the onboarding process. It is expected to be available by March 3 at the latest.",
+    "login_title": "Need an account?",
+    "login_text": "If you do not have an account yet, you can create an account at the top right (\"Login\" -> \"Register\") or request one by writing an E-Mail to matthias.springstein@tib.eu with a short explanation of your intended usecase.",
+    "format_title": "Video File Support",
+    "format_text": "Please note that TIB-AV-A currently only supports the analysis of <span style='font-weight: bold;'>mp4 video files</span> to avoid long processing times due to transcoding videos on our server."
+  },
+  "plugin": {
+    "menu": {
+      "title": "Pipelines",
+      "new": "New"
+    }
+  },
+  "visualization": {
+    "title": "Visualize",
+    "start": "Apply",
+    "reset": "Reset",
+    "controls": {
+      "plotTypes": {
+        "controlName": "Select Plot Type",
+        "resultControlName": "Select Timeline to Visualize",
+        "linePlot": "Line Plot",
+        "scatterPlot": "Scatter Plot",
+        "histogramChart": "Histogram Chart",
+        "stackedBarChart": "Stacked Bar Chart",
+        "constellationGraph": "Constellation Graph"
+      },
+      "mapping": {
+        "mappingTitle": "Visualization mapping",
+        "xTitle": "Select x axis data:",
+        "xSelect": "Not selected",
+        "yTitle": "Select y axis data:",
+        "ySelect": "Not selected"
+      }
+    }
+  },
+  "timelineSegment": {
+    "title": "Title",
+    "close": "Close",
+    "update": "Update",
+    "delete": "Delete",
+    "annotate": {
+      "selection": "Annotate selected segments",
+      "range": "Annotate selected range"
+    },
+    "split": "Create Cut",
+    "merge": {
+      "selection": "Merge selected segements",
+      "range": "Merge selected range"
+    },
+    "mergeleft": "Merge left segement",
+    "mergeright": "Merge right segment",
+    "color": "Color"
+  },
+  "button": {
+    "search": "Search",
+    "totimeline": "To Timeline",
+    "deleteCluster": "Delete",
+    "edit": "Edit",
+    "apply": "Apply",
+    "cancel": "Cancel",
+    "close": "Close",
+    "delete": "Delete",
+    "create": "Create"
+  },
+  "modal": {
+    "error": {
+      "title": "Error",
+      "close": "Close"
+    },
+    "video": {
+      "rename": {
+        "title": "Rename Video",
+        "link": "Rename",
+        "name": "Video Name",
+        "update": "Rename",
+        "close": "Close"
+      }
+    },
+    "export": {
+      "title": "Export Annotations",
+      "merged_csv": {
+        "export_name": "Merged CSV",
+        "timeline_merge": "Merge annotations",
+        "use_timestamps": "Use timestamps",
+        "use_seconds": "Use seconds",
+        "include_category": "Include category",
+        "split_places": "Show places categories in separate columns"
+      },
+      "individual_csv": {
+        "export_name": "Individual CSVs",
+        "use_timestamps": "Use timestamps",
+        "use_seconds": "Use seconds",
+        "include_category": "Include category"
+      },
+      "json": {
+        "export_name": "JSON"
+      },
+      "elan": {
+        "export_name": "ELAN"
+      },
+      "export": "export",
+      "close": "close"
+    },
+    "analyse": {
+      "title": "Analyse"
+    },
+    "plugin": {
+      "search": {
+        "prompt": "Search Plugin",
+        "select": "Select Plugin"
+      },
+      "groups": {
+        "audio": "Audio Analysis",
+        "aggregation": "Timeline Aggregation",
+        "color": "Color Analysis",
+        "face": "Face Analysis",
+        "identification": "Concept Recognition",
+        "shot": "Shot Analysis"
+      },
+      "status": {
+        "unknown": "Unknown",
+        "error": "Error",
+        "done": "Done",
+        "running": "Running",
+        "queued": "Queued",
+        "waiting": "Waiting"
+      },
+      "title": "Plugins",
+      "close": "Close",
+      "run": "Start Plugin",
+      "timeline_name": "Timeline Name",
+      "shot_timeline_name": "Shot Boundaries from Timeline",
+      "shot_timeline_hint": "*The annotations are created based on the shot boundaries of the selected timeline",
+      "scalar_timeline_name": "Select Timeline",
+      "scalar_timeline_hint": "*The scalar values of the selected timelines will be aggregated",
+      "fps": "Frames per Second (FPS)",
+      "normalize": "Normalize Results?",
+      "aggregation": {
+        "plugin_name": "Aggregate Timelines",
+        "plugin_description": "This plugin allows you to combine information from multiple timeles with logical operators. In this way, more complex patterns can be revealed. For example, the <em>logical and</em> can be used to detect when two concepts or persons are visible simultaneously. <br><br><b>Tip:</b> You can perform the plugin multiple times to create more complex patterns. The following example performs three aggregations to detect when a <em>Concept A</em> is simultaneously visible with <em>Concept B</em> or <em>Concept C</em>: <br><br>AGG1 = (Concept A) Logical And (Concept B) <br> AGG2 = (Concept A) Logical And (Concept C) <br> AGG3 = (AGG1) Logical Or (AGG2)",
+        "timeline_name": "Aggregated Timeline",
+        "method": "Aggregation Method",
+        "logical_or": "Logical Or",
+        "logical_and": "Logical And",
+        "mean": "Mean",
+        "max": "Maximum",
+        "min": "Minimum",
+        "prod": "Product"
+      },
+      "audio_waveform": {
+        "plugin_name": "Audio Waveform",
+        "plugin_description": "This plugin computes the waveform of the audio signal for basic sound analysis.",
+        "timeline_name": "Audio Waveform",
+        "sr": "Sampling Rate"
+      },
+      "audio_rms": {
+        "plugin_name": "Audio Volume (Root Mean Square)",
+        "plugin_description": "This plugin computes the audio volume by computing the root mean square (RMS) of the audio signal. It could, for example, reveal scenes with silence or sudden volume changes in a film.",
+        "timeline_name": "RMS Volume"
+      },
+      "whisper": {
+        "plugin_name": "Speech Recognition (Whisper)",
+        "plugin_description": "This plugin uses <a href=\"https://openai.com/research/whisper\">OpenAI's Whisper model</a> to automatically provide a transcription of the spoken language in the video. It supports more than 100 languages. A list of supported languages can be found <a href=\"https://github.com/openai/whisper?tab=readme-ov-file#available-models-and-languages\">here</a>. <br><br> After performing the plugin, the transcript can be found in the tab \"Transcript\" and you can search for words within it."
+      },
+      "audio_frequency": {
+        "plugin_name": "Audio Spectrogram",
+        "plugin_description": "This plugin computes the spectrogram of the audio signal that could reveal rhytmic patterns (e.g., music), voices, or other sound patterns.",
+        "timeline_name": "Audio Spectrogram",
+        "sr": "Sampling Rate",
+        "n_fft": "Length of the FFT (Fast Fourier Transform) window"
+      },
+      "blip": {
+        "plugin_name": "Visual Question Answering (InstructBLIP)",
+        "plugin_description": "This plugin uses the large vision language model <a href=\"https://arxiv.org/abs/2305.06500\">InstructBLIP</a> that is similar to GPT-4 to perform question answering over the video. It can be used for various purposes, for example, to automatically find concepts within the video. Here are some examples: <br><br> <em>Does this image show a car? Please answer with yes or no! <br> Does this image show at least three persons? Please answer with yes or no! <br> Is this photo taken in a restaurant? Please answer with yes or no!</em>",
+        "timeline_name": "InstructBLIP Visual QA",
+        "search_term": "Question"
+      },
+      "clip": {
+        "plugin_name": "Single-Object Classification (CLIP)",
+        "plugin_description": "This plugin uses <a href=\"https://openai.com/research/clip\">OpenAI's CLIP (Contrastive Language-Image Pretraining) model</a> that allows to search the video content for arbritrary visual concepts given a textual description. The textual description should describe the concept of interest in simple, unambigous terms. Here is an example: <em>A photo of a car.</em> <br><br>CLIP works well for a large variety of concepts (e.g., objects, places, events, daytimes, weather conditions, etc.) that can be identified from a single video frame. To identify concepts that require temporal context from the video such as human actions, we recommend using the \"Action Recognition\" plugin. <br><br> Please note that the plugin required more time if you first use it for a video. After the first use, the results will be computed much faster.",
+        "timeline_name": "Object Classification",
+        "search_term": "Concept Description"
+      },
+      "clip_ontology": {
+        "plugin_name": "Multi-Object Classification (CLIP)",
+        "plugin_description": "This plugin uses <a href=\"https://openai.com/research/clip\">OpenAI's CLIP (Contrastive Language-Image Pretraining) model</a> that allows to search the video content for a set of arbritrary visual concepts given a csv file containing the concept name and an associated textual description. The textual description should describe the concept of interest in simple, unambigous terms. Here is an example: <br><br> \"day\",\"a photo taken at daylight\" <br> \"night\",\"a photo taken during the night\" <br><br> It works well for a large variety of concepts (e.g., objects, places, events, daytimes, weather conditions, etc.) that can be identified from a single video frame. To identify concepts that require temporal context from the video such as human actions, we recommend using the \"Action Recognition\" plugin. <br><br> Please note that the plugin required more time if you first use it for a video. After the first use, the results will be computed much faster.",
+        "timeline_name": "Object Classification",
+        "concepts": "Concept Lexicon",
+        "concepts_hint": "CSV file with timeline name and a description for the concept in each row"
+      },
+      "x_clip": {
+        "plugin_name": "Action Classification (X-CLIP)",
+        "plugin_description": "This plugin uses <a href=\"https://arxiv.org/abs/2207.07285\">X-CLIP</a> that allows to search the video content for arbritrary actions given a textual description. The textual description should describe the action in simple, unambigous terms. Here is an example: <em>A video showing a person dancing</em> <br><br> Please note that the plugin required more time if you first use it for a video. After the first use, the results will be computed much faster.",
+        "timeline_name": "Action Classification",
+        "search_term": "Action Description"
+      },
+      "color_analysis": {
+        "plugin_name": "Dominant Color(s)",
+        "plugin_description": "This plugin uses a clustering algorithm (k-Means) to determine the top-k dominant colors within the video. The number of dominant colors can be selected by the slider below.",
+        "timeline_name": "Dominant Color(s)",
+        "slider": "Number of dominant color(s)",
+        "buttongroup": "Show dominant color(s) in:",
+        "singletimeline": "Single Timeline",
+        "multipletimelines": "Individual Timelines",
+        "max_resolution": "Maximum Image Resolution",
+        "max_iter": "Maximum Number of Iterations for k-Means Clustering"
+      },
+      "color_brightness_analysis": {
+        "plugin_name": "Video Brightness",
+        "plugin_description": "This plugin computes the brightness of frames within the video. It can reveal darker and brighter content that can, for example, reveal the daytime of a scene.",
+        "timeline_name": "Video Brightness"
+      },
+      "facedetection": {
+        "plugin_name": "Face Detection",
+        "timeline_name": "Faces"
+      },
+      "face_clustering": {
+        "plugin_name": "Face Clustering",
+        "clustering_method_name": "Select a clustering method",
+        "plugin_description": "This plugin automatically performs a clustering algorithm to automatically determine the dominant faces (persons) in the video. Selecting the threshold for clustering is crucial to achieve good results. After performing the clustering, each resulting cluster visible in the tab \"Faces\" should ideally only contain images of the same person. If this is not the case, the threshold needs to be lowered so that fewer images are grouped in the same cluster. <br><br>Note that after performing the clustering, the clusters can be manually adjusted and a person constellation graph can be created in the tab \"Faces\". Moreover, you can create a timeline for a specific person to see when the person is visible in the video.",
+        "threshold": {
+          "hint_left": "More clusters, higher cluster purity",
+          "hint_right": "Less clusters, lower cluster purity"
+        },
+        "max_cluster": {
+          "hint_left": "Less clusters to display",
+          "hint_right": "More clusters to display"
+        },
+        "max_faces": {
+          "hint_left": "Less faces per clusters",
+          "hint_right": "More faces per clusters"
+        },
+        "min_face_height": {
+          "hint_left": "Smaller minimum face height",
+          "hint_right": "Larger minimum face height"
+        }
+      },
+      "faceemotion": {
+        "plugin_name": "Face Emotion Recognition",
+        "plugin_description": "This plugin automaticalyl recognizes the facial expression for each face found in the video. It differentiates between seven basic emotions: Angry, Disgust, Fear, Happy, Sad, Surprise, and Neutral. <br><br> Please note that there can be multiple faces visible at the same time. The timelines created by this plugin show that maximum score for each emotion over all faces visible at the same time.",
+        "timeline_name": "Face Emotions",
+        "fps": "Frames per Second (FPS)",
+        "min_facesize": "Minimum Face Size [px]"
+      },
+      "face_identification": {
+        "plugin_name": "Face Identification with an Example Image",
+        "plugin_description": "This plugin perform a face identification based on an uploaded example image of the person of interest. Please note that the image must be uploaded as a jpg file and that it should only contain the person you are interested in. The plugin might fail, if the face is not detected in your uploaded photo. So, please make sure that the face is clearly and entirely visible. <br><br> To automatically identify the main characters within the video, we recommend using the \"Face Clustering\" plugin.",
+        "timeline_name": "Face Identification",
+        "query_images": "Select query image (jpg format)",
+        "query_images_hint": "*The image should only the person you want to search for in good resolution and quality"
+      },
+      "ocr": {
+        "plugin_name": "OCR",
+        "timeline_name": "OCR",
+        "search_term": "Search Term"
+      },
+      "facesize": {
+        "plugin_name": "Face Size Analysis",
+        "timeline_name": "Face Size"
+      },
+      "place_clustering": {
+        "plugin_name": "Place Clustering",
+        "plugin_description": "This plugin automatically performs a clustering algorithm to automatically determine the dominant places in the video. Selecting the threshold for clustering is crucial to achieve good results. After performing the clustering, each resulting cluster visible in the tab \"Places\" should ideally only contain images of the same place. If this is not the case, the threshold needs to be lowered so that fewer images are grouped in the same cluster. <br><br>Note that after performing the clustering, the clusters can be manually adjusted and a constellation graph can be created. Moreover, you can create a timeline for a specific place to see when the place is visible in the video.",
+        "encoder_name": "Select an image encoder",
+        "clustering_method_name": "Select a clustering method",
+        "threshold": {
+          "hint_left": "More clusters, higher cluster purity",
+          "hint_right": "Less clusters, lower cluster purity"
+        },
+        "max_cluster": {
+          "hint_left": "Less clusters to display",
+          "hint_right": "More clusters to display"
+        }
+      },
+      "place_identification": {
+        "plugin_name": "Place Identification"
+      },
+      "places_classification": {
+        "plugin_name": "Place Recognition",
+        "plugin_description": "This plugin uses a model trained on the <a href=\"http://places2.csail.mit.edu/\">Places365 dataset</a> to identify places within the video in three hierarchy levels with 3, 16, and 365 place categories. The first hierarchy level contains the places: indoor, outdoor natural, and outdoor man-made. The set of place categories in the other levels can be found <a href=\"https://docs.google.com/spreadsheets/d/1H7ADoEIGgbF_eXh9kcJjCs5j_r3VJwke4nebhkdzksg/edit#gid=142478777\">here</a>.",
+        "timeline_name": "Places"
+      },
+      "shot_detection": {
+        "plugin_name": "Shot Boundary Detection",
+        "plugin_description": "This plugin automatically detects shots boundaries within the video using a deep learning model. You can create or merge cuts by right-clicking on the resulting timeline.",
+        "timeline_name": "Shots"
+      },
+      "shot_density": {
+        "plugin_name": "Shot Density",
+        "plugin_description": "This plugin predicts the density of the shots within a video. In this way, you can differentiate between slow and fast-paced scenes. The computation is performed based on a selected timeline, e.g., the timeline that is created by the \"Shot Boundary Detection\" plugin.",
+        "timeline_name": "Shot Density",
+        "input_timeline": "Select Timeline",
+        "kernel": "Gaussian",
+        "bandwidth": "Bandwidth"
+      },
+      "shot_scalar_annotation": {
+        "plugin_name": "Scalar Shot Annotation",
+        "plugin_description": "This plugin annotates shots based on a selected shot timeline with the average value of a timeline with scalar values. This plugin can be primarily used to import information created within TIB-AV-A to <a href=\"https://archive.mpi.nl/tla/elan\">ELAN</a>.",
+        "timeline_name": "Scalar Shot Annotation"
+      },
+      "shot_type_classification": {
+        "plugin_name": "Shot Size Classification",
+        "plugin_description": "This plugin predicts the shot sizes within the video based on a deep learning model. It differentiates between five shots sizes: Extreme Close-Up, Close-Up, Medium Shot, Full Shot, and Long Shot. <br><br>By selecting a timeline that contains shots, e.g., the timeline that is created by the \"Shot Boundary Detection\" plugin, each shot will be automatically labeled by its dominant shot size.",
+        "timeline_name": "Shot Sizes"
+      },
+      "thumbnail": {
+        "plugin_name": "Thumbnail Generation",
+        "plugin_description": "This plugin creates thumbnails for the video that are used in the tab \"Shots\". The plugin is automatically performed once a video is uploaded. Please only perform it again if the thumbnails appear to be missing."
+      },
+      "invert": {
+        "plugin_name": "Invert Timeline",
+        "plugin_description": "Inverts a timeline by calculating 1-y. If the original timeline was greater than 1 or less than 0, the values are normalized to [0,1] beforehand.",
+        "timeline_name": "Inverted Timeline"
+      }
+    },
+    "shortcut": {
+      "title": "Shortcuts",
+      "annotation": "Annotation",
+      "shortcut": "Shortcut",
+      "create": "Create",
+      "update": "Update",
+      "close": "Close"
+    },
+    "timeline": {
+      "export_result": {
+        "link": "Export Data",
+        "close": "Close",
+        "title": "Export Timeline Data",
+        "export": "Export",
+        "csv": {
+          "export_name": "CSV"
+        }
+      },
+      "menu": {
+        "title": "Options"
+      },
+      "create": {
+        "title": "Create Timeline",
+        "name": "Timeline Name",
+        "submit": "Create",
+        "close": "Close"
+      },
+      "import": {
+        "title": "Import Timeline",
+        "eaf": "Import from ELAN .eaf file",
+        "update": "Import",
+        "close": "Close"
+      },
+      "duplicate": {
+        "title": "Duplicate Timeline",
+        "link": "Duplicate",
+        "name": "Timeline Name",
+        "includeannotations": "Duplicate with annotations?",
+        "update": "Duplicate",
+        "close": "Close"
+      },
+      "rename": {
+        "title": "Rename Timeline",
+        "link": "Rename",
+        "name": "Timeline Name",
+        "update": "Rename",
+        "close": "Close"
+      },
+      "visualization": {
+        "title": "Change Visualization",
+        "link": "Visualization",
+        "name": "Timeline Name",
+        "update": "OK",
+        "close": "Close",
+        "description": "The color map of the timeline can be changed to one of the following maps:",
+        "colormap_inverse": "Invert color"
+      },
+      "delete": {
+        "title": "Delete Timeline",
+        "link": "Delete",
+        "question": "Are you sure that you want to delete this timeline?",
+        "yes": "Yes",
+        "no": "No"
+      }
+    },
+    "cluster_edit": {
+      "move_new": "Move to new Cluster",
+      "move": "Move",
+      "new_cluster": "New Cluster",
+      "move_existing": "Move to existing Cluster"
+    }
+  },
+  "user": {
+    "name": "Username",
+    "password": "Password",
+    "email": "E-Mail",
+    "menu": {
+      "title": "Account",
+      "joined": "Joined {n_days} days ago"
+    },
+    "login": {
+      "title": "Login",
+      "text": "Don't have an account?",
+      "rules": {
+        "min": "Min. 5 characters.",
+        "max": "Max. 50 characters."
+      }
+    },
+    "logout": {
+      "title": "Logout"
+    },
+    "register": {
+      "title": "Register",
+      "rules": {
+        "min": "Min. 5 characters.",
+        "max": "Max. 50 characters."
+      }
+    }
+  }
+}

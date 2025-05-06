@@ -1,0 +1,13 @@
+[project]
+name = "interface"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "matthias springstein", email = "matthias.springstein@gmail.com" },
+]
+requires-python = ">=3.12"
+dependencies = ["grpcio>=1.70.0", "protobuf>=5.29.3"]
+
+[tool.uv]
+package = true

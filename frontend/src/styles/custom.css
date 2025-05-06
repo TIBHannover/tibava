@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+.v-input.lang .v-select__selections {
+  color: #457B9D !important;
+}
+
+.theme--light.v-chip,
+.theme--light.v-sheet,
+.theme--light.v-input input,
+.theme--light.v-application,
+.theme--light.v-pagination .v-pagination__item,
+.theme--light.v-expansion-panels .v-expansion-panel,
+.theme--light.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled),
+.v-main .v-text-field--outlined.v-input--has-state fieldset,
+.v-main .v-text-field--outlined.v-input--is-focused fieldset,
+.v-card.login .v-btn.register,
+.v-banner .v-btn--text:hover .v-icon,
+.vis-button:after {
+  color: #1D3557 !important;
+}

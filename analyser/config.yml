@@ -1,0 +1,15 @@
+data:
+  data_dir: /data
+  cache:
+    type: valkey
+    params:
+      db: 1
+      host: valkey
+      port: 6380
+      tag: analyser
+inference:
+  type: ray
+  params:
+    host: inference_ray
+    port: 8000
+    status_port: 52365

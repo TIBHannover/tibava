@@ -1,0 +1,771 @@
+proxy_location: EveryNode
+http_options:
+  host: 0.0.0.0
+  port: 8000
+
+applications:
+  - name: video_to_audio
+    route_prefix: /video_to_audio
+    import_path: inference_ray.main:app_builder
+    args:
+      model: video_to_audio
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - requests==2.26.0
+  - name: audio_amp_analysis
+    route_prefix: /audio_amp_analysis
+    import_path: inference_ray.main:app_builder
+    args:
+      model: audio_amp_analysis
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - librosa==0.10.1
+  - name: audio_freq_analysis
+    route_prefix: /audio_freq_analysis
+    import_path: inference_ray.main:app_builder
+    args:
+      model: audio_freq_analysis
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - librosa==0.10.1
+  - name: audio_rms_analysis
+    route_prefix: /audio_rms_analysis
+    import_path: inference_ray.main:app_builder
+    args:
+      model: audio_rms_analysis
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - librosa==0.10.1
+  - name: clip_image_embedding
+    route_prefix: /clip_image_embedding
+    import_path: inference_ray.main:app_builder
+    args:
+      model: clip_image_embedding
+      data_path: /data
+      params:
+        model: xlm-roberta-base-ViT-B-32
+        pretrained: laion5b_s13b_b90k
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - "open-clip-torch==2.24.0"
+              - git+https://github.com/SpringsteinM/imageio.git
+              - torch==2.2.0
+              - scikit-learn==1.4.0
+              - transformers==4.37.2
+  - name: clip_text_embedding
+    route_prefix: /clip_text_embedding
+    import_path: inference_ray.main:app_builder
+    args:
+      model: clip_text_embedding
+      data_path: /data
+      params:
+        model: xlm-roberta-base-ViT-B-32
+        pretrained: laion5b_s13b_b90k
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - "open-clip-torch==2.24.0"
+              - git+https://github.com/SpringsteinM/imageio.git
+              - torch==2.2.0
+              - scikit-learn==1.4.0
+              - transformers==4.37.2
+  - name: clip_ontology_probs
+    route_prefix: /clip_ontology_probs
+    import_path: inference_ray.main:app_builder
+    args:
+      model: clip_ontology_probs
+      data_path: /data
+      params:
+        model: xlm-roberta-base-ViT-B-32
+        pretrained: laion5b_s13b_b90k
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - "open-clip-torch==2.24.0"
+              - git+https://github.com/SpringsteinM/imageio.git
+              - torch==2.2.0
+              - scikit-learn==1.4.0
+              - transformers==4.37.2
+  - name: clip_probs
+    route_prefix: /clip_probs
+    import_path: inference_ray.main:app_builder
+    args:
+      model: clip_probs
+      data_path: /data
+      params:
+        model: xlm-roberta-base-ViT-B-32
+        pretrained: laion5b_s13b_b90k
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - "open-clip-torch==2.24.0"
+              - git+https://github.com/SpringsteinM/imageio.git
+              - torch==2.2.0
+              - scikit-learn==1.4.0
+              - transformers==4.37.2
+  - name: color_analyser
+    route_prefix: /color_analyser
+    import_path: inference_ray.main:app_builder
+    args:
+      model: color_analyser
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - scikit-learn==1.4.0
+  - name: color_brightness_analyser
+    route_prefix: /color_brightness_analyser
+    import_path: inference_ray.main:app_builder
+    args:
+      model: color_brightness_analyser
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - scikit-learn==1.4.0
+              - opencv-python-headless==4.9.0.80
+  - name: deepface_emotion
+    route_prefix: /deepface_emotion
+    import_path: inference_ray.main:app_builder
+    args:
+      model: deepface_emotion
+      data_path: /data
+      params:
+        model_path: /models/deepface_emotion/facial_expression_model.onnx
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - scikit-learn==1.4.0
+              - opencv-python-headless==4.9.0.80
+              - onnxruntime-gpu>=1.17.0
+              - onnx>=1.15.0
+  - name: insightface_video_detector_torch
+    route_prefix: /insightface_video_detector_torch
+    import_path: inference_ray.main:app_builder
+    args:
+      model: insightface_video_detector_torch
+      data_path: /data
+      params:
+        model_path: /models/insightface_detector_torch/scrfd_10g_bnkps.pth
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - scikit-learn==1.4.0
+              - opencv-python-headless==4.9.0.80
+              - torch==2.2.0
+  - name: insightface_image_detector_torch
+    route_prefix: /insightface_image_detector_torch
+    import_path: inference_ray.main:app_builder
+    args:
+      model: insightface_image_detector_torch
+      data_path: /data
+      params:
+        model_path: /models/insightface_detector_torch/scrfd_10g_bnkps.pth
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - scikit-learn==1.4.0
+              - opencv-python-headless==4.9.0.80
+              - torch==2.2.0
+  - name: insightface_facesize
+    route_prefix: /insightface_facesize
+    import_path: inference_ray.main:app_builder
+    args:
+      model: insightface_facesize
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - scikit-learn==1.4.0
+  - name: insightface_video_feature_extractor
+    route_prefix: /insightface_video_feature_extractor
+    import_path: inference_ray.main:app_builder
+    args:
+      model: insightface_video_feature_extractor
+      data_path: /data
+      params:
+        model_path: /models/insightface_feature_extraction/w600k_r50.onnx
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - scikit-learn==1.4.0
+              - opencv-python-headless==4.9.0.80
+              - onnxruntime-gpu>=1.17.0
+              - onnx>=1.15.0
+  - name: insightface_image_feature_extractor
+    route_prefix: /insightface_image_feature_extractor
+    import_path: inference_ray.main:app_builder
+    args:
+      model: insightface_image_feature_extractor
+      data_path: /data
+      params:
+        model_path: /models/insightface_feature_extraction/w600k_r50.onnx
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - scikit-learn==1.4.0
+              - opencv-python-headless==4.9.0.80
+              - onnxruntime-gpu>=1.17.0
+              - onnx>=1.15.0
+  - name: min_max_norm
+    route_prefix: /min_max_norm
+    import_path: inference_ray.main:app_builder
+    args:
+      model: min_max_norm
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+  - name: places_classifier
+    route_prefix: /places_classifier
+    import_path: inference_ray.main:app_builder
+    args:
+      model: places_classifier
+      data_path: /data
+      params:
+        model_path: /models/places_classification/resnet50_places365.pt
+        classes_file: /models/places_classification/categories_places365.txt
+        hierarchy_file: /models/places_classification/scene_hierarchy_places365.csv
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - scikit-learn==1.4.0
+              - opencv-python-headless==4.9.0.80
+              - torch==2.2.0
+
+  - name: scalar_threshold
+    route_prefix: /scalar_threshold
+    import_path: inference_ray.main:app_builder
+    args:
+      model: scalar_threshold
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+
+  - name: shot_annotator
+    route_prefix: /shot_annotator
+    import_path: inference_ray.main:app_builder
+    args:
+      model: shot_annotator
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+  - name: shot_density
+    route_prefix: /shot_density
+    import_path: inference_ray.main:app_builder
+    args:
+      model: shot_density
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - scikit-learn==1.4.0
+  - name: shot_scalar_annotator
+    route_prefix: /shot_scalar_annotator
+    import_path: inference_ray.main:app_builder
+    args:
+      model: shot_scalar_annotator
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+  - name: shot_type_classifier
+    route_prefix: /shot_type_classifier
+    import_path: inference_ray.main:app_builder
+    args:
+      model: shot_type_classifier
+      data_path: /data
+      params:
+        model_path: /models/shot_type_classification/shot_type_classifier_e9-s3199_cpu.pt
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - torch==2.2.0
+  - name: thumbnail_generator
+    route_prefix: /thumbnail_generator
+    import_path: inference_ray.main:app_builder
+    args:
+      model: thumbnail_generator
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+
+  - name: transnet_shotdetection
+    route_prefix: /transnet_shotdetection
+    import_path: inference_ray.main:app_builder
+    args:
+      model: transnet_shotdetection
+      data_path: /data
+      params:
+        model_path: /models/transnet_shotdetection/transnet.pt
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - torch==2.2.0
+
+  - name: video_to_video
+    route_prefix: /video_to_video
+    import_path: inference_ray.main:app_builder
+    args:
+      model: video_to_video
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+
+  - name: aggregate_list_scalar_per_time
+    route_prefix: /aggregate_list_scalar_per_time
+    import_path: inference_ray.main:app_builder
+    args:
+      model: aggregate_list_scalar_per_time
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+
+  - name: aggregate_scalar
+    route_prefix: /aggregate_scalar
+    import_path: inference_ray.main:app_builder
+    args:
+      model: aggregate_scalar
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+
+  - name: cosine_similarity
+    route_prefix: /cosine_similarity
+    import_path: inference_ray.main:app_builder
+    args:
+      model: cosine_similarity
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - scipy==1.12.0
+
+  - name: aggregate_scalar_per_time
+    route_prefix: /aggregate_scalar_per_time
+    import_path: inference_ray.main:app_builder
+    args:
+      model: aggregate_scalar_per_time
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+  - name: whisper
+    route_prefix: /whisper
+    import_path: inference_ray.main:app_builder
+    args:
+      model: whisper
+      data_path: /data
+      params:
+        model: openai/whisper-medium
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - librosa==0.10.1
+              - torch==2.2.0
+              - scikit-learn==1.4.0
+              - transformers==4.37.2
+
+  - name: x_clip_video_embedding
+    route_prefix: /x_clip_video_embedding
+    import_path: inference_ray.main:app_builder
+    args:
+      model: x_clip_video_embedding
+      data_path: /data
+      params:
+        model_path: /models/xclip/xclip_16_8_video.onnx
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - scikit-learn==1.4.0
+              - opencv-python-headless==4.9.0.80
+              - onnxruntime-gpu>=1.17.0
+              - onnx>=1.15.0
+              - cuda-python==12.2.0
+              - regex==2023.12.25
+              - ftfy==6.1.3
+  - name: x_clip_text_embedding
+    route_prefix: /x_clip_text_embedding
+    import_path: inference_ray.main:app_builder
+    args:
+      model: x_clip_text_embedding
+      data_path: /data
+      params:
+        model_path: /models/xclip/xclip_16_8_text.onnx
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - scikit-learn==1.4.0
+              - opencv-python-headless==4.9.0.80
+              - onnxruntime-gpu>=1.17.0
+              - onnx>=1.15.0
+              - cuda-python==12.2.0
+              - regex==2023.12.25
+              - ftfy==6.1.3
+  - name: x_clip_probs
+    route_prefix: /x_clip_probs
+    import_path: inference_ray.main:app_builder
+    args:
+      model: x_clip_probs
+      data_path: /data
+      params:
+        text_model_path: /models/xclip/xclip_16_8_text.onnx
+        sim_model_path: /models/xclip/xclip_16_8_sim.onnx
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - scikit-learn==1.4.0
+              - opencv-python-headless==4.9.0.80
+              - onnxruntime-gpu>=1.17.0
+              - onnx>=1.15.0
+              - cuda-python==12.2.0
+              - regex==2023.12.25
+              - ftfy==6.1.3
+  - name: face_clustering
+    route_prefix: /face_clustering
+    import_path: inference_ray.main:app_builder
+    args:
+      model: face_clustering
+      data_path: /data
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - scipy==1.12.0
+  - name: place_clustering
+    route_prefix: /place_clustering
+    import_path: inference_ray.main:app_builder
+    args:
+      model: place_clustering
+      data_path: /data
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - scipy==1.12.0
+  - name: clustering
+    route_prefix: /clustering
+    import_path: inference_ray.main:app_builder
+    args:
+      model: clustering
+      data_path: /data
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - scipy==1.12.0
+  - name: dbscanclustering
+    route_prefix: /dbscanclustering
+    import_path: inference_ray.main:app_builder
+    args:
+      model: dbscanclustering
+      data_path: /data
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - scipy==1.12.0
+              - scikit-learn==1.4.0
+
+  - name: cluster_size_filter
+    route_prefix: /cluster_size_filter
+    import_path: inference_ray.main:app_builder
+    args:
+      model: cluster_size_filter
+      data_path: /data
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+
+  - name: face_size_filter
+    route_prefix: /face_size_filter
+    import_path: inference_ray.main:app_builder
+    args:
+      model: face_size_filter
+      data_path: /data
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+
+  - name: blip_image_embedding
+    route_prefix: /blip_image_embedding
+    import_path: inference_ray.main:app_builder
+    args:
+      model: blip_image_embedding
+      data_path: /data
+      params:
+        model: Salesforce/instructblip-flan-t5-xl
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - git+https://github.com/SpringsteinM/imageio.git
+              - torch==2.2.0
+              - pillow
+              - scikit-learn==1.4.0
+              - transformers==4.37.2
+  - name: blip_vqa
+    route_prefix: /blip_vqa
+    import_path: inference_ray.main:app_builder
+    args:
+      model: blip_vqa
+      data_path: /data
+      params:
+        model: Salesforce/instructblip-flan-t5-xl
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 8
+          runtime_env:
+            uv:
+              - git+https://github.com/SpringsteinM/imageio.git
+              - torch==2.2.0
+              - pillow
+              - scikit-learn==1.4.0
+              - transformers==4.37.2
+  - name: timeline_video_sampler
+    route_prefix: /timeline_video_sampler
+    import_path: inference_ray.main:app_builder
+    args:
+      model: timeline_video_sampler
+      data_path: /data
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 1
+  - name: invert_scalar
+    route_prefix: /invert_scalar
+    import_path: inference_ray.main:app_builder
+    args:
+      model: invert_scalar
+      data_path: /data
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 1
+  - name: ocr_video_detector_onnx
+    route_prefix: /ocr_video_detector_onnx
+    import_path: inference_ray.main:app_builder
+    runtime_env:
+      uv:
+        - "--extra-index-url https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/onnxruntime-cuda-12/pypi/simple/"
+        - scikit-learn
+        - opencv-python-headless
+        - onnxruntime-gpu>=1.17.0
+        - onnx
+        - torch
+        - torchvision
+        - pytorch_lightning
+        - timm
+        - nltk
+    args:
+      model: ocr_video_detector_onnx
+      data_path: /data
+      params:
+        model_path: /models/ocr/yolov7_text_det_dyn_input.onnx
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 1
+        ray_actor_options:
+          num_cpus: 1

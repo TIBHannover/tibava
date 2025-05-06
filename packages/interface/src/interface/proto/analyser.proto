@@ -1,0 +1,208 @@
+syntax = "proto3";
+option java_multiple_files = true;
+
+// python -m grpc_tools.protoc -I=proto --python_out=. --grpc_python_out=.
+// proto/analyser.proto
+
+package tibava.analyser;
+
+service Analyser {
+  rpc list_plugins(ListPluginsRequest) returns (ListPluginsReply);
+  rpc upload_data(stream UploadDataRequest) returns (UploadDataResponse);
+  rpc upload_file(stream UploadFileRequest) returns (UploadFileResponse);
+  rpc download_data(DownloadDataRequest) returns (stream DownloadDataResponse);
+  rpc check_data(CheckDataRequest) returns (CheckDataResponse);
+  rpc run_plugin(RunPluginRequest) returns (RunPluginResponse);
+  rpc get_plugin_status(GetPluginStatusRequest)
+      returns (GetPluginStatusResponse);
+  rpc run_pipeline(RunPipelineRequest) returns (RunPipelineResponse);
+  rpc get_pipeline_status(GetPieplineStatusRequest)
+      returns (GetPieplineStatusResponse);
+}
+
+enum DataType {
+  UNKOWN_TYPE = 0;
+  STRING_TYPE = 1;
+  INT_TYPE = 2;
+  FLOAT_TYPE = 3;
+  BOOL_TYPE = 4;
+}
+
+message PluginInfoParameter {
+  string name = 1;
+  string default = 2;
+  DataType type = 3;
+}
+
+enum PluginDataType {
+  UNKOWN_DATA = 0;
+  VIDEO_DATA = 1;
+  IMAGE_DATA = 2;
+  BBOXES_DATA = 3;
+  AUDIO_DATA = 4;
+  SCALAR_DATA = 5;
+  SHOTS_DATA = 6;
+  IMAGES_DATA = 7;
+  LIST_DATA = 8;
+  RGB_DATA = 9;
+  HIST_DATA = 10;
+  RGB_HIST_DATA = 11;
+  ANNOTATION_DATA = 12;
+  IMAGE_EMBEDDING_DATA = 13;
+  TEXT_EMBEDDING_DATA = 14;
+  KPSS_DATA = 15;
+  FACES_DATA = 16;
+  CONTAINER_DATA = 17;
+  VIDEO_TEMPORAL_EMBEDDING_DATA = 18;
+  STRING_DATA = 19;
+
+  FACE_CLUSTER_DATA = 20;
+  PLACE_CLUSTER_DATA = 21;
+  PLACES_DATA = 22;
+
+  CLUSTER_DATA = 23;
+}
+
+message PluginInfoData {
+  string name = 1;
+  PluginDataType type = 2;
+}
+
+message RunPluginData {
+  string name = 1;
+  string id = 2;
+}
+
+message PluginInfo {
+  string name = 1;
+  string version = 2;
+  repeated PluginInfoParameter parameters = 3;
+  repeated PluginInfoData requires = 4;
+  repeated PluginInfoData provides = 5;
+}
+
+message ListPluginsRequest {}
+message ListPluginsReply { repeated PluginInfo plugins = 1; }
+
+message UploadDataRequest {
+  bytes data_encoded = 1;
+  // PluginDataType type = 2;
+  // string ext = 3;
+  string id = 4;
+}
+
+message UploadDataResponse {
+  string id = 1;
+  bool success = 2;
+  string hash = 3;
+}
+
+message UploadFileRequest {
+  bytes data_encoded = 1;
+  PluginDataType type = 2;
+  string ext = 3;
+  string filename = 4;
+  string id = 5;
+}
+
+message UploadFileResponse {
+  string id = 1;
+  bool success = 2;
+  string hash = 3;
+}
+
+message DownloadDataRequest { string id = 1; }
+
+message DownloadDataResponse {
+  bytes data_encoded = 1;
+  // PluginDataType type = 2;
+  // string ext = 3;
+  string hash = 4;
+  string id = 5;
+}
+
+message CheckDataRequest { string id = 1; }
+message CheckDataResponse {
+  bool exists = 1;
+  string hash = 2;
+}
+
+// Plugin
+
+message PluginParameter {
+  string name = 1;
+  string value = 2;
+  DataType type = 3;
+}
+
+message RunPluginRequest {
+  string plugin = 1;
+  repeated RunPluginData inputs = 2;
+  repeated PluginParameter parameters = 3;
+}
+
+message RunPluginResponse {
+  string id = 1;
+  bool success = 2;
+}
+
+message GetPluginStatusRequest { string id = 1; }
+
+message GetPluginStatusResponse {
+
+  enum Status {
+    UNKNOWN = 0;
+    ERROR = 1;
+    DONE = 2;
+    RUNNING = 3;
+    WAITING = 4;
+  }
+  Status status = 1;
+  repeated RunPluginData outputs = 2;
+  float progress = 3;
+}
+
+// PIPELINE
+
+message RunPipelineData {
+  string symbol = 1;
+  string id = 2;
+}
+
+message PipelineSymbolMap {
+  string name = 1;
+  string symbol = 2;
+}
+
+message PipelinePlugin {
+  string plugin = 1;
+  repeated PipelineSymbolMap inputs = 2;
+  repeated PipelineSymbolMap outputs = 3;
+  repeated PluginParameter parameters = 4;
+}
+
+message RunPipelineRequest {
+  repeated RunPipelineData inputs = 1;
+  repeated PipelinePlugin plugins = 3;
+}
+
+message RunPipelineResponse {
+  string id = 1;
+  bool success = 2;
+}
+
+message GetPieplineStatusRequest { string id = 1; }
+
+message GetPieplineStatusResponse {
+
+  enum Status {
+    UNKNOWN = 0;
+    ERROR = 1;
+    DONE = 2;
+    RUNNING = 3;
+    WAITING = 4;
+  }
+  Status status = 1;
+  repeated RunPipelineData outputs = 2;
+  float progress = 3;
+}

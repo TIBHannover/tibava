@@ -1,0 +1,20 @@
+[project]
+name = "TIB-AV-A"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "packaging>=24.2",
+    "pip>=25.0.1",
+    "protobuf>=5.29.3",
+    "pyyaml>=6.0.2",
+    "requests>=2.32.3",
+    "torch>=2.6.0",
+    "tqdm>=4.67.1",
+    "transformers>=4.48.3",
+    "valkey>=6.1.0",
+]
+
+[tool.uv.workspace]
+members = ["packages/*", "analyser", "backend", "inference_ray"]

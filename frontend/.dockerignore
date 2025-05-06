@@ -1,0 +1,11 @@
+media/
+/src/assets/Crash_Course_Engineering_Preview_-_English.mp4
+/src/assets/Electronic_Computing__Crash_Course_Computer_Science_2_-_English_csyt.mp4
+**/.idea
+**/.gitignore
+**/docker-compose*
+**/Dockerfile*
+**/node_modules
+**/npm-debug.log
+build
+README.md

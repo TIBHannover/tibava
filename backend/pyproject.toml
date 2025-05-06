@@ -1,0 +1,36 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "imageio[ffmpeg,pyav]>=2.37.0",
+    "interface",
+    "data",
+    "analyser",
+    "grpcio>=1.70.0",
+    "protobuf>=5.29.3",
+    "django>=5.1.6",
+    "celery[redis]>=5.4.0",
+    "gunicorn>=23.0.0",
+    "valkey>=6.1.0",
+    "psycopg2-binary>=2.9.10",
+    "djangorestframework>=3.15.2",
+    "requests>=2.32.3",
+    "msgpack>=1.1.0",
+    "wand>=0.6.13",
+    "pymemcache>=4.0.0",
+    "django-cors-headers>=4.7.0",
+    "pyyaml>=6.0.2",
+    "pympi-ling>=1.70.2",
+    "pandas>=2.2.3",
+]
+
+[tool.uv]
+package = true
+
+[tool.uv.sources]
+interface = { workspace = true }
+data = { workspace = true }
+analyser = { workspace = true }

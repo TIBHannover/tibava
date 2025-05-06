@@ -1,0 +1,20 @@
+# For more information, please refer to https://aka.ms/vscode-docker-python
+Bootstrap: docker
+From: pytorch/pytorch:2.6.0-cuda12.6-cudnn9-runtime
+
+%post
+    DEBIAN_FRONTEND=noninteractive apt update --fix-missing -y
+    DEBIAN_FRONTEND=noninteractive apt upgrade -y 
+    DEBIAN_FRONTEND=noninteractive apt install python3-pip wget git libsndfile1-dev python3-numba python3-opencv python3-numpy ffmpeg -y
+
+    python3 -m pip install "av==11.0.0"
+    python3 -m pip install git+https://github.com/SpringsteinM/imageio.git --ignore-installed
+    python3 -m pip install "imageio[pyav]"
+    python3 -m pip install "msgpack==1.0.7"
+    python3 -m pip install PyYAML
+    python3 -m pip install "valkey==6.1.0" 
+    python3 -m pip install "grpcio==1.47.0"
+    python3 -m pip install "grpcio-tools==1.47.0"
+    python3 -m pip install "msgpack-numpy==0.4.8"
+    python3 -m pip install "librosa==0.10.1" 
+

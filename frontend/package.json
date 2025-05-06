@@ -1,0 +1,44 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@mdi/font": "^6.5.95",
+    "@vue/composition-api": "^1.6.2",
+    "axios": "^0.24.0",
+    "core-js": "^3.6.5",
+    "d3": "^7.6.1",
+    "d3-cloud": "^1.2.5",
+    "d3-interpolate": "^3.0.1",
+    "google-palette": "^1.1.0",
+    "paper": "^0.12.15",
+    "pinia": "^2.0.14",
+    "pinia-plugin-persistedstate": "^1.6.1",
+    "pixi-filters": "^4.1.6",
+    "pixi.js": "^6.2.2",
+    "plotly.js": "^2.24.3",
+    "stopword": "^2.0.8",
+    "vis": "^4.21.0-EOL",
+    "vis-network": "^9.1.8",
+    "vue": "^2.6.11",
+    "vue-draggable-nested-tree": "^3.0.0-beta2",
+    "vue-i18n": "^8.26.8",
+    "vue-router": "^3.5.3",
+    "vuetify": "^2.6.2"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
