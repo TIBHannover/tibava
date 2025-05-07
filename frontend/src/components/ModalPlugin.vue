@@ -175,7 +175,92 @@ export default {
               icon: "mdi-waveform",
               plugin: "whisper",
               id: 104,
-              parameters: [],
+              parameters: [
+                {
+                  field: "text_field",
+                  name: "timeline",
+                  value: this.$t("modal.plugin.whisper.timeline_name"),
+                  text: this.$t("modal.plugin.timeline_name"),
+                },
+              ],
+              optional_parameters: [],
+            },
+            {
+              name: this.$t("modal.plugin.whisper_x.plugin_name"),
+              description: this.$t("modal.plugin.whisper_x.plugin_description"),
+              icon: "mdi-waveform",
+              plugin: "whisper_x",
+              id: 105,
+              parameters: [
+                {
+                  field: "text_field",
+                  name: "timeline",
+                  value: this.$t("modal.plugin.whisper_x.timeline_name"),
+                  text: this.$t("modal.plugin.timeline_name"),
+                },
+              ],
+              optional_parameters: [
+                {
+                  field: "text_field",
+                  name: "language_code",
+                  value: "none", // TODO should be no value (currently then no task is started)
+                  text: this.$t("modal.plugin.whisper_x.language_code_name") + ` (${this.$t("modal.plugin.whisper_x.language_code_hint")})`,
+                },
+              ],
+            },
+            {
+              name: this.$t("modal.plugin.audio_emotion.plugin_name"),
+              description: this.$t("modal.plugin.audio_emotion.plugin_description"),
+              icon: "mdi-waveform",
+              plugin: "audio_emotion",
+              id: 106,
+              parameters: [
+                {
+                  field: "text_field",
+                  name: "timeline",
+                  value: this.$t("modal.plugin.audio_emotion.timeline_name"),
+                  text: this.$t("modal.plugin.timeline_name"),
+                },
+              ],
+              optional_parameters: [],
+            },
+            {
+              name: this.$t("modal.plugin.audio_gender.plugin_name"),
+              description: this.$t("modal.plugin.audio_gender.plugin_description"),
+              icon: "mdi-waveform",
+              plugin: "audio_gender",
+              id: 107,
+              parameters: [
+                {
+                  field: "text_field",
+                  name: "timeline",
+                  value: this.$t("modal.plugin.audio_gender.timeline_name"),
+                  text: this.$t("modal.plugin.timeline_name"),
+                },
+              ],
+              optional_parameters: [],
+            },
+            {
+              name: this.$t("modal.plugin.audio_classification.plugin_name"),
+              description: this.$t("modal.plugin.audio_classification.plugin_description"),
+              icon: "mdi-waveform",
+              plugin: "audio_classification",
+              id: 108,
+              parameters: [
+                {
+                  field: "text_field",
+                  name: "timeline",
+                  value: this.$t("modal.plugin.audio_classification.timeline_name"),
+                  text: this.$t("modal.plugin.timeline_name"),
+                },
+                {
+                  field: "select_options",
+                  text: this.$t("modal.plugin.audio_classification.segmentation_selector_description"),
+                  items: ["Shot", "Speaker"],
+                  value: "Shot",
+                  name: "segment_type",
+                },
+              ],
               optional_parameters: [],
             },
           ],
@@ -332,6 +417,38 @@ export default {
                   name: "min_facesize",
                   text: this.$t("modal.plugin.faceemotion.min_facesize"),
                   disabled: true,
+                },
+              ],
+            },
+            {
+              name: this.$t("modal.plugin.active_speaker_detection.plugin_name"),
+              description: this.$t("modal.plugin.active_speaker_detection.plugin_description"),
+              icon: "mdi-waveform",
+              plugin: "active_speaker_detection",
+              id: 204,
+              parameters: [
+                {
+                  field: "text_field",
+                  name: "timeline",
+                  value: this.$t("modal.plugin.active_speaker_detection.timeline_name"),
+                  text: this.$t("modal.plugin.timeline_name"),
+                },
+                {
+                  field: "select_timeline",
+                  name: "shot_timeline_id",
+                  text: this.$t("modal.plugin.shot_timeline_name"),
+                  hint: this.$t("modal.plugin.shot_timeline_hint"),
+                },
+              ],
+              optional_parameters: [
+                {
+                  field: "slider",
+                  min: 1,
+                  max: 30,
+                  value: 25,
+                  step: 1,
+                  name: "fps",
+                  text: this.$t("modal.plugin.fps"),
                 },
               ],
             },
@@ -863,6 +980,116 @@ export default {
               optional_parameters: [],
             },
             {
+              name: this.$t("modal.plugin.shot_angle.plugin_name"),
+              description: this.$t("modal.plugin.shot_angle.plugin_description"),
+              icon: "mdi-image-multiple",
+              plugin: "shot_angle",
+              id: 506,
+              parameters: [
+                {
+                  field: "text_field",
+                  name: "timeline",
+                  value: this.$t(
+                    "modal.plugin.shot_angle.timeline_name"
+                  ),
+                  text: this.$t("modal.plugin.timeline_name"),
+                },
+                {
+                  field: "select_timeline",
+                  name: "shot_timeline_id",
+                  text: this.$t("modal.plugin.shot_timeline_name"),
+                  hint: this.$t("modal.plugin.shot_timeline_hint"),
+                },
+              ],
+              optional_parameters: [
+                {
+                  field: "slider",
+                  min: 1,
+                  max: 10,
+                  value: 2,
+                  step: 1,
+                  name: "fps",
+                  text: this.$t("modal.plugin.fps"),
+                },
+              ],
+            },
+            {
+              name: this.$t("modal.plugin.shot_level.plugin_name"),
+              description: this.$t("modal.plugin.shot_level.plugin_description"),
+              icon: "mdi-image-multiple",
+              plugin: "shot_level",
+              id: 507,
+              parameters: [
+                {
+                  field: "text_field",
+                  name: "timeline",
+                  value: this.$t(
+                    "modal.plugin.shot_level.timeline_name"
+                  ),
+                  text: this.$t("modal.plugin.timeline_name"),
+                },
+                {
+                  field: "select_timeline",
+                  name: "shot_timeline_id",
+                  text: this.$t("modal.plugin.shot_timeline_name"),
+                  hint: this.$t("modal.plugin.shot_timeline_hint"),
+                },
+              ],
+              optional_parameters: [
+                {
+                  field: "slider",
+                  min: 1,
+                  max: 10,
+                  value: 2,
+                  step: 1,
+                  name: "fps",
+                  text: this.$t("modal.plugin.fps"),
+                },
+              ],
+            },
+            {
+              name: this.$t("modal.plugin.shot_scale_and_movement.plugin_name"),
+              description: this.$t("modal.plugin.shot_scale_and_movement.plugin_description"),
+              icon: "mdi-image-multiple",
+              plugin: "shot_scale_and_movement",
+              id: 508,
+              parameters: [
+                {
+                  field: "text_field",
+                  name: "timeline_scale",
+                  value: this.$t(
+                    "modal.plugin.shot_scale_and_movement.timeline_name_scale"
+                  ),
+                  text: this.$t("modal.plugin.timeline_name"),
+                },
+                {
+                  field: "text_field",
+                  name: "timeline_movement",
+                  value: this.$t(
+                    "modal.plugin.shot_scale_and_movement.timeline_name_movement"
+                  ),
+                  text: this.$t("modal.plugin.timeline_name"),
+                },
+                {
+                  field: "select_timeline",
+                  name: "shot_timeline_id",
+                  text: this.$t("modal.plugin.shot_timeline_name"),
+                  hint: this.$t("modal.plugin.shot_timeline_hint"),
+                },
+              ],
+              optional_parameters: [
+                {
+                  field: "slider",
+                  min: 5,
+                  max: 60,
+                  value: 25,
+                  step: 5,
+                  name: "fps",
+                  text: this.$t("modal.plugin.fps"),
+                },
+              ],
+            },
+            {
               name: this.$t("modal.plugin.thumbnail.plugin_name"),
               description: this.$t("modal.plugin.thumbnail.plugin_description"),
               icon: "mdi-image-multiple",
@@ -934,6 +1161,73 @@ export default {
             },
           ],
         },
+        {
+          id: 7,
+          name: this.$t("modal.plugin.groups.text"),
+          children: [
+            {
+              name: this.$t("modal.plugin.text_ner.plugin_name"),
+              description: this.$t("modal.plugin.text_ner.plugin_description"),
+              icon: "mdi-translate",
+              plugin: "text_ner",
+              id: 701,
+              parameters: [
+                {
+                  field: "text_field",
+                  name: "timeline",
+                  value: this.$t("modal.plugin.text_ner.timeline_name"),
+                  text: this.$t("modal.plugin.timeline_name"),
+                },
+              ],
+              optional_parameters: []
+            },
+            {
+              name: this.$t("modal.plugin.text_pos.plugin_name"),
+              description: this.$t("modal.plugin.text_pos.plugin_description"),
+              icon: "mdi-translate",
+              plugin: "text_pos",
+              id: 702,
+              parameters: [
+                {
+                  field: "text_field",
+                  name: "timeline",
+                  value: this.$t("modal.plugin.text_pos.timeline_name"),
+                  text: this.$t("modal.plugin.timeline_name"),
+                },
+                {
+                  field: "text_field",
+                  name: "language_code",
+                  value: "de",
+                  text: this.$t("modal.plugin.text_pos.language_code_name")
+                },
+              ],
+              optional_parameters: []
+            },
+            {
+              name: this.$t("modal.plugin.text_sentiment.plugin_name"),
+              description: this.$t("modal.plugin.text_sentiment.plugin_description"),
+              icon: "mdi-translate",
+              plugin: "text_sentiment",
+              id: 703,
+              parameters: [
+                {
+                  field: "text_field",
+                  name: "timeline",
+                  value: this.$t("modal.plugin.text_sentiment.timeline_name"),
+                  text: this.$t("modal.plugin.timeline_name"),
+                },
+                {
+                  field: "select_options",
+                  text: this.$t("modal.plugin.text_sentiment.model_selector_description"),
+                  items: ["German-News", "German-General", "Multilingual"],
+                  value: "Multilingual",
+                  name: "model_type",
+                },
+              ],
+              optional_parameters: []
+            }
+          ]
+        }
       ],
     };
   },

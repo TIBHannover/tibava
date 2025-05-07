@@ -116,6 +116,7 @@
       },
       "groups": {
         "audio": "Audio Analysis",
+        "text": "Text Analysis",
         "aggregation": "Timeline Aggregation",
         "color": "Color Analysis",
         "face": "Face Analysis",
@@ -165,7 +166,36 @@
       },
       "whisper": {
         "plugin_name": "Speech Recognition (Whisper)",
-        "plugin_description": "This plugin uses <a href=\"https://openai.com/research/whisper\">OpenAI's Whisper model</a> to automatically provide a transcription of the spoken language in the video. It supports more than 100 languages. A list of supported languages can be found <a href=\"https://github.com/openai/whisper?tab=readme-ov-file#available-models-and-languages\">here</a>. <br><br> After performing the plugin, the transcript can be found in the tab \"Transcript\" and you can search for words within it."
+        "plugin_description": "This plugin uses <a href=\"https://openai.com/research/whisper\">OpenAI's Whisper model</a> to automatically provide a transcription of the spoken language in the video. It supports more than 100 languages. A list of supported languages can be found <a href=\"https://github.com/openai/whisper?tab=readme-ov-file#available-models-and-languages\">here</a>. <br><br> After performing the plugin, the transcript can be found in the tab \"Transcript\" and you can search for words within it.",
+        "timeline_name": "Whisper Transcript"
+      },
+      "whisper_x": {
+        "plugin_name": "Speech and Speaker Recognition (WhisperX)",
+        "plugin_description": "This plugin uses a <a href=\"https://github.com/m-bain/whisperX\">faster version of OpenAI's Whisper model with speaker diarization</a> to automatically provide a transcription of the spoken language in the video (differentiated by the speaker). It supports more than 100 languages. A list of supported languages can be found <a href=\"https://github.com/openai/whisper?tab=readme-ov-file#available-models-and-languages\">here</a>.",
+        "language_code_name": "Language Code",
+        "language_code_hint": "If not provided, the spoken language is detected automatically",
+        "timeline_name": "WhisperX Transcript"
+      },
+      "audio_emotion": {
+        "plugin_name": "Audio Emotion Classification",
+        "timeline_name": "Audio Emotion Classification",
+        "plugin_description": "This plugin detects emotions from audio segments (retrieved with WisperX)."
+      },
+      "audio_gender": {
+        "plugin_name": "Audio Gender Classification",
+        "timeline_name": "Audio Gender Classification",
+        "plugin_description": "This plugin detects the gender from audio/speech segments (retrieved with WisperX)."
+      },
+      "active_speaker_detection": {
+        "plugin_name": "Active Speaker Detection",
+        "plugin_description": "This plugin does active speaker detection based on audio and tracked face data.",
+        "timeline_name": "Active Speaker Detection"
+      },
+      "audio_classification": {
+        "plugin_name": "Audio Classification",
+        "plugin_description": "This plugin classifies sounds from video segments.",
+        "timeline_name": "Audio Classification",
+        "segmentation_selector_description": "Select the type of segments you want to use to classify the audio fragments:"
       },
       "audio_frequency": {
         "plugin_name": "Audio Spectrogram",
@@ -174,6 +204,25 @@
         "sr": "Sampling Rate",
         "n_fft": "Length of the FFT (Fast Fourier Transform) window"
       },
+
+      "text_ner": {
+        "plugin_name": "Named Entity Recognition and Disambiguation (NERD)",
+        "timeline_name": "Named Entities",
+        "plugin_description": "This plugin performs Named Entity Recognition (NER) and subsequently Entity Linking / Disambiguation based on the speaker segments of WhisperX."
+      },
+      "text_pos": {
+        "plugin_name": "PoS Tagging",
+        "timeline_name": "PoS Tagging",
+        "plugin_description": "This plugin performs PoS Tagging based on the speaker segments of WhisperX. For each speaker segment the count of each PoS-Tag is shown.",
+        "language_code_name": "Language Code"
+      },
+      "text_sentiment": {
+        "plugin_name": "Sentiment Analysis",
+        "timeline_name": "Speech Sentiment",
+        "plugin_description": "This plugin performs sentiment analysis based on the speaker segments of WhisperX. The predicted label is shown as well as the predicted probabilities for each sentiment.",
+        "model_selector_description": "Model Type"
+      },
+
       "blip": {
         "plugin_name": "Visual Question Answering (InstructBLIP)",
         "plugin_description": "This plugin uses the large vision language model <a href=\"https://arxiv.org/abs/2305.06500\">InstructBLIP</a> that is similar to GPT-4 to perform question answering over the video. It can be used for various purposes, for example, to automatically find concepts within the video. Here are some examples: <br><br> <em>Does this image show a car? Please answer with yes or no! <br> Does this image show at least three persons? Please answer with yes or no! <br> Is this photo taken in a restaurant? Please answer with yes or no!</em>",
@@ -311,6 +360,22 @@
       "thumbnail": {
         "plugin_name": "Thumbnail Generation",
         "plugin_description": "This plugin creates thumbnails for the video that are used in the tab \"Shots\". The plugin is automatically performed once a video is uploaded. Please only perform it again if the thumbnails appear to be missing."
+      },
+      "shot_angle": {
+        "plugin_name": "Shot Angle Classification",
+        "plugin_description": "This plugin classifies the angle of each shot within the video based on a deep learning model. All shots will be automatically labeled by its dominant shot angle. Possible labels: Overhead, High, Neutral, Low, Dutch",
+        "timeline_name": "Shot Angles"
+      },
+      "shot_level": {
+        "plugin_name": "Shot Level Classification",
+        "plugin_description": "This plugin classifies the level of each shot within the video based on a deep learning model. All shots will be automatically labeled by its dominant shot level. Possible labels: Aerial, Eye, Shoulder, Hip, Knee, Ground",
+        "timeline_name": "Shot Levels"
+      },
+      "shot_scale_and_movement": {
+        "plugin_name": "Shot Scale and Movement Classification",
+        "plugin_description": "This plugin classifies scale/size and movement of each shot within the video based on a deep learning model. All shots will be automatically labeled by its dominant shot scale/size and movement. Possible scale labels: Extreme Close-Up, Close-Up, Medium, Full, Long; Possible movement labels: Static, Motion, Push, Pull",
+        "timeline_name_scale": "Shot Scales",
+        "timeline_name_movement": "Shot Movements"
       },
       "invert": {
         "plugin_name": "Invert Timeline",

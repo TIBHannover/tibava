@@ -769,3 +769,224 @@ applications:
           min_replicas: 1
         ray_actor_options:
           num_cpus: 1
+
+  - name: face_tracking
+    route_prefix: /face_tracking
+    import_path: main:app_builder
+    args:
+      model: face_tracking
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+            - scipy
+            - opencv-python-headless
+  - name: shot_angle
+    route_prefix: /shot_angle
+    import_path: main:app_builder
+    args:
+      model: shot_angle
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - torch>=2.6.0
+              - torchvision
+              - transformers
+  - name: shot_level
+    route_prefix: /shot_level
+    import_path: main:app_builder
+    args:
+      model: shot_level
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - torch>=2.6.0
+              - torchvision
+              - transformers
+  - name: shot_scale_and_movement
+    route_prefix: /shot_scale_and_movement
+    import_path: main:app_builder
+    args:
+      model: shot_scale_and_movement
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - torch>=2.6.0
+              - torchvision
+              - transformers
+  - name: whisper_x
+    route_prefix: /whisper_x
+    import_path: main:app_builder
+    args:
+      model: whisper_x
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - git+https://github.com/m-bain/whisperx.git
+              - librosa==0.10.1
+              - torch>=2.6.0
+              - scikit-learn>=1.6.1
+              - transformers>=4.48.3
+  - name: audio_emotion
+    route_prefix: /audio_emotion
+    import_path: main:app_builder
+    args:
+      model: audio_emotion
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - librosa==0.10.1
+              - torch>=2.6.0
+              - transformers>=4.48.3
+              - speechbrain==1.0.2
+  - name: audio_gender
+    route_prefix: /audio_gender
+    import_path: main:app_builder
+    args:
+      model: audio_gender
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - librosa==0.10.1
+              - torch>=2.6.0
+              - transformers>=4.48.3
+              - speechbrain==1.0.2
+  - name: active_speaker_detection
+    route_prefix: /active_speaker_detection
+    import_path: main:app_builder
+    args:
+      model: active_speaker_detection
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+            - librosa==0.10.1
+            - torch>=2.6.0
+            - python_speech_features
+            - scipy
+            - opencv-python-headless
+            - pandas
+
+  - name: audio_classification
+    route_prefix: /audio_classification
+    import_path: main:app_builder
+    args:
+      model: audio_classification
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - librosa==0.10.1
+              - torch>=2.6.0
+              - torchaudio # TODO specify version
+  - name: text_ner
+    route_prefix: /text_ner
+    import_path: main:app_builder
+    args:
+      model: text_ner
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - requests==2.28.2
+              - stanza==1.9.2
+  - name: text_pos
+    route_prefix: /text_pos
+    import_path: main:app_builder
+    args:
+      model: text_pos
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - stanza==1.9.2
+  - name: text_sentiment
+    route_prefix: /text_sentiment
+    import_path: main:app_builder
+    args:
+      model: text_sentiment
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - torch>=2.6.0
+              - transformers>=4.48.3
+              - germansentiment==1.1.0

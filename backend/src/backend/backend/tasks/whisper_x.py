@@ -1,11 +1,10 @@
-from typing import Dict, List
+from typing import Dict
 import logging
 
 from ..utils.analyser_client import TaskAnalyserClient
 
-from backend.models import PluginRun, PluginRunResult, Video, Timeline
+from backend.models import PluginRun, Video, Timeline
 from backend.plugin_manager import PluginManager
-from backend.utils import media_path_to_video
 
 from backend.utils.parser import Parser
 from backend.utils.task import Task
@@ -15,7 +14,6 @@ from backend.models import (
     Annotation,
     AnnotationCategory,
     PluginRun,
-    PluginRunResult,
     TimelineSegmentAnnotation,
     Video,
     TibavaUser,
@@ -29,8 +27,16 @@ from django.conf import settings
 @PluginManager.export_parser("whisper_x")
 class WhisperXParser(Parser):
     def __init__(self):
+        self.valid_parameter = {
+            "timeline": {"parser": str, "default": "WhisperX Transcript"},
+            "language_code": {"parser": str, "default": None},
+        }
 
-        self.valid_parameter = {}
+    def __call__(self, parameters: Dict = None, **kwargs) -> Dict:
+        parameters = super().__call__(parameters, **kwargs)
+        if parameters["language_code"] == "none":
+            parameters["language_code"] = None
+        return parameters
 
 
 @PluginManager.export_plugin("whisper_x")
@@ -51,7 +57,6 @@ class WhisperX(Task):
         dry_run: bool = False,
         **kwargs,
     ):
-
         manager = DataManager(self.config["output_path"])
         client = TaskAnalyserClient(
             host=self.config["analyser_host"],
@@ -78,6 +83,7 @@ class WhisperX(Task):
         result = self.run_analyser(
             client,
             "whisper_x",
+            parameters={"language_code": parameters.get("language_code")},
             inputs={**result[0]},
             downloads=["annotations"],
         )
@@ -94,20 +100,18 @@ class WhisperX(Task):
                 Create a timeline labeled
                 """
                 data.extract_all(manager)
-                parent_timeline = None
-                if len(data.data) > 1:
-                    parent_timeline = Timeline.objects.create(
-                        video=video,
-                        name="WhisperX Transcript",
-                        type=Timeline.TYPE_ANNOTATION,
-                    )
+
+                parent_timeline = Timeline.objects.create(
+                    video=video,
+                    name=parameters["timeline"],
+                    type=Timeline.TYPE_ANNOTATION,
+                )
 
                 category_db, _ = AnnotationCategory.objects.get_or_create(
                     name="Transcript", video=video, owner=user
                 )
                 result_timelines = {}
                 for sub_index, sub_data in data:
-                    print(sub_index, sub_data)
                     with sub_data as sub_data:
                         timeline = Timeline.objects.create(
                             video=video,
@@ -123,7 +127,6 @@ class WhisperX(Task):
                                 end=annotation.end,
                             )
                             for label in annotation.labels:
-                                print(label)
                                 label = str(label)
                                 if len(label) > settings.ANNOTATION_MAX_LENGTH:
                                     label = (
@@ -137,7 +140,7 @@ class WhisperX(Task):
                                     video=video,
                                     category=category_db,
                                     owner=user,
-                                    # color=color,
+                                    color="#EEEEEE",  # white/gray
                                 )
 
                                 TimelineSegmentAnnotation.objects.create(

@@ -11,6 +11,9 @@ from .places_classification import *
 from .shot_density import *
 from .shot_type_classification import *
 from .shotdetection import *
+from .shot_angle import *
+from .shot_level import *
+from .shot_scale_and_movement import *
 from .thumbnail import *
 from .color_brightness_analysis import *
 from .clip import *
@@ -23,4 +26,11 @@ from .place_clustering import *
 from .blip_vqa import *
 from .cluster_to_scalar import *
 from .invert_scalar import *
-from .ocr import *
+from .whisper_x import *
+from .audio_emotion import *
+from .audio_gender import *
+from .active_speaker_detection import *
+from .audio_classification import *
+from .text_ner import *
+from .text_pos import *
+from .text_sentiment import *

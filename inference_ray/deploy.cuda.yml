@@ -74,7 +74,7 @@ applications:
     args:
       model: clip_image_embedding
       data_path: /data
-      params: 
+      params:
         model: xlm-roberta-base-ViT-B-32
         pretrained: laion5b_s13b_b90k
     deployments:
@@ -97,7 +97,7 @@ applications:
     args:
       model: clip_text_embedding
       data_path: /data
-      params: 
+      params:
         model: xlm-roberta-base-ViT-B-32
         pretrained: laion5b_s13b_b90k
     deployments:
@@ -120,7 +120,7 @@ applications:
     args:
       model: clip_ontology_probs
       data_path: /data
-      params: 
+      params:
         model: xlm-roberta-base-ViT-B-32
         pretrained: laion5b_s13b_b90k
     deployments:
@@ -143,7 +143,7 @@ applications:
     args:
       model: clip_probs
       data_path: /data
-      params: 
+      params:
         model: xlm-roberta-base-ViT-B-32
         pretrained: laion5b_s13b_b90k
     deployments:
@@ -199,7 +199,7 @@ applications:
     args:
       model: deepface_emotion
       data_path: /data
-      params: 
+      params:
         model_path: /models/deepface_emotion/facial_expression_model.onnx
     deployments:
       - name: Deployment
@@ -220,7 +220,7 @@ applications:
     args:
       model: insightface_video_detector_torch
       data_path: /data
-      params: 
+      params:
         model_path: /models/insightface_detector_torch/scrfd_10g_bnkps.pth
     deployments:
       - name: Deployment
@@ -240,7 +240,7 @@ applications:
     args:
       model: insightface_image_detector_torch
       data_path: /data
-      params: 
+      params:
         model_path: /models/insightface_detector_torch/scrfd_10g_bnkps.pth
     deployments:
       - name: Deployment
@@ -277,7 +277,7 @@ applications:
     args:
       model: insightface_video_feature_extractor
       data_path: /data
-      params: 
+      params:
         model_path: /models/insightface_feature_extraction/w600k_r50.onnx
     deployments:
       - name: Deployment
@@ -298,7 +298,7 @@ applications:
     args:
       model: insightface_image_feature_extractor
       data_path: /data
-      params: 
+      params:
         model_path: /models/insightface_feature_extraction/w600k_r50.onnx
     deployments:
       - name: Deployment
@@ -331,7 +331,7 @@ applications:
     args:
       model: places_classifier
       data_path: /data
-      params: 
+      params:
         model_path: /models/places_classification/resnet50_places365.pt
         classes_file: /models/places_classification/categories_places365.txt
         hierarchy_file: /models/places_classification/scene_hierarchy_places365.csv
@@ -360,7 +360,7 @@ applications:
         autoscaling_config:
           min_replicas: 0
           max_replicas: 20
-              
+
   - name: shot_annotator
     route_prefix: /shot_annotator
     import_path: main:app_builder
@@ -387,7 +387,7 @@ applications:
           max_replicas: 20
         ray_actor_options:
           runtime_env:
-            uv: 
+            uv:
               - scikit-learn==1.4.0
   - name: shot_scalar_annotator
     route_prefix: /shot_scalar_annotator
@@ -407,7 +407,7 @@ applications:
     args:
       model: shot_type_classifier
       data_path: /data
-      params: 
+      params:
         model_path: /models/shot_type_classification/shot_type_classifier_e9-s3199.pt
     deployments:
       - name: Deployment
@@ -432,14 +432,13 @@ applications:
           min_replicas: 0
           max_replicas: 20
 
-            
   - name: transnet_shotdetection
     route_prefix: /transnet_shotdetection
     import_path: main:app_builder
     args:
       model: transnet_shotdetection
       data_path: /data
-      params: 
+      params:
         model_path: /models/transnet_shotdetection/transnet.pt
     deployments:
       - name: Deployment
@@ -464,7 +463,6 @@ applications:
         autoscaling_config:
           min_replicas: 0
           max_replicas: 20
-
 
   - name: aggregate_list_scalar_per_time
     route_prefix: /aggregate_list_scalar_per_time
@@ -508,7 +506,7 @@ applications:
           runtime_env:
             uv:
               - scipy==1.12.0
-  
+
   - name: aggregate_scalar_per_time
     route_prefix: /aggregate_scalar_per_time
     import_path: main:app_builder
@@ -527,7 +525,7 @@ applications:
     args:
       model: whisper
       data_path: /data
-      params: 
+      params:
         model: openai/whisper-medium
     deployments:
       - name: Deployment
@@ -543,14 +541,13 @@ applications:
               - scikit-learn==1.4.0
               - transformers==4.37.2
 
-
   - name: x_clip_video_embedding
     route_prefix: /x_clip_video_embedding
     import_path: main:app_builder
     args:
       model: x_clip_video_embedding
       data_path: /data
-      params: 
+      params:
         model_path: /models/xclip/xclip_16_8_video.onnx
     deployments:
       - name: Deployment
@@ -574,7 +571,7 @@ applications:
     args:
       model: x_clip_text_embedding
       data_path: /data
-      params: 
+      params:
         model_path: /models/xclip/xclip_16_8_text.onnx
     deployments:
       - name: Deployment
@@ -598,7 +595,7 @@ applications:
     args:
       model: x_clip_probs
       data_path: /data
-      params: 
+      params:
         text_model_path: /models/xclip/xclip_16_8_text.onnx
         sim_model_path: /models/xclip/xclip_16_8_sim.onnx
     deployments:
@@ -632,7 +629,7 @@ applications:
           num_gpus: 0.1
           runtime_env:
             uv:
-              - scipy==1.12.0  
+              - scipy==1.12.0
   - name: place_clustering
     route_prefix: /place_clustering
     import_path: main:app_builder
@@ -648,7 +645,7 @@ applications:
           num_gpus: 0.1
           runtime_env:
             uv:
-              - scipy==1.12.0  
+              - scipy==1.12.0
 
   - name: clustering
     route_prefix: /clustering
@@ -665,7 +662,7 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - scipy==1.12.0  
+              - scipy==1.12.0
   - name: cluster_size_filter
     route_prefix: /cluster_size_filter
     import_path: main:app_builder
@@ -679,7 +676,7 @@ applications:
           max_replicas: 20
         ray_actor_options:
           num_cpus: 2
-           
+
   - name: face_size_filter
     route_prefix: /face_size_filter
     import_path: main:app_builder
@@ -693,15 +690,14 @@ applications:
           max_replicas: 20
         ray_actor_options:
           num_cpus: 2
-                             
-              
+
   - name: blip_image_embedding
     route_prefix: /blip_image_embedding
     import_path: main:app_builder
     args:
       model: blip_image_embedding
       data_path: /data
-      params: 
+      params:
         model: Salesforce/instructblip-flan-t5-xl
     deployments:
       - name: Deployment
@@ -717,17 +713,17 @@ applications:
               - torch==2.2.0
               - pillow
               - scikit-learn==1.4.0
-              - transformers==4.37.2   
-              - accelerate      
+              - transformers==4.37.2
+              - accelerate
               - bitsandbytes
-              - peft   
+              - peft
   - name: blip_vqa
     route_prefix: /blip_vqa
     import_path: main:app_builder
     args:
       model: blip_vqa
       data_path: /data
-      params: 
+      params:
         model: Salesforce/instructblip-flan-t5-xl
     deployments:
       - name: Deployment
@@ -743,10 +739,10 @@ applications:
               - torch==2.2.0
               - pillow
               - scikit-learn==1.4.0
-              - transformers==4.37.2   
-              - accelerate      
+              - transformers==4.37.2
+              - accelerate
               - bitsandbytes
-              - peft   
+              - peft
   - name: timeline_video_sampler
     route_prefix: /timeline_video_sampler
     import_path: main:app_builder
@@ -806,7 +802,7 @@ applications:
     args:
       model: ocr_video_detector_onnx
       data_path: /data
-      params: 
+      params:
         model_path: /models/ocr/yolov7_text_det_dyn_input.onnx
     deployments:
       - name: Deployment
@@ -814,3 +810,224 @@ applications:
           min_replicas: 1
         ray_actor_options:
           num_gpus: 0.2
+
+  - name: face_tracking
+    route_prefix: /face_tracking
+    import_path: main:app_builder
+    args:
+      model: face_tracking
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - scipy
+              - opencv-python-headless
+  - name: shot_angle
+    route_prefix: /shot_angle
+    import_path: main:app_builder
+    args:
+      model: shot_angle
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - torch>=2.6.0
+              - torchvision
+              - transformers
+  - name: shot_level
+    route_prefix: /shot_level
+    import_path: main:app_builder
+    args:
+      model: shot_level
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - torch>=2.6.0
+              - torchvision
+              - transformers
+  - name: shot_scale_and_movement
+    route_prefix: /shot_scale_and_movement
+    import_path: main:app_builder
+    args:
+      model: shot_scale_and_movement
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - torch>=2.6.0
+              - torchvision
+              - transformers
+  - name: whisper_x
+    route_prefix: /whisper_x
+    import_path: main:app_builder
+    args:
+      model: whisper_x
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - git+https://github.com/m-bain/whisperx.git
+              - librosa==0.10.1
+              - torch>=2.6.0
+              - scikit-learn>=1.6.1
+              - transformers>=4.48.3
+  - name: audio_emotion
+    route_prefix: /audio_emotion
+    import_path: main:app_builder
+    args:
+      model: audio_emotion
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - librosa==0.10.1
+              - torch>=2.6.0
+              - transformers>=4.48.3
+              - speechbrain==1.0.2
+  - name: audio_gender
+    route_prefix: /audio_gender
+    import_path: main:app_builder
+    args:
+      model: audio_gender
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - librosa==0.10.1
+              - torch>=2.6.0
+              - transformers>=4.48.3
+              - speechbrain==1.0.2
+  - name: active_speaker_detection
+    route_prefix: /active_speaker_detection
+    import_path: main:app_builder
+    args:
+      model: active_speaker_detection
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - librosa==0.10.1
+              - torch>=2.6.0
+              - python_speech_features
+              - scipy
+              - opencv-python-headless
+              - pandas
+
+  - name: audio_classification
+    route_prefix: /audio_classification
+    import_path: main:app_builder
+    args:
+      model: audio_classification
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - librosa==0.10.1
+              - torch>=2.6.0
+              - torchaudio # TODO specify version
+  - name: text_ner
+    route_prefix: /text_ner
+    import_path: main:app_builder
+    args:
+      model: text_ner
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - requests==2.28.2
+              - stanza==1.9.2
+  - name: text_pos
+    route_prefix: /text_pos
+    import_path: main:app_builder
+    args:
+      model: text_pos
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - stanza==1.9.2
+  - name: text_sentiment
+    route_prefix: /text_sentiment
+    import_path: main:app_builder
+    args:
+      model: text_sentiment
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            pip:
+              - torch>=2.6.0
+              - transformers>=4.48.3
+              - germansentiment==1.1.0

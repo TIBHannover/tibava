@@ -106,6 +106,27 @@ export default {
       if (type === "audio_rms") {
         return this.$t("modal.plugin.audio_rms.plugin_name");
       }
+      if (type === "audio_emotion") {
+        return this.$t("modal.plugin.audio_emotion.plugin_name")
+      }
+      if (type === "audio_gender") {
+        return this.$t("modal.plugin.audio_gender.plugin_name")
+      }
+      if (type === "active_speaker_detection") {
+        return this.$t("modal.plugin.active_speaker_detection.plugin_name")
+      }
+      if (type === "audio_classification") {
+        return this.$t("modal.plugin.audio_classification.plugin_name")
+      }
+      if (type === "text_ner") {
+        return this.$t("modal.plugin.text_ner.plugin_name")
+      }
+      if (type === "text_pos") {
+        return this.$t("modal.plugin.text_pos.plugin_name")
+      }
+      if (type === "text_sentiment") {
+        return this.$t("modal.plugin.text_sentiment.plugin_name")
+      }
       if (type === "clip") {
         return this.$t("modal.plugin.clip.plugin_name");
       }
@@ -151,6 +172,9 @@ export default {
       if (type === "whisper") {
         return this.$t("modal.plugin.whisper.plugin_name");
       }
+      if (type === "whisper_x") {
+        return this.$t("modal.plugin.whisper_x.plugin_name");
+      }
       if (type === "shotdetection") {
         return this.$t("modal.plugin.shot_detection.plugin_name");
       }
@@ -165,6 +189,15 @@ export default {
       }
       if (type === "thumbnail") {
         return this.$t("modal.plugin.thumbnail.plugin_name");
+      }
+      if (type === "shot_angle") {
+        return this.$t("modal.plugin.shot_angle.plugin_name");
+      }
+      if (type === "shot_level") {
+        return this.$t("modal.plugin.shot_level.plugin_name");
+      }
+      if (type === "shot_scale_and_movement") {
+        return this.$t("modal.plugin.shot_scale_and_movement.plugin_name");
       }
       return type;
     },
