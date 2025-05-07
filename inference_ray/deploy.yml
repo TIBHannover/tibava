@@ -539,9 +539,9 @@ applications:
               - opencv-python-headless>=4.11.0.86
               - onnxruntime-gpu>=1.17.0
               - onnx>=1.15.0
-              - cuda-python==12.2.0
-              - regex==2023.12.25
-              - ftfy==6.1.3
+              - cuda-python>=12.9.0
+              - regex>=2024.11.6
+              - ftfy>=6.3.1
   - name: x_clip_text_embedding
     route_prefix: /x_clip_text_embedding
     import_path: inference_ray.main:app_builder
@@ -562,9 +562,9 @@ applications:
               - opencv-python-headless>=4.11.0.86
               - onnxruntime-gpu>=1.17.0
               - onnx>=1.15.0
-              - cuda-python==12.2.0
-              - regex==2023.12.25
-              - ftfy==6.1.3
+              - cuda-python>=12.9.0
+              - regex>=2024.11.6
+              - ftfy>=6.3.1
   - name: x_clip_probs
     route_prefix: /x_clip_probs
     import_path: inference_ray.main:app_builder
@@ -586,9 +586,9 @@ applications:
               - opencv-python-headless>=4.11.0.86
               - onnxruntime-gpu>=1.17.0
               - onnx>=1.15.0
-              - cuda-python==12.2.0
-              - regex==2023.12.25
-              - ftfy==6.1.3
+              - cuda-python>=12.9.0
+              - regex>=2024.11.6
+              - ftfy>=6.3.1
   - name: face_clustering
     route_prefix: /face_clustering
     import_path: inference_ray.main:app_builder
@@ -772,7 +772,7 @@ applications:
 
   - name: face_tracking
     route_prefix: /face_tracking
-    import_path: main:app_builder
+    import_path: inference_ray.main:app_builder
     args:
       model: face_tracking
       data_path: /data
@@ -789,7 +789,7 @@ applications:
             - opencv-python-headless
   - name: shot_angle
     route_prefix: /shot_angle
-    import_path: main:app_builder
+    import_path: inference_ray.main:app_builder
     args:
       model: shot_angle
       data_path: /data
@@ -807,7 +807,7 @@ applications:
               - transformers
   - name: shot_level
     route_prefix: /shot_level
-    import_path: main:app_builder
+    import_path: inference_ray.main:app_builder
     args:
       model: shot_level
       data_path: /data
@@ -825,7 +825,7 @@ applications:
               - transformers
   - name: shot_scale_and_movement
     route_prefix: /shot_scale_and_movement
-    import_path: main:app_builder
+    import_path: inference_ray.main:app_builder
     args:
       model: shot_scale_and_movement
       data_path: /data
@@ -843,7 +843,7 @@ applications:
               - transformers
   - name: whisper_x
     route_prefix: /whisper_x
-    import_path: main:app_builder
+    import_path: inference_ray.main:app_builder
     args:
       model: whisper_x
       data_path: /data
@@ -863,7 +863,7 @@ applications:
               - transformers>=4.48.3
   - name: audio_emotion
     route_prefix: /audio_emotion
-    import_path: main:app_builder
+    import_path: inference_ray.main:app_builder
     args:
       model: audio_emotion
       data_path: /data
@@ -882,7 +882,7 @@ applications:
               - speechbrain==1.0.2
   - name: audio_gender
     route_prefix: /audio_gender
-    import_path: main:app_builder
+    import_path: inference_ray.main:app_builder
     args:
       model: audio_gender
       data_path: /data
@@ -901,7 +901,7 @@ applications:
               - speechbrain==1.0.2
   - name: active_speaker_detection
     route_prefix: /active_speaker_detection
-    import_path: main:app_builder
+    import_path: inference_ray.main:app_builder
     args:
       model: active_speaker_detection
       data_path: /data
@@ -923,7 +923,7 @@ applications:
 
   - name: audio_classification
     route_prefix: /audio_classification
-    import_path: main:app_builder
+    import_path: inference_ray.main:app_builder
     args:
       model: audio_classification
       data_path: /data
@@ -941,7 +941,7 @@ applications:
               - torchaudio # TODO specify version
   - name: text_ner
     route_prefix: /text_ner
-    import_path: main:app_builder
+    import_path: inference_ray.main:app_builder
     args:
       model: text_ner
       data_path: /data
@@ -958,7 +958,7 @@ applications:
               - stanza==1.9.2
   - name: text_pos
     route_prefix: /text_pos
-    import_path: main:app_builder
+    import_path: inference_ray.main:app_builder
     args:
       model: text_pos
       data_path: /data
@@ -974,7 +974,7 @@ applications:
               - stanza==1.9.2
   - name: text_sentiment
     route_prefix: /text_sentiment
-    import_path: main:app_builder
+    import_path: inference_ray.main:app_builder
     args:
       model: text_sentiment
       data_path: /data
