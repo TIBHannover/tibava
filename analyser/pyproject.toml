@@ -5,24 +5,18 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "grpcio>=1.70.0",
-    "imageio>=2.37.0",
     "interface",
     "inference_ray",
     "utils",
     "data",
+    "grpcio>=1.70.0",
+    "imageio>=2.37.0",
     "msgpack>=1.1.0",
-    "h5py>=3.12.1",
     "packaging>=24.2",
-    "pip>=25.0.1",
     "protobuf>=5.29.3",
-    "qdrant-client>=1.13.2",
     "ray[serve]==2.42.0",
     "requests>=2.32.3",
-    "scikit-learn>=1.6.1",
-    "torch>=2.6.0",
     "tqdm>=4.67.1",
-    "transformers>=4.48.3",
     "valkey>=6.1.0",
 ]
 

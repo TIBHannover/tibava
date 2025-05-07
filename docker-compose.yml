@@ -207,11 +207,11 @@ services:
     volumes:
       - type: bind
         source: ./frontend/
-        target: /frontend
+        target: /app/frontend
       - type: bind
         source: ./data/predictions/
         target: /thumbnails
       - type: bind
         source: ./data/media/
         target: /media
-    working_dir: /frontend
+    working_dir: /app/frontend

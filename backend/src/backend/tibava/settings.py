@@ -171,7 +171,7 @@ DATA_CACHE_ROOT = os.path.join("/cache/")
 DATA_OUTPUT_PATH = os.path.join("/predictions")
 
 
-GRPC_HOST = "localhost"
+GRPC_HOST = "analyser"
 GRPC_PORT = 50051
 
 INDEXER_PATH = "/indexer"
@@ -185,7 +185,7 @@ try:
 except:
     pass
 
-MEDIA_URL = "/tibava/media/"
+MEDIA_URL = "/media/"
 THUMBNAIL_URL = "http://localhost/thumbnails/"
 
 # the last resolution will use for indexing

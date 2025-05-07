@@ -87,9 +87,9 @@ applications:
             uv:
               - "open-clip-torch==2.24.0"
               - git+https://github.com/SpringsteinM/imageio.git
-              - torch==2.2.0
-              - scikit-learn==1.4.0
-              - transformers==4.37.2
+              - torch>=2.6.0
+              - scikit-learn>=1.6.1
+              - transformers>=4.48.3
   - name: clip_text_embedding
     route_prefix: /clip_text_embedding
     import_path: inference_ray.main:app_builder
@@ -109,9 +109,9 @@ applications:
             uv:
               - "open-clip-torch==2.24.0"
               - git+https://github.com/SpringsteinM/imageio.git
-              - torch==2.2.0
-              - scikit-learn==1.4.0
-              - transformers==4.37.2
+              - torch>=2.6.0
+              - scikit-learn>=1.6.1
+              - transformers>=4.48.3
   - name: clip_ontology_probs
     route_prefix: /clip_ontology_probs
     import_path: inference_ray.main:app_builder
@@ -131,9 +131,9 @@ applications:
             uv:
               - "open-clip-torch==2.24.0"
               - git+https://github.com/SpringsteinM/imageio.git
-              - torch==2.2.0
-              - scikit-learn==1.4.0
-              - transformers==4.37.2
+              - torch>=2.6.0
+              - scikit-learn>=1.6.1
+              - transformers>=4.48.3
   - name: clip_probs
     route_prefix: /clip_probs
     import_path: inference_ray.main:app_builder
@@ -153,9 +153,9 @@ applications:
             uv:
               - "open-clip-torch==2.24.0"
               - git+https://github.com/SpringsteinM/imageio.git
-              - torch==2.2.0
-              - scikit-learn==1.4.0
-              - transformers==4.37.2
+              - torch>=2.6.0
+              - scikit-learn>=1.6.1
+              - transformers>=4.48.3
   - name: color_analyser
     route_prefix: /color_analyser
     import_path: inference_ray.main:app_builder
@@ -171,7 +171,7 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - scikit-learn==1.4.0
+              - scikit-learn>=1.6.1
   - name: color_brightness_analyser
     route_prefix: /color_brightness_analyser
     import_path: inference_ray.main:app_builder
@@ -187,8 +187,8 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - scikit-learn==1.4.0
-              - opencv-python-headless==4.9.0.80
+              - scikit-learn>=1.6.1
+              - opencv-python-headless>=4.11.0.86
   - name: deepface_emotion
     route_prefix: /deepface_emotion
     import_path: inference_ray.main:app_builder
@@ -205,8 +205,8 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - scikit-learn==1.4.0
-              - opencv-python-headless==4.9.0.80
+              - scikit-learn>=1.6.1
+              - opencv-python-headless>=4.11.0.86
               - onnxruntime-gpu>=1.17.0
               - onnx>=1.15.0
   - name: insightface_video_detector_torch
@@ -225,9 +225,9 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - scikit-learn==1.4.0
-              - opencv-python-headless==4.9.0.80
-              - torch==2.2.0
+              - scikit-learn>=1.6.1
+              - opencv-python-headless>=4.11.0.86
+              - torch>=2.6.0
   - name: insightface_image_detector_torch
     route_prefix: /insightface_image_detector_torch
     import_path: inference_ray.main:app_builder
@@ -244,9 +244,9 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - scikit-learn==1.4.0
-              - opencv-python-headless==4.9.0.80
-              - torch==2.2.0
+              - scikit-learn>=1.6.1
+              - opencv-python-headless>=4.11.0.86
+              - torch>=2.6.0
   - name: insightface_facesize
     route_prefix: /insightface_facesize
     import_path: inference_ray.main:app_builder
@@ -262,7 +262,7 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - scikit-learn==1.4.0
+              - scikit-learn>=1.6.1
   - name: insightface_video_feature_extractor
     route_prefix: /insightface_video_feature_extractor
     import_path: inference_ray.main:app_builder
@@ -279,8 +279,8 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - scikit-learn==1.4.0
-              - opencv-python-headless==4.9.0.80
+              - scikit-learn>=1.6.1
+              - opencv-python-headless>=4.11.0.86
               - onnxruntime-gpu>=1.17.0
               - onnx>=1.15.0
   - name: insightface_image_feature_extractor
@@ -299,8 +299,8 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - scikit-learn==1.4.0
-              - opencv-python-headless==4.9.0.80
+              - scikit-learn>=1.6.1
+              - opencv-python-headless>=4.11.0.86
               - onnxruntime-gpu>=1.17.0
               - onnx>=1.15.0
   - name: min_max_norm
@@ -332,9 +332,9 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - scikit-learn==1.4.0
-              - opencv-python-headless==4.9.0.80
-              - torch==2.2.0
+              - scikit-learn>=1.6.1
+              - opencv-python-headless>=4.11.0.86
+              - torch>=2.6.0
 
   - name: scalar_threshold
     route_prefix: /scalar_threshold
@@ -374,7 +374,7 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - scikit-learn==1.4.0
+              - scikit-learn>=1.6.1
   - name: shot_scalar_annotator
     route_prefix: /shot_scalar_annotator
     import_path: inference_ray.main:app_builder
@@ -403,7 +403,7 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - torch==2.2.0
+              - torch>=2.6.0
   - name: thumbnail_generator
     route_prefix: /thumbnail_generator
     import_path: inference_ray.main:app_builder
@@ -432,7 +432,7 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - torch==2.2.0
+              - torch>=2.6.0
 
   - name: video_to_video
     route_prefix: /video_to_video
@@ -485,7 +485,7 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - scipy==1.12.0
+              - scipy>=1.15.2
 
   - name: aggregate_scalar_per_time
     route_prefix: /aggregate_scalar_per_time
@@ -515,9 +515,9 @@ applications:
           runtime_env:
             uv:
               - librosa==0.10.1
-              - torch==2.2.0
-              - scikit-learn==1.4.0
-              - transformers==4.37.2
+              - torch>=2.6.0
+              - scikit-learn>=1.6.1
+              - transformers>=4.48.3
 
   - name: x_clip_video_embedding
     route_prefix: /x_clip_video_embedding
@@ -535,8 +535,8 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - scikit-learn==1.4.0
-              - opencv-python-headless==4.9.0.80
+              - scikit-learn>=1.6.1
+              - opencv-python-headless>=4.11.0.86
               - onnxruntime-gpu>=1.17.0
               - onnx>=1.15.0
               - cuda-python==12.2.0
@@ -558,8 +558,8 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - scikit-learn==1.4.0
-              - opencv-python-headless==4.9.0.80
+              - scikit-learn>=1.6.1
+              - opencv-python-headless>=4.11.0.86
               - onnxruntime-gpu>=1.17.0
               - onnx>=1.15.0
               - cuda-python==12.2.0
@@ -582,8 +582,8 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - scikit-learn==1.4.0
-              - opencv-python-headless==4.9.0.80
+              - scikit-learn>=1.6.1
+              - opencv-python-headless>=4.11.0.86
               - onnxruntime-gpu>=1.17.0
               - onnx>=1.15.0
               - cuda-python==12.2.0
@@ -603,7 +603,7 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - scipy==1.12.0
+              - scipy>=1.15.2
   - name: place_clustering
     route_prefix: /place_clustering
     import_path: inference_ray.main:app_builder
@@ -618,7 +618,7 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - scipy==1.12.0
+              - scipy>=1.15.2
   - name: clustering
     route_prefix: /clustering
     import_path: inference_ray.main:app_builder
@@ -633,7 +633,7 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - scipy==1.12.0
+              - scipy>=1.15.2
   - name: dbscanclustering
     route_prefix: /dbscanclustering
     import_path: inference_ray.main:app_builder
@@ -648,8 +648,8 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - scipy==1.12.0
-              - scikit-learn==1.4.0
+              - scipy>=1.15.2
+              - scikit-learn>=1.6.1
 
   - name: cluster_size_filter
     route_prefix: /cluster_size_filter
@@ -694,10 +694,10 @@ applications:
           runtime_env:
             uv:
               - git+https://github.com/SpringsteinM/imageio.git
-              - torch==2.2.0
+              - torch>=2.6.0
               - pillow
-              - scikit-learn==1.4.0
-              - transformers==4.37.2
+              - scikit-learn>=1.6.1
+              - transformers>=4.48.3
   - name: blip_vqa
     route_prefix: /blip_vqa
     import_path: inference_ray.main:app_builder
@@ -715,10 +715,10 @@ applications:
           runtime_env:
             uv:
               - git+https://github.com/SpringsteinM/imageio.git
-              - torch==2.2.0
+              - torch>=2.6.0
               - pillow
-              - scikit-learn==1.4.0
-              - transformers==4.37.2
+              - scikit-learn>=1.6.1
+              - transformers>=4.48.3
   - name: timeline_video_sampler
     route_prefix: /timeline_video_sampler
     import_path: inference_ray.main:app_builder
@@ -753,7 +753,7 @@ applications:
         - opencv-python-headless
         - onnxruntime-gpu>=1.17.0
         - onnx
-        - torch
+        - torch>=2.6.0
         - torchvision
         - pytorch_lightning
         - timm
