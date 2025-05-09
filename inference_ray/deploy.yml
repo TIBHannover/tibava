@@ -19,7 +19,7 @@ applications:
           num_cpus: 2
           runtime_env:
             uv:
-              - requests==2.26.0
+              - requests
   - name: audio_amp_analysis
     route_prefix: /audio_amp_analysis
     import_path: inference_ray.main:app_builder
@@ -207,7 +207,7 @@ applications:
             uv:
               - scikit-learn>=1.6.1
               - opencv-python-headless>=4.11.0.86
-              - onnxruntime-gpu>=1.17.0
+              - onnxruntime-cpu>=1.17.0
               - onnx>=1.15.0
   - name: insightface_video_detector_torch
     route_prefix: /insightface_video_detector_torch
@@ -539,9 +539,9 @@ applications:
               - opencv-python-headless>=4.11.0.86
               - onnxruntime-gpu>=1.17.0
               - onnx>=1.15.0
-              - cuda-python==12.2.0
-              - regex==2023.12.25
-              - ftfy==6.1.3
+              - cuda-python>=12.9.0
+              - regex>=2024.11.6
+              - ftfy>=6.3.1
   - name: x_clip_text_embedding
     route_prefix: /x_clip_text_embedding
     import_path: inference_ray.main:app_builder
@@ -562,9 +562,9 @@ applications:
               - opencv-python-headless>=4.11.0.86
               - onnxruntime-gpu>=1.17.0
               - onnx>=1.15.0
-              - cuda-python==12.2.0
-              - regex==2023.12.25
-              - ftfy==6.1.3
+              - cuda-python>=12.9.0
+              - regex>=2024.11.6
+              - ftfy>=6.3.1
   - name: x_clip_probs
     route_prefix: /x_clip_probs
     import_path: inference_ray.main:app_builder
@@ -586,9 +586,9 @@ applications:
               - opencv-python-headless>=4.11.0.86
               - onnxruntime-gpu>=1.17.0
               - onnx>=1.15.0
-              - cuda-python==12.2.0
-              - regex==2023.12.25
-              - ftfy==6.1.3
+              - cuda-python>=12.9.0
+              - regex>=2024.11.6
+              - ftfy>=6.3.1
   - name: face_clustering
     route_prefix: /face_clustering
     import_path: inference_ray.main:app_builder
