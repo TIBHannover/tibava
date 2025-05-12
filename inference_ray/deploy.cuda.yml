@@ -439,7 +439,7 @@ applications:
       model: transnet_shotdetection
       data_path: /data
       params:
-        model_path: /models/transnet_shotdetection/transnet.pt
+        model_path: /models/transnet_shotdetection/transnet_gpu.pt
     deployments:
       - name: Deployment
         autoscaling_config:
