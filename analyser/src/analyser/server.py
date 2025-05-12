@@ -438,6 +438,7 @@ def parse_args():
     parser.add_argument("--no_cache", action="store_true", help="disable cache")
     parser.add_argument("--cache_valkey_host", help="valkey cache host")
     parser.add_argument("--cache_valkey_port", type=int, help="valkey cache port")
+    parser.add_argument("--num_workers", type=int, help="number of workers")
     parser.add_argument("--inference_ray_host", help="inference ray host")
     parser.add_argument("--inference_ray_port", type=int, help="inference ray port")
     parser.add_argument(
@@ -544,7 +545,10 @@ def main():
                 "port": 8000,
             }
         config["inference"]["params"]["port"] = args.inference_ray_port
-    # print(config, flush=True)
+
+    if args.num_workers:
+        config["num_workers"] = args.num_workers
+
     server = Server(config)
     server.run()
     return 0
