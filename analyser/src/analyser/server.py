@@ -234,7 +234,7 @@ class Commune(analyser_pb2_grpc.AnalyserServicer):
         self.config = config
         self.managers = init_plugins(config)
         self.process_pool = futures.ThreadPoolExecutor(
-            max_workers=self.config.get("num_worker", 1),
+            max_workers=self.config.get("num_workers", 4),
             initializer=init_process,
             initargs=(config,),
         )
