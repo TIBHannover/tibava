@@ -31,12 +31,6 @@ services:
       - type: bind
         source: ./backend
         target: /app/backend
-      - type: bind
-        source: ./pyproject.toml
-        target: /app/pyproject.toml
-      - type: bind
-        source: ./.python-version
-        target: /app/.python-version
 
     working_dir: /app/
 
@@ -64,12 +58,6 @@ services:
       - type: bind
         source: ./data/cache/
         target: /cache/
-      - type: bind
-        source: ./pyproject.toml
-        target: /app/pyproject.toml
-      - type: bind
-        source: ./.python-version
-        target: /app/.python-version
 
     working_dir: /app/
 
@@ -122,12 +110,6 @@ services:
       - type: bind
         source: ./data/tmp
         target: /tmp
-      - type: bind
-        source: ./pyproject.toml
-        target: /app/pyproject.toml
-      - type: bind
-        source: ./.python-version
-        target: /app/.python-version
 
     depends_on:
       - postgres
@@ -172,12 +154,6 @@ services:
       - type: bind
         source: ./data/tmp
         target: /tmp
-      - type: bind
-        source: ./pyproject.toml
-        target: /app/pyproject.toml
-      - type: bind
-        source: ./.python-version
-        target: /app/.python-version
 
     working_dir: /app/
     environment:
