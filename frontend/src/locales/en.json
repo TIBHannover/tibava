@@ -1,7 +1,7 @@
 {
   "welcome": {
     "title": "TIB AV-Analytics",
-    "text": "Welcome to the TIB AV-Analytics (TIB-AV-A) video analysis platform for scholarly video analysis and film science. <br><br> <strong>Join us at the ACM Creativity & Cognition (C&C) Conference that takes place online from 23 to 25 June 2025 for a tutorial on automatic film & video analysis with TIB AV-Analytics!</strong> It's a great opportunity for researchers seeking to leverage cutting-edge methods from computer science including generative AI for film and video analysis. <br> Please find more information here: <a href='https://cc.acm.org/2025/tutorials_programme/'>https://cc.acm.org/2025/tutorials_programme/</a> <br> Tutorial Registration link: <a href='https://forms.gle/HL6QdVWQV9HG7fN38'>https://forms.gle/HL6QdVWQV9HG7fN38</a> <br> Conference Registration is open👇 <a href='https://cc.acm.org/2025/registration/'>https://cc.acm.org/2025/registration/</a>",
+    "text": "Welcome to the TIB AV-Analytics (TIB-AV-A) video analysis platform for scholarly video analysis and film science.",
     "demo_title": "Video Demonstration",
     "demo_text": "We are currently preparing a video that demonstrates the features of TIB-AV-A and explains how to use it to simplify the onboarding process. It is expected to be available by March 3 at the latest.",
     "login_title": "Need an account?",
