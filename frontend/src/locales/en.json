@@ -79,6 +79,16 @@
         "name": "Video Name",
         "update": "Rename",
         "close": "Close"
+      },
+      "upload": {
+        "title": "Upload Video",
+        "link": "Upload Video",
+        "tab_legal": "Legal information",
+        "tab_upload": "Upload",
+        "terms": {
+          "title": "TERMS OF USE",
+          "content": "<strong>1. Introduction</strong><br><br>These Terms of Use (\"Terms\") govern access to and use of the video portal (\"Portal\") of TIB-AV-A. By using the Portal, you agree to the following Terms of Use.<br><br><strong>2. Rights to Upload</strong><br><br>2.1. By uploading content (\"Content\") to the Portal, you grant TIB-AV-A the non-exclusive right to store, process, analyze, and use the Content in order to provide the Portal's services.<br>2.2. You confirm that you have the necessary rights to upload the Content, including copyrights, trademark rights, and other rights required for the use of the Content.<br><br><strong>3. Processing and Analysis</strong><br><br>3.1. TIB-AV-A processes and analyzes the Content to provide the Portal's services, including the analysis of usage data and the optimization of the Content.<br>3.2. By using the Portal, you agree that TIB-AV-A may process and analyze the Content to provide the Portal's services.<br><br><strong>4. Data Protection</strong><br><br>4.1. TIB-AV-A treats your personal data confidentially and in accordance with data protection regulations.<br>4.2. By using the Portal, you agree that TIB-AV-A may process your personal data to provide the Portal's services.<br><br><strong>5. Liability</strong><br><br>5.1. TIB-AV-A is not liable for damages resulting from the use of the Portal, including the infringement of third-party rights.<br>5.2. By using the Portal, you agree that TIB-AV-A cannot be held liable for damages resulting from the use of the Portal.<br><br><strong>6. Changes</strong><br><br>6.1. TIB-AV-A may change these Terms of Use at any time.<br>6.2. By continuing to use the Portal after changes to the Terms of Use, you agree to the modified Terms of Use.<br><br><strong>7. Final Provisions</strong><br><br>7.1. These Terms of Use govern the entire contractual relationship between you and TIB-AV-A.<br>7.2. By using the Portal, you agree to these Terms of Use and confirm that you accept the following terms."
+        }
       }
     },
     "export": {
