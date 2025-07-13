@@ -44,7 +44,7 @@
         <v-card-text>
           <v-tabs-items v-model="tab">
             <v-tab-item>
-              <h1>{{ $t("modal.video.upload.terms.title") }}</h1>
+              <h1 class="mt-2">{{ $t("modal.video.upload.terms.title") }}</h1>
               <p v-html="$t('modal.video.upload.terms.content')"></p>
 
               <v-form>
@@ -54,10 +54,6 @@
                   required
                 >
                 </v-checkbox>
-                <v-btn class="mr-4" :disabled="!checkbox" @click="tab++">
-                  Continue
-                </v-btn>
-                <v-btn @click="dialog = false">Close</v-btn>
               </v-form>
             </v-tab-item>
             <v-tab-item>
@@ -81,15 +77,31 @@
                   :value="uploadingProgress"
                   class="mb-2"
                 ></v-progress-linear>
-
-                <v-btn class="mr-4" :disabled="disabled" @click="upload_video">
-                  Upload
-                </v-btn>
-                <v-btn @click="dialog = false">Close</v-btn>
               </v-form>
             </v-tab-item>
           </v-tabs-items>
         </v-card-text>
+        <v-card-actions class="pt-0">
+          <v-btn
+            v-if="tab == 0"
+            class="mr-4"
+            :disabled="!checkbox"
+            @click="tab++"
+          >
+            {{ $t("modal.video.upload.continue") }}
+          </v-btn>
+          <v-btn
+            v-if="tab == 1"
+            class="mr-4"
+            :disabled="disabled"
+            @click="upload_video"
+          >
+            {{ $t("modal.video.upload.upload") }}
+          </v-btn>
+          <v-btn @click="dialog = false">{{
+            $t("modal.video.upload.close")
+          }}</v-btn>
+        </v-card-actions>
       </v-card>
     </v-dialog>
     <span v-if="!canUpload" class="red--text"
