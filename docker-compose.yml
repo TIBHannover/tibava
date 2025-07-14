@@ -1,15 +1,12 @@
 services:
   inference_ray:
-    image: ghcr.io/astral-sh/uv:debian
+    build: .
 
     environment:
       - HF_HOME=/models
       - NUMBA_CACHE_DIR=/tmp
 
     volumes:
-      - type: bind
-        source: ./data/inference_ray_venv
-        target: /app/.venv
       - type: bind
         source: ./data/analyser
         target: /data/
