@@ -10,99 +10,136 @@
     </template>
 
     <v-card>
-      <v-card-title class="mb-0"> {{ $t("modal.plugin.title") }} </v-card-title>
-      <v-card-text>
-        <v-row>
-          <v-col cols="3" style="max-height: 600px; overflow: hidden">
-            <v-sheet
-              class="pa-1"
-              style="background-color: rgb(174, 19, 19) !important"
-            >
-              <v-text-field
-                v-model="search"
-                label="Search Plugin"
-                class="searchField"
-                dark
-                flat
-                solo-inverted
-                hide-details
-                clearable
-                clear-icon="mdi-close-circle-outline"
-              >
-              </v-text-field>
-            </v-sheet>
-            <v-treeview
-              :items="plugins_sorted"
-              :search="search"
-              :open.sync="open"
-              activatable
-              open-all
-              style="cursor: pointer; overflow-y: scroll; height: 500px"
-              :active.sync="active"
-            >
-              <template v-slot:prepend="{ item }">
-                <v-icon>{{ item.icon }}</v-icon>
-              </template>
-            </v-treeview>
-          </v-col>
-          <v-col cols="9">
-            <div
-              v-if="!selected"
-              class="text-h6 grey--text font-weight-light"
-              style="text-align: center"
-            >
-              {{ $t("modal.plugin.search.select") }}
-            </div>
-            <v-card
-              v-else
-              :key="selected.id"
-              class="mx-auto overflow-y-auto"
-              style="max-height: calc(80vh - 50px)"
-              flat
-            >
-              <v-card-title class="mb-0"> {{ selected.name }} </v-card-title>
-              <v-card-text>
-                <div
-                  class=""
-                  style="padding-bottom: 2em"
-                  v-html="selected.description"
-                ></div>
-                <Parameters
-                  :parameters="selected.parameters"
-                  :videoIds="videoIds"
-                >
-                </Parameters>
-                <v-expansion-panels
-                  v-if="
-                    selected.optional_parameters &&
-                    selected.optional_parameters.length > 0
-                  "
-                >
-                  <v-expansion-panel>
-                    <v-expansion-panel-header expand-icon="mdi-menu-down">
-                      Advanced Options
-                    </v-expansion-panel-header>
+      <v-card-title>
+        {{ $t("modal.plugin.title") }}
 
-                    <v-expansion-panel-content>
-                      <Parameters
-                        :parameters="selected.optional_parameters"
-                        :videoIds="videoIds"
-                      >
-                      </Parameters>
-                    </v-expansion-panel-content>
-                  </v-expansion-panel>
-                </v-expansion-panels>
-              </v-card-text>
-              <v-card-actions class="pt-0"> </v-card-actions>
-            </v-card>
-          </v-col>
-        </v-row>
+        <v-tabs v-model="tab" fixed-tabs>
+          <v-tabs-slider></v-tabs-slider>
+
+          <v-tab> {{ $t("modal.video.upload.tab_legal") }} </v-tab>
+          <v-tab :disabled="!checkbox">
+            {{ $t("modal.video.upload.tab_upload") }}
+          </v-tab>
+        </v-tabs>
+      </v-card-title>
+      <v-card-text>
+        <v-tabs-items v-model="tab">
+          <v-tab-item>
+            <h1 class="mt-2">{{ $t("modal.video.upload.terms.title") }}</h1>
+            <p v-html="$t('modal.video.upload.terms.content')"></p>
+
+            <v-form>
+              <v-checkbox
+                v-model="checkbox"
+                label="Do you agree with the terms of services?"
+                required
+              >
+              </v-checkbox>
+            </v-form>
+          </v-tab-item>
+          <v-tab-item>
+            <v-row>
+              <v-col cols="3" style="max-height: 600px; overflow: hidden">
+                <v-sheet
+                  class="pa-1"
+                  style="background-color: rgb(174, 19, 19) !important"
+                >
+                  <v-text-field
+                    v-model="search"
+                    label="Search Plugin"
+                    class="searchField"
+                    dark
+                    flat
+                    solo-inverted
+                    hide-details
+                    clearable
+                    clear-icon="mdi-close-circle-outline"
+                  >
+                  </v-text-field>
+                </v-sheet>
+                <v-treeview
+                  :items="plugins_sorted"
+                  :search="search"
+                  :open.sync="open"
+                  activatable
+                  open-all
+                  style="cursor: pointer; overflow-y: scroll; height: 500px"
+                  :active.sync="active"
+                >
+                  <template v-slot:prepend="{ item }">
+                    <v-icon>{{ item.icon }}</v-icon>
+                  </template>
+                </v-treeview>
+              </v-col>
+              <v-col cols="9">
+                <div
+                  v-if="!selected"
+                  class="text-h6 grey--text font-weight-light"
+                  style="text-align: center"
+                >
+                  {{ $t("modal.plugin.search.select") }}
+                </div>
+                <v-card
+                  v-else
+                  :key="selected.id"
+                  class="mx-auto overflow-y-auto"
+                  style="max-height: calc(80vh - 50px)"
+                  flat
+                >
+                  <v-card-title class="mb-0">
+                    {{ selected.name }}
+                  </v-card-title>
+                  <v-card-text>
+                    <div
+                      class=""
+                      style="padding-bottom: 2em"
+                      v-html="selected.description"
+                    ></div>
+                    <Parameters
+                      :parameters="selected.parameters"
+                      :videoIds="videoIds"
+                    >
+                    </Parameters>
+                    <v-expansion-panels
+                      v-if="
+                        selected.optional_parameters &&
+                        selected.optional_parameters.length > 0
+                      "
+                    >
+                      <v-expansion-panel>
+                        <v-expansion-panel-header expand-icon="mdi-menu-down">
+                          Advanced Options
+                        </v-expansion-panel-header>
+
+                        <v-expansion-panel-content>
+                          <Parameters
+                            :parameters="selected.optional_parameters"
+                            :videoIds="videoIds"
+                          >
+                          </Parameters>
+                        </v-expansion-panel-content>
+                      </v-expansion-panel>
+                    </v-expansion-panels>
+                  </v-card-text>
+                  <v-card-actions class="pt-0"> </v-card-actions>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-tab-item>
+        </v-tabs-items>
       </v-card-text>
       <v-card-actions class="pt-0">
-        <v-btn @click="dialog = false">{{ $t("modal.plugin.close") }}</v-btn>
-        <v-spacer></v-spacer>
         <v-btn
-          v-if="selected"
+          v-if="tab == 0"
+          class="mr-4"
+          :disabled="!checkbox"
+          @click="tab++"
+        >
+          {{ $t("modal.video.upload.continue") }}
+        </v-btn>
+        <v-btn
+          v-if="tab == 1"
+          :disabled="!selected"
           @click="
             runPlugin(
               selected.plugin,
@@ -112,6 +149,7 @@
           "
           >{{ $t("modal.plugin.run") }}</v-btn
         >
+        <v-btn @click="dialog = false">{{ $t("modal.plugin.close") }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -128,6 +166,8 @@ export default {
   data() {
     return {
       dialog: false,
+      checkbox: false,
+      tab: null,
       open: [1, 2],
       search: null,
       active: [],
