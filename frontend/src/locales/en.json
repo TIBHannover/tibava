@@ -143,6 +143,7 @@
         "queued": "Queued",
         "waiting": "Waiting"
       },
+      "link": "Run Plugin",
       "title": "Plugins",
       "close": "Close",
       "run": "Start Plugin",

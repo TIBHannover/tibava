@@ -1,30 +1,42 @@
 <template>
   <v-dialog v-model="menu" offset-y bottom left width="700px">
     <template v-slot:activator="{ attrs, on: menu }">
-      <v-btn tile text v-bind="attrs" v-on="menu" class="ml-n2" :title="$t('plugin.menu.title')">
+      <v-btn
+        tile
+        text
+        v-bind="attrs"
+        v-on="menu"
+        :title="$t('plugin.menu.title')"
+      >
         <v-icon color="primary">mdi-history</v-icon>
-        <v-badge v-if="numRunningPlugins > 0" color="accent" :content="numRunningPlugins">
+        <v-badge
+          v-if="numRunningPlugins > 0"
+          color="accent"
+          :content="numRunningPlugins"
+        >
           History
         </v-badge>
-        <span v-else>
-          History
-        </span>
+        <span v-else> History </span>
       </v-btn>
     </template>
-    <v-data-table :items-per-page="10" :headers="headers" :items="pluginRuns" item-key="id" class="elevation-1">
+    <v-data-table
+      :items-per-page="10"
+      :headers="headers"
+      :items="pluginRuns"
+      item-key="id"
+      class="elevation-1"
+    >
       <template v-slot:item.status="{ value }">
         <v-chip :color="progressColor(value)"> {{ value }}</v-chip>
       </template>
       <template v-slot:item.progress="{ value }">
-        <v-progress-linear :value="value * 100" height="8">
-        </v-progress-linear>
+        <v-progress-linear :value="value * 100" height="8"> </v-progress-linear>
       </template>
     </v-data-table>
   </v-dialog>
 </template>
 
 <script>
-
 import ModalPlugin from "@/components/ModalPlugin.vue";
 
 import { mapStores } from "pinia";
@@ -39,14 +51,14 @@ export default {
       showModalPlugin: false,
       headers: [
         {
-          text: 'Plugin Name',
-          align: 'start',
+          text: "Plugin Name",
+          align: "start",
           sortable: false,
-          value: 'type',
+          value: "type",
         },
-        { text: 'Date', value: 'date' },
-        { text: 'Progress', value: 'progress' },
-        { text: 'Status', value: 'status' },
+        { text: "Date", value: "date" },
+        { text: "Progress", value: "progress" },
+        { text: "Status", value: "status" },
       ],
     };
   },
@@ -174,15 +186,19 @@ export default {
       const pluginRuns = this.pluginRunStore
         .forVideo(this.playerStore.videoId)
         .sort((a, b) => {
-          return new Date(b.date) - new Date(a.date)
-        }).map((pluginRun, index) => {
+          return new Date(b.date) - new Date(a.date);
+        })
+        .map((pluginRun, index) => {
           return {
             id: index,
             type: this.pluginName(pluginRun.type),
-            date: pluginRun.date.replace("T", " ").replace("Z", "").substring(0, pluginRun.date.length - 5),
-            progress: parseFloat(pluginRun.progress),// * 100 + "%",
-            status: pluginRun.status
-          }
+            date: pluginRun.date
+              .replace("T", " ")
+              .replace("Z", "")
+              .substring(0, pluginRun.date.length - 5),
+            progress: parseFloat(pluginRun.progress), // * 100 + "%",
+            status: pluginRun.status,
+          };
         });
       return pluginRuns;
     },

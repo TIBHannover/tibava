@@ -3,7 +3,12 @@
     <v-container fluid>
       <v-row class="ma-2">
         <v-col cols="6">
-          <v-card class="d-flex flex-column flex-nowrap px-2" elevation="2" v-resize="onVideoResize" ref="videoCard">
+          <v-card
+            class="d-flex flex-column flex-nowrap px-2"
+            elevation="2"
+            v-resize="onVideoResize"
+            ref="videoCard"
+          >
             <v-row>
               <v-card-title>
                 {{ playerStore.videoName }}
@@ -28,7 +33,12 @@
             </div>
             <div class="loading-text">Loading...</div>
           </div>
-          <v-card v-else elevation="2" ref="resultCard" :height="resultCardHeight">
+          <v-card
+            v-else
+            elevation="2"
+            ref="resultCard"
+            :height="resultCardHeight"
+          >
             <div class="sticky-tabs-bar">
               <v-tabs v-model="tab" centered show-arrows>
                 <v-tabs-slider />
@@ -41,32 +51,53 @@
               </v-tabs>
             </div>
 
-            <v-tabs-items v-model="tab" style="height: 92%;">
+            <v-tabs-items v-model="tab" style="height: 92%">
               <v-tab-item style="height: 100%">
-
                 <div :class="['d-flex', 'flex-column', 'px-2', 'mx-4', 'my-2']">
-                  <v-select solo hide-details dense :items="shotsList" v-model="selectedShots" />
+                  <v-select
+                    solo
+                    hide-details
+                    dense
+                    :items="shotsList"
+                    v-model="selectedShots"
+                  />
                 </div>
                 <ShotsOverview />
               </v-tab-item>
 
               <v-tab-item style="height: 100%">
-
                 <div :class="['d-flex', 'flex-column', 'px-2', 'mx-4', 'my-2']">
-                  <v-select solo hide-details dense :items="faceClusteringList" v-model="selectedFaceClustering" />
+                  <v-select
+                    solo
+                    hide-details
+                    dense
+                    :items="faceClusteringList"
+                    v-model="selectedFaceClustering"
+                  />
                 </div>
                 <div :class="['d-flex', 'flex-column', 'px-2', 'mx-4', 'my-2']">
                   <PersonGraph />
                 </div>
-                <ClusterTimelineItemOverview name="Face" :clusters="faceClusters"></ClusterTimelineItemOverview>
+                <ClusterTimelineItemOverview
+                  name="Face"
+                  :clusters="faceClusters"
+                ></ClusterTimelineItemOverview>
               </v-tab-item>
 
               <v-tab-item style="height: 100%">
-
                 <div :class="['d-flex', 'flex-column', 'px-2', 'mx-4', 'my-2']">
-                  <v-select solo hide-details dense :items="placeClusteringList" v-model="selectedPlaceClustering" />
+                  <v-select
+                    solo
+                    hide-details
+                    dense
+                    :items="placeClusteringList"
+                    v-model="selectedPlaceClustering"
+                  />
                 </div>
-                <ClusterTimelineItemOverview name="Place" :clusters="placeClusters"></ClusterTimelineItemOverview>
+                <ClusterTimelineItemOverview
+                  name="Place"
+                  :clusters="placeClusters"
+                ></ClusterTimelineItemOverview>
               </v-tab-item>
 
               <v-tab-item>
@@ -93,7 +124,12 @@
 
       <v-row class="ma-2">
         <v-col>
-          <v-card class="d-flex flex-column flex-nowrap" max-width="100%" elevation="2" scrollable="False">
+          <v-card
+            class="d-flex flex-column flex-nowrap"
+            max-width="100%"
+            elevation="2"
+            scrollable="False"
+          >
             <v-card-title> Timelines </v-card-title>
             <v-flex grow class="mb-2 px-4">
               <Timeline ref="timeline" width="100%"> </Timeline>
@@ -349,7 +385,9 @@ export default {
     selectedShots: {
       get() {
         const selectedShots = this.shotStore.selectedShots;
-        return this.selectedShotsProxy === null ? selectedShots : this.selectedShotsProxy;
+        return this.selectedShotsProxy === null
+          ? selectedShots
+          : this.selectedShotsProxy;
       },
       set(val) {
         this.selectedShotsProxy = val;
@@ -358,35 +396,51 @@ export default {
       },
     },
     shotsList() {
-      return this.shotStore.shotsList.map((e) => { return { text: e.name, value: e.index } });
+      return this.shotStore.shotsList.map((e) => {
+        return { text: e.name, value: e.index };
+      });
     },
     selectedFaceClustering: {
       get() {
-        const selectedFaceClustering = this.clusterTimelineItemStore.selectedFaceClustering;
-        return this.selectedFaceClusteringProxy === null ? selectedFaceClustering : this.selectedFaceClusteringProxy;
+        const selectedFaceClustering =
+          this.clusterTimelineItemStore.selectedFaceClustering;
+        return this.selectedFaceClusteringProxy === null
+          ? selectedFaceClustering
+          : this.selectedFaceClusteringProxy;
       },
       set(val) {
         this.selectedFaceClusteringProxy = val;
 
-        this.clusterTimelineItemStore.setSelectedFaceClustering({ pluginRunId: val });
+        this.clusterTimelineItemStore.setSelectedFaceClustering({
+          pluginRunId: val,
+        });
       },
     },
     faceClusteringList() {
-      return this.clusterTimelineItemStore.faceClusteringList.map((e) => { return { text: e.name, value: e.index } });
+      return this.clusterTimelineItemStore.faceClusteringList.map((e) => {
+        return { text: e.name, value: e.index };
+      });
     },
     selectedPlaceClustering: {
       get() {
-        const selectedPlaceClustering = this.clusterTimelineItemStore.selectedPlaceClustering;
-        return this.selectedPlaceClusteringProxy === null ? selectedPlaceClustering : this.selectedPlaceClusteringProxy;
+        const selectedPlaceClustering =
+          this.clusterTimelineItemStore.selectedPlaceClustering;
+        return this.selectedPlaceClusteringProxy === null
+          ? selectedPlaceClustering
+          : this.selectedPlaceClusteringProxy;
       },
       set(val) {
         this.selectedPlaceClusteringProxy = val;
 
-        this.clusterTimelineItemStore.setSelectedPlaceClustering({ pluginRunId: val });
+        this.clusterTimelineItemStore.setSelectedPlaceClustering({
+          pluginRunId: val,
+        });
       },
     },
     placeClusteringList() {
-      return this.clusterTimelineItemStore.placeClusteringList.map((e) => { return { text: e.name, value: e.index } });
+      return this.clusterTimelineItemStore.placeClusteringList.map((e) => {
+        return { text: e.name, value: e.index };
+      });
     },
     selectedTimeline: {
       get() {
@@ -409,11 +463,13 @@ export default {
       useTimelineSegmentAnnotationStore,
       useShortcutStore,
       useAnnotationShortcutStore,
-      useClusterTimelineItemStore,
+      useClusterTimelineItemStore
     ),
   },
   async created() {
     // fetch the data when the view is created and the data is
+    this.videoStore.pushSelected(this.$route.params.id);
+    console.log(this.videoStore.videoSelected);
     await this.fetchData({ addResults: true });
     this.isLoading = false;
   },
@@ -428,7 +484,7 @@ export default {
     WordcloudCard,
     VisualizationMenu,
     PersonGraph,
-    ClusterTimelineItemOverview
+    ClusterTimelineItemOverview,
   },
 
   watch: {
@@ -450,13 +506,13 @@ export default {
         this.resultCardHeight = this.$refs.videoCard.$el.clientHeight;
         this.$refs.main.$el.focus();
       }
-    }
+    },
   },
 };
 </script>
 
 <style scoped>
-.logo>img {
+.logo > img {
   max-height: 56px;
 }
 

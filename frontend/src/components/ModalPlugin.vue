@@ -1,49 +1,99 @@
 <template>
-  <v-dialog v-model="dialog" max-width="90%" style="height: 80vh;">
+  <v-dialog v-model="dialog" max-width="90%" style="height: 80vh">
+    <template v-slot:activator="{ on, attrs }">
+      <slot name="activator" :on="on" :attrs="attrs">
+        <v-btn tile text v-bind="attrs" v-on="on">
+          <v-icon>{{ "mdi-plus" }}</v-icon>
+          {{ $t("modal.plugin.link") }}
+        </v-btn>
+      </slot>
+    </template>
+
     <v-card>
       <v-card-title class="mb-0"> {{ $t("modal.plugin.title") }} </v-card-title>
       <v-card-text>
         <v-row>
-          <v-col cols="3" style="max-height: 600px; overflow: hidden;">
-            <v-sheet class="pa-1" style="background-color: rgb(174, 19, 19) !important;">
-              <v-text-field v-model="search" label="Search Plugin" class="searchField" dark flat solo-inverted
-                hide-details clearable clear-icon="mdi-close-circle-outline">
+          <v-col cols="3" style="max-height: 600px; overflow: hidden">
+            <v-sheet
+              class="pa-1"
+              style="background-color: rgb(174, 19, 19) !important"
+            >
+              <v-text-field
+                v-model="search"
+                label="Search Plugin"
+                class="searchField"
+                dark
+                flat
+                solo-inverted
+                hide-details
+                clearable
+                clear-icon="mdi-close-circle-outline"
+              >
               </v-text-field>
             </v-sheet>
-            <v-treeview :items="plugins_sorted" :search="search" :open.sync="open" activatable open-all
-              style="cursor: pointer; overflow-y: scroll; height: 500px;" :active.sync="active">
+            <v-treeview
+              :items="plugins_sorted"
+              :search="search"
+              :open.sync="open"
+              activatable
+              open-all
+              style="cursor: pointer; overflow-y: scroll; height: 500px"
+              :active.sync="active"
+            >
               <template v-slot:prepend="{ item }">
                 <v-icon>{{ item.icon }}</v-icon>
               </template>
             </v-treeview>
           </v-col>
           <v-col cols="9">
-            <div v-if="!selected" class="text-h6 grey--text font-weight-light" style="text-align: center;">
+            <div
+              v-if="!selected"
+              class="text-h6 grey--text font-weight-light"
+              style="text-align: center"
+            >
               {{ $t("modal.plugin.search.select") }}
             </div>
-            <v-card v-else :key="selected.id" class="mx-auto overflow-y-auto" style="max-height: calc(80vh - 50px);"
-              flat>
+            <v-card
+              v-else
+              :key="selected.id"
+              class="mx-auto overflow-y-auto"
+              style="max-height: calc(80vh - 50px)"
+              flat
+            >
               <v-card-title class="mb-0"> {{ selected.name }} </v-card-title>
               <v-card-text>
-                <div class="" style="padding-bottom: 2em;" v-html="selected.description"></div>
-                <Parameters :parameters="selected.parameters" :videoIds="videoIds"> </Parameters>
-                <v-expansion-panels v-if="selected.optional_parameters &&
-    selected.optional_parameters.length > 0
-    ">
+                <div
+                  class=""
+                  style="padding-bottom: 2em"
+                  v-html="selected.description"
+                ></div>
+                <Parameters
+                  :parameters="selected.parameters"
+                  :videoIds="videoIds"
+                >
+                </Parameters>
+                <v-expansion-panels
+                  v-if="
+                    selected.optional_parameters &&
+                    selected.optional_parameters.length > 0
+                  "
+                >
                   <v-expansion-panel>
                     <v-expansion-panel-header expand-icon="mdi-menu-down">
                       Advanced Options
                     </v-expansion-panel-header>
 
                     <v-expansion-panel-content>
-                      <Parameters :parameters="selected.optional_parameters" :videoIds="videoIds">
+                      <Parameters
+                        :parameters="selected.optional_parameters"
+                        :videoIds="videoIds"
+                      >
                       </Parameters>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
                 </v-expansion-panels>
               </v-card-text>
-              <v-card-actions class="pt-0">
-              </v-card-actions>
+              <v-card-actions class="pt-0"> </v-card-actions>
             </v-card>
           </v-col>
         </v-row>
@@ -51,13 +101,17 @@
       <v-card-actions class="pt-0">
         <v-btn @click="dialog = false">{{ $t("modal.plugin.close") }}</v-btn>
         <v-spacer></v-spacer>
-        <v-btn v-if="selected" @click="
-    runPlugin(
-      selected.plugin,
-      selected.parameters,
-      selected.optional_parameters
-    )
-    ">{{ $t("modal.plugin.run") }}</v-btn>
+        <v-btn
+          v-if="selected"
+          @click="
+            runPlugin(
+              selected.plugin,
+              selected.parameters,
+              selected.optional_parameters
+            )
+          "
+          >{{ $t("modal.plugin.run") }}</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -110,7 +164,9 @@ export default {
             },
             {
               name: this.$t("modal.plugin.audio_frequency.plugin_name"),
-              description: this.$t("modal.plugin.audio_frequency.plugin_description"),
+              description: this.$t(
+                "modal.plugin.audio_frequency.plugin_description"
+              ),
               icon: "mdi-waveform",
               plugin: "audio_freq",
               id: 102,
@@ -145,7 +201,9 @@ export default {
             },
             {
               name: this.$t("modal.plugin.audio_waveform.plugin_name"),
-              description: this.$t("modal.plugin.audio_waveform.plugin_description"),
+              description: this.$t(
+                "modal.plugin.audio_waveform.plugin_description"
+              ),
               icon: "mdi-waveform",
               plugin: "audio_amp",
               id: 103,
@@ -186,7 +244,9 @@ export default {
           children: [
             {
               name: this.$t("modal.plugin.face_clustering.plugin_name"),
-              description: this.$t("modal.plugin.face_clustering.plugin_description"),
+              description: this.$t(
+                "modal.plugin.face_clustering.plugin_description"
+              ),
               icon: "mdi-ungroup",
               plugin: "face_clustering",
               id: 201,
@@ -198,8 +258,12 @@ export default {
                   value: 0.5,
                   step: 0.01,
                   name: "cluster_threshold",
-                  hint_right: this.$t("modal.plugin.face_clustering.threshold.hint_right"),
-                  hint_left: this.$t("modal.plugin.face_clustering.threshold.hint_left"),
+                  hint_right: this.$t(
+                    "modal.plugin.face_clustering.threshold.hint_right"
+                  ),
+                  hint_left: this.$t(
+                    "modal.plugin.face_clustering.threshold.hint_left"
+                  ),
                 },
                 {
                   field: "slider",
@@ -208,8 +272,12 @@ export default {
                   value: 50,
                   step: 1,
                   name: "max_cluster",
-                  hint_right: this.$t("modal.plugin.face_clustering.max_cluster.hint_right"),
-                  hint_left: this.$t("modal.plugin.face_clustering.max_cluster.hint_left"),
+                  hint_right: this.$t(
+                    "modal.plugin.face_clustering.max_cluster.hint_right"
+                  ),
+                  hint_left: this.$t(
+                    "modal.plugin.face_clustering.max_cluster.hint_left"
+                  ),
                 },
                 {
                   field: "slider",
@@ -218,8 +286,12 @@ export default {
                   value: 20,
                   step: 1,
                   name: "max_samples_per_cluster",
-                  hint_right: this.$t("modal.plugin.face_clustering.max_faces.hint_right"),
-                  hint_left: this.$t("modal.plugin.face_clustering.max_faces.hint_left"),
+                  hint_right: this.$t(
+                    "modal.plugin.face_clustering.max_faces.hint_right"
+                  ),
+                  hint_left: this.$t(
+                    "modal.plugin.face_clustering.max_faces.hint_left"
+                  ),
                 },
                 {
                   field: "slider",
@@ -228,18 +300,26 @@ export default {
                   value: 0.1,
                   step: 0.05,
                   name: "min_face_height",
-                  hint_right: this.$t("modal.plugin.face_clustering.min_face_height.hint_right"),
-                  hint_left: this.$t("modal.plugin.face_clustering.min_face_height.hint_left"),
+                  hint_right: this.$t(
+                    "modal.plugin.face_clustering.min_face_height.hint_right"
+                  ),
+                  hint_left: this.$t(
+                    "modal.plugin.face_clustering.min_face_height.hint_left"
+                  ),
                 },
               ],
               optional_parameters: [
                 {
                   field: "select_options",
-                  text: this.$t("modal.plugin.face_clustering.clustering_method_name"),
-                  hint: this.$t("modal.plugin.face_clustering.clustering_method_hint"),
+                  text: this.$t(
+                    "modal.plugin.face_clustering.clustering_method_name"
+                  ),
+                  hint: this.$t(
+                    "modal.plugin.face_clustering.clustering_method_hint"
+                  ),
                   items: ["Agglomerative", "DBScan"],
                   name: "clustering_method",
-                  value: "DBScan"
+                  value: "DBScan",
                 },
                 {
                   field: "slider",
@@ -254,7 +334,9 @@ export default {
             },
             {
               name: this.$t("modal.plugin.face_identification.plugin_name"),
-              description: this.$t("modal.plugin.face_identification.plugin_description"),
+              description: this.$t(
+                "modal.plugin.face_identification.plugin_description"
+              ),
               icon: "mdi-account-search",
               plugin: "insightface_identification",
               id: 202,
@@ -293,7 +375,9 @@ export default {
             },
             {
               name: this.$t("modal.plugin.faceemotion.plugin_name"),
-              description: this.$t("modal.plugin.faceemotion.plugin_description"),
+              description: this.$t(
+                "modal.plugin.faceemotion.plugin_description"
+              ),
               icon: "mdi-emoticon-happy-outline",
               plugin: "deepface_emotion",
               id: 203,
@@ -376,7 +460,9 @@ export default {
           children: [
             {
               name: this.$t("modal.plugin.color_analysis.plugin_name"),
-              description: this.$t("modal.plugin.color_analysis.plugin_description"),
+              description: this.$t(
+                "modal.plugin.color_analysis.plugin_description"
+              ),
               icon: "mdi-palette",
               plugin: "color_analysis",
               id: 301,
@@ -431,7 +517,9 @@ export default {
               name: this.$t(
                 "modal.plugin.color_brightness_analysis.plugin_name"
               ),
-              description: this.$t("modal.plugin.color_brightness_analysis.plugin_description"),
+              description: this.$t(
+                "modal.plugin.color_brightness_analysis.plugin_description"
+              ),
               icon: "mdi-palette",
               plugin: "color_brightness_analysis",
               id: 302,
@@ -459,7 +547,7 @@ export default {
                   field: "checkbox",
                   name: "normalize",
                   text: this.$t("modal.plugin.normalize"),
-                  value: true
+                  value: true,
                 },
               ],
             },
@@ -503,7 +591,9 @@ export default {
             },
             {
               name: this.$t("modal.plugin.clip_ontology.plugin_name"),
-              description: this.$t("modal.plugin.clip_ontology.plugin_description"),
+              description: this.$t(
+                "modal.plugin.clip_ontology.plugin_description"
+              ),
               icon: "mdi-eye",
               plugin: "clip_ontology",
               id: 402,
@@ -576,7 +666,9 @@ export default {
             },
             {
               name: this.$t("modal.plugin.places_classification.plugin_name"),
-              description: this.$t("modal.plugin.places_classification.plugin_description"),
+              description: this.$t(
+                "modal.plugin.places_classification.plugin_description"
+              ),
               icon: "mdi-map-marker",
               plugin: "places_classification",
               id: 401,
@@ -612,7 +704,9 @@ export default {
             },
             {
               name: this.$t("modal.plugin.place_clustering.plugin_name"),
-              description: this.$t("modal.plugin.place_clustering.plugin_description"),
+              description: this.$t(
+                "modal.plugin.place_clustering.plugin_description"
+              ),
               icon: "mdi-ungroup",
               plugin: "place_clustering",
               id: 405,
@@ -623,13 +717,13 @@ export default {
                   text: this.$t("modal.plugin.shot_timeline_name"),
                   hint: this.$t("modal.plugin.shot_timeline_hint"),
                 },
-//                {
-//                  field: "select_options",
-//                  text: this.$t("modal.plugin.place_clustering.encoder_name"),
-//                  hint: this.$t("modal.plugin.place_clustering.encoder_hint"),
-//                  items: ["CLIP", "Places"],
-//                  name: "encoder",
-//                },
+                //                {
+                //                  field: "select_options",
+                //                  text: this.$t("modal.plugin.place_clustering.encoder_name"),
+                //                  hint: this.$t("modal.plugin.place_clustering.encoder_hint"),
+                //                  items: ["CLIP", "Places"],
+                //                  name: "encoder",
+                //                },
                 {
                   field: "slider",
                   min: 0.05,
@@ -637,8 +731,12 @@ export default {
                   value: 0.15,
                   step: 0.01,
                   name: "cluster_threshold",
-                  hint_right: this.$t("modal.plugin.place_clustering.threshold.hint_right"),
-                  hint_left: this.$t("modal.plugin.place_clustering.threshold.hint_left"),
+                  hint_right: this.$t(
+                    "modal.plugin.place_clustering.threshold.hint_right"
+                  ),
+                  hint_left: this.$t(
+                    "modal.plugin.place_clustering.threshold.hint_left"
+                  ),
                 },
                 {
                   field: "slider",
@@ -647,19 +745,27 @@ export default {
                   value: 50,
                   step: 1,
                   name: "max_cluster",
-                  hint_right: this.$t("modal.plugin.place_clustering.max_cluster.hint_right"),
-                  hint_left: this.$t("modal.plugin.place_clustering.max_cluster.hint_left"),
+                  hint_right: this.$t(
+                    "modal.plugin.place_clustering.max_cluster.hint_right"
+                  ),
+                  hint_left: this.$t(
+                    "modal.plugin.place_clustering.max_cluster.hint_left"
+                  ),
                 },
               ],
               optional_parameters: [
                 {
                   field: "select_options",
-                  text: this.$t("modal.plugin.place_clustering.clustering_method_name"),
-                  hint: this.$t("modal.plugin.place_clustering.clustering_method_hint"),
+                  text: this.$t(
+                    "modal.plugin.place_clustering.clustering_method_name"
+                  ),
+                  hint: this.$t(
+                    "modal.plugin.place_clustering.clustering_method_hint"
+                  ),
                   items: ["Agglomerative", "DBScan"],
                   name: "clustering_method",
-                  value: "DBScan"
-                }
+                  value: "DBScan",
+                },
               ],
             },
             {
@@ -690,8 +796,7 @@ export default {
                   text: this.$t("modal.plugin.blip.search_term"),
                 },
               ],
-              optional_parameters: [
-              ],
+              optional_parameters: [],
             },
             {
               name: this.$t("modal.plugin.ocr.plugin_name"),
@@ -732,7 +837,9 @@ export default {
           children: [
             {
               name: this.$t("modal.plugin.shot_detection.plugin_name"),
-              description: this.$t("modal.plugin.shot_detection.plugin_description"),
+              description: this.$t(
+                "modal.plugin.shot_detection.plugin_description"
+              ),
               icon: "mdi-arrow-expand-horizontal",
               plugin: "shotdetection",
               id: 501,
@@ -758,7 +865,9 @@ export default {
             },
             {
               name: this.$t("modal.plugin.shot_density.plugin_name"),
-              description: this.$t("modal.plugin.shot_density.plugin_description"),
+              description: this.$t(
+                "modal.plugin.shot_density.plugin_description"
+              ),
               icon: "mdi-sine-wave",
               plugin: "shot_density",
               id: 503,
@@ -800,7 +909,9 @@ export default {
               name: this.$t(
                 "modal.plugin.shot_type_classification.plugin_name"
               ),
-              description: this.$t("modal.plugin.shot_type_classification.plugin_description"),
+              description: this.$t(
+                "modal.plugin.shot_type_classification.plugin_description"
+              ),
               icon: "mdi-video-switch",
               plugin: "shot_type_classification",
               id: 504,
@@ -834,7 +945,9 @@ export default {
             },
             {
               name: this.$t("modal.plugin.shot_scalar_annotation.plugin_name"),
-              description: this.$t("modal.plugin.shot_scalar_annotation.plugin_description"),
+              description: this.$t(
+                "modal.plugin.shot_scalar_annotation.plugin_description"
+              ),
               icon: "mdi-label-outline",
               plugin: "shot_scalar_annotation",
               id: 505,
@@ -879,7 +992,9 @@ export default {
           children: [
             {
               name: this.$t("modal.plugin.aggregation.plugin_name"),
-              description: this.$t("modal.plugin.aggregation.plugin_description"),
+              description: this.$t(
+                "modal.plugin.aggregation.plugin_description"
+              ),
               icon: "mdi-sigma",
               plugin: "aggregate_scalar",
               id: 601,
@@ -910,7 +1025,8 @@ export default {
                 },
               ],
               optional_parameters: [],
-            }, {
+            },
+            {
               name: this.$t("modal.plugin.invert.plugin_name"),
               description: this.$t("modal.plugin.invert.plugin_description"),
               icon: "mdi-numeric-negative-1",
@@ -970,19 +1086,25 @@ export default {
         }
       });
       for (const video of this.videoIds) {
-        const video_params = []
+        const video_params = [];
         // if multiple videos were selected, choose the correct timeline in parameters
         for (const param of parameters) {
-          if (param.name === 'shot_timeline_id' || param.name == 'scalar_timeline_id') {
+          if (
+            param.name === "shot_timeline_id" ||
+            param.name == "scalar_timeline_id"
+          ) {
             video_params.push({
               name: param.name,
-              value: param.value.timeline_ids[param.value.video_ids.indexOf(video)]
+              value:
+                param.value.timeline_ids[param.value.video_ids.indexOf(video)],
             });
-          } else if (param.name === 'timeline_ids') {
+          } else if (param.name === "timeline_ids") {
             video_params.push({
               name: param.name,
-              value: param.value.map(t => t.timeline_ids[t.video_ids.indexOf(video)])
-            })
+              value: param.value.map(
+                (t) => t.timeline_ids[t.video_ids.indexOf(video)]
+              ),
+            });
           } else {
             video_params.push(param);
           }
