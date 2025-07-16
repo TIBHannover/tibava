@@ -9,7 +9,7 @@
       </slot>
     </template>
     <v-card>
-      <v-card-title class="mb-2">
+      <v-card-title>
         {{ $t("modal.video.upload.title") }}
 
         <v-btn icon @click.native="dialog = false" absolute top right>
