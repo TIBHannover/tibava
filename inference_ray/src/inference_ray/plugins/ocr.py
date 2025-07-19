@@ -323,6 +323,9 @@ class OCRTextDetectorONNX(AnalyserPlugin):
             bboxes_list.append(box)
             scores_list.append(score)
 
+        if len(bboxes_list) == 0:
+            return {"boxes": np.zeros(shape=[0, 4]), "scores": np.zeros(shape=[0])}
+
         bboxes = np.vstack(bboxes_list)
         scores = np.vstack(scores_list)
         scores_ravel = scores.ravel()
@@ -339,8 +342,8 @@ class OCRTextDetectorONNX(AnalyserPlugin):
         self,
         frame,
         input_size=(640, 640),
-        det_thresh=0.5,
-        nms_thresh=0.4,
+        det_thresh=0.6,
+        nms_thresh=0.5,
         fps=10,
     ):
         import onnx
@@ -348,11 +351,17 @@ class OCRTextDetectorONNX(AnalyserPlugin):
         import onnxruntime
         import cv2
 
-        if self.textdet_model is None:
+        if torch.cuda.is_available():
+            providers = ["CUDAExecutionProvider"]
+        else:
+            providers = ["CPUExecutionProvider"]
 
+        if self.textdet_model is None:
+            logging.error(self.textdet_model_path)
+            print(self.textdet_model_path, flush=True)
             self.textdet_model = onnx.load(self.textdet_model_path)
             self.session = onnxruntime.InferenceSession(
-                self.textdet_model_path, providers=["CUDAExecutionProvider"]
+                self.textdet_model_path, providers=providers
             )
             self.input_name = self.session.get_inputs()[0].name
             self.output_name = self.session.get_outputs()[0].name
