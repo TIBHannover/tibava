@@ -16,17 +16,17 @@
         <v-tabs v-model="tab" fixed-tabs>
           <v-tabs-slider></v-tabs-slider>
 
-          <v-tab> {{ $t("modal.video.upload.tab_legal") }} </v-tab>
+          <v-tab> {{ $t("modal.plugin.tab_legal") }} </v-tab>
           <v-tab :disabled="!checkbox">
-            {{ $t("modal.video.upload.tab_upload") }}
+            {{ $t("modal.plugin.tab_plugin") }}
           </v-tab>
         </v-tabs>
       </v-card-title>
       <v-card-text>
         <v-tabs-items v-model="tab">
           <v-tab-item>
-            <h1 class="mt-2">{{ $t("modal.video.upload.terms.title") }}</h1>
-            <p v-html="$t('modal.video.upload.terms.content')"></p>
+            <h1 class="mt-2">{{ $t("terms.title") }}</h1>
+            <p v-html="$t('terms.content')"></p>
 
             <v-form>
               <v-checkbox
@@ -135,7 +135,7 @@
           :disabled="!checkbox"
           @click="tab++"
         >
-          {{ $t("modal.video.upload.continue") }}
+          {{ $t("modal.plugin.continue") }}
         </v-btn>
         <v-btn
           v-if="tab == 1"
