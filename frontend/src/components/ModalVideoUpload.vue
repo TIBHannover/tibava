@@ -8,7 +8,7 @@
         </v-btn>
       </slot>
     </template>
-    <v-card>
+    <v-card height="80vh" class="d-flex flex-column">
       <v-card-title>
         {{ $t("modal.video.upload.title") }}
 
@@ -24,13 +24,12 @@
           </v-tab>
         </v-tabs>
       </v-card-title>
-      <v-card-text>
+      <v-card-text style="overflow-y: scroll">
         <v-tabs-items v-model="tab">
-          <v-tab-item>
+          <v-tab-item class="scroll">
             <h1 class="mt-2">{{ $t("terms.title") }}</h1>
             <p v-html="$t('terms.content')"></p>
-
-            <v-form>
+            <v-form class="terms-input">
               <v-checkbox
                 v-model="checkbox"
                 label="Do you agree with the terms of services?"
@@ -64,6 +63,7 @@
           </v-tab-item>
         </v-tabs-items>
       </v-card-text>
+      <v-spacer></v-spacer>
       <v-card-actions class="pt-0">
         <v-btn
           v-if="tab == 0"
@@ -192,3 +192,14 @@ export default {
   },
 };
 </script>
+
+<style scope>
+.scroll {
+  overflow-y: scroll;
+}
+
+.terms-input {
+  margin-bottom: 10px;
+  margin-left: 10px;
+}
+</style>
