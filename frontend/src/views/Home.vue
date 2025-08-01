@@ -5,6 +5,18 @@
         <v-container
           class="d-flex flex-wrap video-gallery align-content-center"
         >
+          <ModalVideoUpload>
+            <template v-slot:activator="{ on, attrs }">
+              <v-card elevation="2" width="420px" v-bind="attrs" v-on="on">
+                <!-- <v-card-title class="video-overview-title">{{
+              $t("views.home.new_video")
+            }}</v-card-title> -->
+                <v-card-text class="center-container">
+                  <v-icon size="100px">{{ "mdi-plus" }}</v-icon>
+                </v-card-text>
+              </v-card>
+            </template>
+          </ModalVideoUpload>
           <v-card
             elevation="2"
             width="420px"
@@ -236,5 +248,12 @@ export default {
   border-style: outset;
   border-color: black;
   max-width: 800px;
+}
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
 }
 </style>
