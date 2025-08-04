@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" width="90%" max-width="1000">
+  <v-dialog v-model="dialog" width="90%" max-width="1000px">
     <template v-slot:activator="{ on, attrs }">
       <slot name="activator" :on="on" :attrs="attrs">
         <v-btn tile text :disabled="!canUpload" v-bind="attrs" v-on="on">

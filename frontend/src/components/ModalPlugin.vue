@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="90%" style="height: 80vh">
+  <v-dialog v-model="dialog" width="90%" max-width="1000px">
     <template v-slot:activator="{ on, attrs }">
       <slot name="activator" :on="on" :attrs="attrs">
         <v-btn tile text v-bind="attrs" v-on="on">
@@ -9,9 +9,13 @@
       </slot>
     </template>
 
-    <v-card>
+    <v-card height="80vh" class="d-flex flex-column">
       <v-card-title>
         {{ $t("modal.plugin.title") }}
+
+        <v-btn icon @click.native="dialog = false" absolute top right>
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
 
         <v-tabs v-model="tab" fixed-tabs>
           <v-tabs-slider></v-tabs-slider>
@@ -22,13 +26,12 @@
           </v-tab>
         </v-tabs>
       </v-card-title>
-      <v-card-text>
+      <v-card-text style="overflow-y: scroll">
         <v-tabs-items v-model="tab">
-          <v-tab-item>
+          <v-tab-item class="scroll">
             <h1 class="mt-2">{{ $t("terms.title") }}</h1>
             <p v-html="$t('terms.content')"></p>
-
-            <v-form>
+            <v-form class="terms-input">
               <v-checkbox
                 v-model="checkbox"
                 label="Do you agree with the terms of services?"
@@ -37,9 +40,12 @@
               </v-checkbox>
             </v-form>
           </v-tab-item>
-          <v-tab-item>
-            <v-row>
-              <v-col cols="3" style="max-height: 600px; overflow: hidden">
+          <v-tab-item style="height: 100%">
+            <v-row style="height: 100%">
+              <v-col
+                cols="3"
+                style="height: 100%; display: flex; flex-direction: column"
+              >
                 <v-sheet
                   class="pa-1"
                   style="background-color: rgb(174, 19, 19) !important"
@@ -63,7 +69,7 @@
                   :open.sync="open"
                   activatable
                   open-all
-                  style="cursor: pointer; overflow-y: scroll; height: 500px"
+                  style="cursor: pointer; overflow-y: scroll"
                   :active.sync="active"
                 >
                   <template v-slot:prepend="{ item }">
@@ -71,7 +77,10 @@
                   </template>
                 </v-treeview>
               </v-col>
-              <v-col cols="9">
+              <v-col
+                cols="9"
+                style="height: 100%; display: flex; flex-direction: column"
+              >
                 <div
                   v-if="!selected"
                   class="text-h6 grey--text font-weight-light"
@@ -83,7 +92,7 @@
                   v-else
                   :key="selected.id"
                   class="mx-auto overflow-y-auto"
-                  style="max-height: calc(80vh - 50px)"
+                  style="height: 100%"
                   flat
                 >
                   <v-card-title class="mb-0">
@@ -91,7 +100,6 @@
                   </v-card-title>
                   <v-card-text>
                     <div
-                      class=""
                       style="padding-bottom: 2em"
                       v-html="selected.description"
                     ></div>
@@ -128,6 +136,8 @@
           </v-tab-item>
         </v-tabs-items>
       </v-card-text>
+
+      <v-spacer></v-spacer>
       <v-card-actions class="pt-0">
         <v-btn
           v-if="tab == 0"
@@ -1174,5 +1184,14 @@ export default {
 <style>
 div.tabs-left [role="tab"] {
   justify-content: flex-start;
+}
+
+.scroll {
+  overflow-y: scroll;
+}
+
+.terms-input {
+  margin-bottom: 10px;
+  margin-left: 10px;
 }
 </style>
