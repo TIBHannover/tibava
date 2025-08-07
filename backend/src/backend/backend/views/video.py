@@ -94,6 +94,7 @@ class VideoUpload(View):
                     width=meta["width"],
                     height=meta["height"],
                     owner=request.user,
+                    terms_accepted=True,
                 )
                 if not created:
                     logger.error("VideoUpload::database_create_failed")
