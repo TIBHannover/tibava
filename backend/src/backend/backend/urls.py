@@ -14,6 +14,7 @@ urlpatterns = [
     path("video/list", views.VideoList.as_view(), name="video_list"),
     path("video/get", views.VideoGet.as_view(), name="video_get"),
     path("video/rename", views.VideoRename.as_view(), name="video_rename"),
+    path("video/accept_terms", views.VideoAcceptTerms.as_view(), name="accept_terms"),
     path("video/delete", views.VideoDelete.as_view(), name="video_delete"),
     #
     path("video/export", views.VideoExport.as_view(), name="video_export"),

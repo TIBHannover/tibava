@@ -169,6 +169,41 @@ export const useVideoStore = defineStore("video", {
       //     commit('error/update', info, { root: true });
       // });
     },
+    async accept_terms({ videoId }) {
+      console.log(videoId);
+      if (this.isLoading) {
+        return;
+      }
+      this.isLoading = true;
+
+      let params = {
+        id: videoId,
+      };
+
+      // const newVideos = { ...this.videos };
+
+      // console.log(JSON.stringify(videoId));
+      // console.log(JSON.stringify(newVideos));
+      // console.log(JSON.stringify(newVideos[videoId]));
+      // newVideos[videoId].accept_terms = true;
+      // Vue.set(this, "videos", newVideos);
+
+      return axios
+        .post(`${config.API_LOCATION}/video/accept_terms`, params)
+        .then((res) => {
+          if (res.data.status === "ok") {
+            // commit("rename", { videoId, name });
+            return true;
+          }
+        })
+        .finally(() => {
+          this.isLoading = false;
+        });
+      // .catch((error) => {
+      //     const info = { date: Date(), error, origin: 'collection' };
+      //     commit('error/update', info, { root: true });
+      // });
+    },
     async delete(video_id) {
       if (this.isLoading) {
         return;

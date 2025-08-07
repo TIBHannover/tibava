@@ -53,6 +53,7 @@ class Video(models.Model):
     duration = models.FloatField(blank=True, null=True)
     height = models.IntegerField(blank=True, null=True)
     width = models.IntegerField(blank=True, null=True)
+    terms_accepted = models.BooleanField(default=False)
 
     def to_dict(self, include_refs_hashes=True, include_refs=False, **kwargs):
         return {
@@ -66,6 +67,7 @@ class Video(models.Model):
             "height": self.height,
             "width": self.width,
             "num_timelines": len(Timeline.objects.filter(video=self)),
+            "terms_accepted": self.terms_accepted,
         }
 
     def clone(self, owner=None, include_timelines=True, include_annotations=True):
