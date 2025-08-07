@@ -168,6 +168,41 @@ class VideoGet(View):
             return JsonResponse({"status": "error"}, status=500)
 
 
+class VideoAcceptTerms(View):
+    def post(self, request):
+        try:
+            if not request.user.is_authenticated:
+                return JsonResponse({"status": "error"}, status=500)
+            try:
+                body = request.body.decode("utf-8")
+            except (UnicodeDecodeError, AttributeError):
+                body = request.body
+
+            try:
+                data = json.loads(body)
+            except Exception as e:
+                return JsonResponse({"status": "error"}, status=500)
+
+            if "id" not in data:
+                return JsonResponse(
+                    {"status": "error", "type": "missing_values"}, status=500
+                )
+
+            try:
+                video_db = Video.objects.get(id=data.get("id"))
+            except Video.DoesNotExist:
+                return JsonResponse(
+                    {"status": "error", "type": "not_exist"}, status=500
+                )
+
+            video_db.terms_accepted = True
+            video_db.save()
+            return JsonResponse({"status": "ok", "entry": video_db.to_dict()})
+        except Exception:
+            logger.exception("Failed to accept terms for video")
+            return JsonResponse({"status": "error"}, status=500)
+
+
 class VideoRename(View):
     def post(self, request):
         try:

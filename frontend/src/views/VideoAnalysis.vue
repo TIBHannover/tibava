@@ -138,6 +138,9 @@
         </v-col>
       </v-row>
       <ModalTimelineSegmentAnnotate :show.sync="annotationDialog.show" />
+      <ModalTerms v-model="termsDialog.show" :videoId="$route.params.id">
+        <template v-slot:activator="{ on, attrs }"><p></p> </template>
+      </ModalTerms>
     </v-container>
   </v-main>
 </template>
@@ -153,6 +156,7 @@ import ShotsOverview from "@/components/ShotsOverview.vue";
 import WordcloudCard from "@/components/WordcloudCard.vue";
 import VisualizationMenu from "@/components/VisualizationMenu.vue";
 import PersonGraph from "../components/PersonGraph.vue";
+import ModalTerms from "../components/ModalTerms.vue";
 
 import * as Keyboard from "../plugins/keyboard.js";
 // import store from "../store/index.js";
@@ -188,6 +192,9 @@ export default {
       annotationsLUT: {},
       //
       annotationDialog: {
+        show: false,
+      },
+      termsDialog: {
         show: false,
       },
       isLoading: true,
@@ -358,6 +365,10 @@ export default {
         videoId: this.$route.params.id,
         addResults: addResults,
       });
+
+      if (this.playerStore.video.terms_accepted == false) {
+        this.termsDialog.show = true;
+      }
     },
     async fetchPlugin() {
       await this.pluginRunStore.fetchForVideo({
@@ -485,6 +496,7 @@ export default {
     VisualizationMenu,
     PersonGraph,
     ClusterTimelineItemOverview,
+    ModalTerms,
   },
 
   watch: {

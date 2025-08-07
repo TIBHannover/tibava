@@ -73,6 +73,10 @@
     "create": "Create"
   },
   "modal": {
+    "terms": {
+      "title": "Terms",
+      "accept": "Accept"
+    },
     "error": {
       "title": "Error",
       "close": "Close"
