@@ -1,5 +1,10 @@
 <template>
-  <v-dialog v-model="dialog" width="90%" max-width="1000px">
+  <v-dialog
+    v-model="dialog"
+    max-width="90%"
+    min-width="600px"
+    :fullscreen="$vuetify.breakpoint.xsOnly"
+  >
     <template v-slot:activator="{ on, attrs }">
       <slot name="activator" :on="on" :attrs="attrs">
         <v-btn tile text :disabled="!canUpload" v-bind="attrs" v-on="on">
