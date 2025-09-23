@@ -810,3 +810,22 @@ applications:
           min_replicas: 1
         ray_actor_options:
           num_gpus: 0.2
+  - name: nano_ocr_video
+    route_prefix: /nano_ocr_video
+    import_path: inference_ray.main:app_builder
+    runtime_env:
+      uv:
+        - transformers>=4.54.0
+        - accelerate>=1.9.0
+        - torchvision>=0.22.1
+        - hqq
+        - torchao
+    args:
+      model: nano_ocr_video
+      data_path: /data
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_gpus: 0.2
