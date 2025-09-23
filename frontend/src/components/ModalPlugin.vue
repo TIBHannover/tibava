@@ -1,5 +1,10 @@
 <template>
-  <v-dialog v-model="dialog" width="90%" max-width="1000px">
+  <v-dialog
+    v-model="dialog"
+    max-width="90%"
+    min-width="600px"
+    :fullscreen="$vuetify.breakpoint.xsOnly"
+  >
     <template v-slot:activator="{ on, attrs }">
       <slot name="activator" :on="on" :attrs="attrs">
         <v-btn tile text v-bind="attrs" v-on="on">
@@ -873,6 +878,31 @@ export default {
                   min: 1,
                   max: 10,
                   value: 2,
+                  step: 1,
+                  name: "fps",
+                  text: this.$t("modal.plugin.fps"),
+                },
+              ],
+            },
+            {
+              name: this.$t("modal.plugin.nano_ocr.plugin_name"),
+              icon: "mdi-text-shadow",
+              plugin: "nano_ocr_video",
+              id: 408,
+              parameters: [
+                {
+                  field: "text_field",
+                  name: "timeline",
+                  value: this.$t("modal.plugin.ocr.timeline_name"),
+                  text: this.$t("modal.plugin.ocr.timeline_name"),
+                },
+              ],
+              optional_parameters: [
+                {
+                  field: "slider",
+                  min: 1,
+                  max: 1,
+                  value: 1,
                   step: 1,
                   name: "fps",
                   text: this.$t("modal.plugin.fps"),
