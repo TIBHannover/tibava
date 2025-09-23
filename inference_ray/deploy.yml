@@ -769,6 +769,7 @@ applications:
           min_replicas: 1
         ray_actor_options:
           num_cpus: 1
+<<<<<<< HEAD
 
   - name: face_tracking
     route_prefix: /face_tracking
@@ -777,11 +778,27 @@ applications:
       model: face_tracking
       data_path: /data
       params: {}
+=======
+  - name: nano_ocr_video
+    route_prefix: /nano_ocr_video
+    import_path: inference_ray.main:app_builder
+    runtime_env:
+      uv:
+        - transformers>=4.54.0
+        - accelerate>=1.9.0
+        - torchvision>=0.22.1
+        - hqq
+        - torchao
+    args:
+      model: nano_ocr_video
+      data_path: /data
+>>>>>>> d30380b (Add nanonets ocr.)
     deployments:
       - name: Deployment
         autoscaling_config:
           min_replicas: 0
         ray_actor_options:
+<<<<<<< HEAD
           num_cpus: 2
           runtime_env:
             pip:
@@ -990,3 +1007,6 @@ applications:
               - torch>=2.6.0
               - transformers>=4.48.3
               - germansentiment==1.1.0
+=======
+          num_cpus: 1
+>>>>>>> d30380b (Add nanonets ocr.)

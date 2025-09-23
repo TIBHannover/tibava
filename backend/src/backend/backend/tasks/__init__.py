@@ -34,3 +34,5 @@ from .audio_classification import *
 from .text_ner import *
 from .text_pos import *
 from .text_sentiment import *
+from .ocr import *
+from .nano_ocr import *
