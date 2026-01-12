@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 
 import numpy.typing as npt
 import numpy as np
+from mava import GraphBuilder
 
 from ..manager import DataManager
 from ..data import Data
@@ -18,6 +19,15 @@ class Annotation:
 
     def to_dict(self) -> dict:
         return {"start": self.start, "end": self.end, "labels": self.labels}
+    
+    def compute_duration(self) -> float:
+        return self.end - self.start
+    
+    def to_mava_dict(self) -> dict:
+        return {
+            **self.to_dict(),
+            "duration": self.compute_duration()
+        }
 
 
 @DataManager.export("AnnotationData", analyser_pb2.ANNOTATION_DATA)
@@ -48,3 +58,21 @@ class AnnotationData(Data):
             **super().to_dict(),
             "annotations": [ann.to_dict() for ann in self.annotations],
         }
+    
+    def to_mava_dict(self) -> List[dict]:
+        return [ann.to_mava_dict() for ann in self.annotations]
+    
+    
+    def to_mava(self) -> bytes:
+        mava_data = self.to_mava_dict()
+        mava_mapping =  {
+                    "series_description": "Annotation",
+                    "value_description": "annotation",
+                    "value_type": "string",
+                    "value_prefix": "Annotation:: ",
+                    "time_column": "start",
+                    "value_column": "labels",
+                    "duration_column": "duration"
+                    }
+        mava_graph = GraphBuilder()
+        return mava_graph.add_mapped_data(mava_data, mava_mapping)

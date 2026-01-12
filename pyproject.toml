@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "mava",
     "packaging>=24.2",
     "pyyaml>=6.0.2",
     "requests>=2.32.3",
@@ -13,3 +14,6 @@ dependencies = [
 
 [tool.uv.workspace]
 members = ["packages/*", "analyser", "backend", "inference_ray"]
+
+[tool.uv.sources]
+mava = { git = "https://github.com/sdsc-ordes/mava-api.git" }
