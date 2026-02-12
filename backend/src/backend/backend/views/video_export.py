@@ -39,7 +39,7 @@ logger = logging.getLogger(__name__)
 
 def json_to_csv(json_obj):
     df = pd.DataFrame(json_obj)
-    return df.to_csv(index=False, sep="\t")
+    return df.to_csv(index=False, sep="\t", quotechar="'", quoting=csv.QUOTE_NONE)
 
 
 def time_to_string(sec, loc="en"):
@@ -548,7 +548,7 @@ class VideoExport(View):
                                 all_annotations.append(
                                     segment_annotation_db.annotation.name
                                 )
-                        annotations["annotations"].append(all_annotations)
+                        annotations["annotations"].append(json.dumps(all_annotations))
                     else:
                         annotations["annotations"].append("")
 
