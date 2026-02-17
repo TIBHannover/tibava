@@ -664,7 +664,7 @@ class VideoExport(View):
                     end_time = int(segment_db.end * 1000)
                     # print(f"{start_time} - {end_time}")
                     # TODO: check why this occurs
-                    if start_time <= end_time:
+                    if start_time >= end_time:
                         continue
                     annotations = []
                     # if the timeline contains annotations, export them
