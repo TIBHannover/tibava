@@ -5,6 +5,7 @@ import logging
 import sys
 import io
 import csv
+import yaml
 import base64
 from dataclasses import dataclass
 
@@ -31,6 +32,7 @@ from backend.models import (
 )
 from enum import Enum
 from data import DataManager, Shot
+from data import Annotation as Data_Annotation
 import numpy as np
 
 
@@ -577,135 +579,100 @@ class VideoExport(View):
 
     def export_data(self, parameters, video_db):
         include_category = parameters.get("include_category", True)
-        use_timestamps = parameters.get("use_timestamps", True)
-        use_seconds = parameters.get("use_seconds", True)
-
-        timeline_annotations = []
-        timeline_names = []
-
-        data_manager = DataManager("/predictions/")
-
-        for timeline_db in Timeline.objects.filter(video=video_db):
-            annotations = {}
-            tl_type = timeline_db.plugin_run_result
-            # print(f"{timeline_db.name} --> {tl_type=}")
-
-            # if the type of the timeline is scalar convert it to elan format
-            if tl_type is not None:
-                annotations["start in seconds"] = []
-                if use_timestamps:
-                    annotations["start hh:mm:ss.ms"] = []
-                annotations["annotations"] = []
-
-                data = data_manager.load(timeline_db.plugin_run_result.data_id)
-
-                # if it is not of type SCALAR, skip it
-                with data:
-                    if tl_type.type == PluginRunResult.TYPE_SCALAR:
-                        y = np.asarray(data.y)
-                        # print(f"Data {len(y)}\n {y}")
-                        time = np.asarray(data.time)
-                        # print(f"Data {len(time)}\n {time}")
-                        for i, time_stamp in enumerate(time):
-                            annotations["start in seconds"].append(time_stamp)
-                            annotations["annotations"].append(round(float(y[i]), 5))
-                            if use_timestamps:
-                                annotations["start hh:mm:ss.ms"].append(
-                                    time_to_string(time_stamp, loc="en")
-                                )
-                    elif tl_type.type == PluginRunResult.TYPE_RGB_HIST:
-                        colors = np.asarray(data.colors)
-                        # print(f"Data {len(colors)}\n {colors}")
-                        time = np.asarray(data.time)
-                        # print(f"Data {len(time)}\n {time}")
-                        for i, time_stamp in enumerate(time):
-                            annotations["start in seconds"].append(time_stamp)
-                            annotations["annotations"].append(colors[i])
-                            if use_timestamps:
-                                annotations["start hh:mm:ss.ms"].append(
-                                    time_to_string(time_stamp, loc="en")
-                                )
-                    else:
-                        continue
-
-            else:
-                times = []
-                durations = []
-
-                shot_timeline_segments = TimelineSegment.objects.filter(
-                    timeline=timeline_db
-                )
-
-                for segment in shot_timeline_segments:
-                    times.append(segment.start)
-                    durations.append(segment.end - segment.start)
-
-                time_duration = sorted(
-                    list(set(zip(times, durations))), key=lambda x: x[0]
-                )
-
-                # start
-                if use_timestamps:
-                    annotations["start hh:mm:ss.ms"] = [
-                        time_to_string(t[0], loc="en") for t in time_duration
-                    ]
-
-                if use_seconds:
-                    annotations["start in seconds"] = [str(t[0]) for t in time_duration]
-
-                # duration
-                if use_timestamps:
-                    annotations["duration hh:mm:ss.ms"] = [
-                        time_to_string(t[1], loc="en") for t in time_duration
-                    ]
-
-                if use_seconds:
-                    annotations["duration in seconds"] = [
-                        str(t[1]) for t in time_duration
-                    ]
-
-                annotations["annotations"] = []
-
-                for segment in shot_timeline_segments:
-                    if len(segment.timelinesegmentannotation_set.all()) > 0:
-                        all_annotations = []
-                        for (
-                            segment_annotation_db
-                        ) in segment.timelinesegmentannotation_set.all():
-                            if (
-                                include_category
-                                and segment_annotation_db.annotation.category
-                            ):
-                                all_annotations.append(
-                                    segment_annotation_db.annotation.category.name
-                                    + "::"
-                                    + segment_annotation_db.annotation.name
-                                )
-                            else:
-                                all_annotations.append(
-                                    segment_annotation_db.annotation.name
-                                )
-                        annotations["annotations"].append(json.dumps(all_annotations))
-                    else:
-                        annotations["annotations"].append("")
-
-            timeline_annotations.append(annotations)
-            timeline_names.append(timeline_db.name)
-
-        # print(len(timeline_annotations))
 
         # Create a temporary in-memory file to store the zip
         buffer = io.BytesIO()
         zip_file = zipfile.ZipFile(buffer, "w")
 
-        # print(timeline_annotations)
+        data_manager = DataManager("/predictions/")
 
-        for index, json_obj in enumerate(timeline_annotations):
-            csv_data = json_to_csv(json_obj)
-            filename = f"{timeline_names[index]}.tsv"
+        data_ids = set()
+        for plugin_run_result_db in PluginRunResult.objects.filter(
+            plugin_run__video=video_db
+        ):
+            with open(data_manager.data_path(plugin_run_result_db.data_id), "rb") as f:
+                data_id = plugin_run_result_db.data_id
+                if data_id not in data_ids:
+                    data_ids.add(data_id)
+                    print(plugin_run_result_db.data_id, flush=True)
+                    print(plugin_run_result_db.plugin_run, flush=True)
+                    # Write the CSV data to the individual file
+                    zip_file.writestr(f"{plugin_run_result_db.data_id}.zip", f.read())
 
-            # Write the CSV data to the individual file
-            zip_file.writestr(filename, csv_data)
+        timelines = []
+
+        print(len(Timeline.objects.filter(video=video_db)))
+        for timeline_db in Timeline.objects.filter(video=video_db):
+            print(timeline_db.to_dict(), flush=True)
+            timelines.append(timeline_db.to_dict())
+            if timeline_db.type == Timeline.TYPE_ANNOTATION:
+                with data_manager.create_data(
+                    "AnnotationData", timeline_db.id.hex
+                ) as data:
+
+                    print("ANNOTATION", data.to_dict(), flush=True)
+                    shot_timeline_segments = TimelineSegment.objects.filter(
+                        timeline=timeline_db
+                    )
+
+                    for segment in shot_timeline_segments:
+
+                        annotations = []
+
+                        if len(segment.timelinesegmentannotation_set.all()) > 0:
+                            for (
+                                segment_annotation_db
+                            ) in segment.timelinesegmentannotation_set.all():
+                                if (
+                                    include_category
+                                    and segment_annotation_db.annotation.category
+                                ):
+                                    annotations.append(
+                                        segment_annotation_db.annotation.category.name
+                                        + "::"
+                                        + segment_annotation_db.annotation.name
+                                    )
+                                else:
+                                    annotations.append(
+                                        segment_annotation_db.annotation.name
+                                    )
+                        data.annotations.append(
+                            Data_Annotation(
+                                start=segment.start,
+                                end=segment.end,
+                                labels=annotations,
+                            )
+                        )
+
+                with open(data_manager.data_path(data.id), "rb") as f:
+                    zip_file.writestr(f"{data.id}.zip", f.read())
+
+        # Save all timelines
+        zip_file.writestr(f"timelines.yml", yaml.safe_dump(timelines).encode())
+
+        # Save all plugin_runs that are done
+        plugin_runs = [
+            x.to_dict()
+            for x in PluginRun.objects.filter(video=video_db)
+            if x.status == PluginRun.STATUS_DONE
+        ]
+        zip_file.writestr(f"plugin_runs.yml", yaml.safe_dump(plugin_runs).encode())
+
+        # Save all plugin_run_results
+        plugin_run_results = [
+            x.to_dict()
+            for x in PluginRunResult.objects.filter(plugin_run__video=video_db)
+        ]
+        zip_file.writestr(
+            f"plugin_run_results.yml", yaml.safe_dump(plugin_run_results).encode()
+        )
+
+        # Save the video
+
+        zip_file.writestr(f"video.yml", yaml.safe_dump(video_db.to_dict()).encode())
+
+        meta = {"version": "1.0"}
+        zip_file.writestr(f"meta.yml", yaml.safe_dump(meta).encode())
 
         # Close the zip file
         zip_file.close()
@@ -902,7 +869,7 @@ class VideoExport(View):
             elif request.POST.get("format") == "data":
                 result = self.export_data(parameters, video_db)
                 return JsonResponse(
-                    {"status": "ok", "file": result, "extension": "eaf"}
+                    {"status": "ok", "file": result, "extension": "zip"}
                 )
 
             return JsonResponse({"status": "error", "type": "unknown_format"})
