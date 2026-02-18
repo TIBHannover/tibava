@@ -29,6 +29,7 @@ dependencies = [
     "qdrant-client>=1.13.2",
     "ray[serve,serve-grpc]==2.42.0",
     "scipy>=1.15.2",
+    "setuptools>=75.8.0",
 ]
 
 [tool.uv]

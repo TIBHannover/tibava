@@ -10,25 +10,37 @@
       </v-card-title>
       <v-card-text>
         <v-tabs vertical class="tabs-left">
-          <v-tab v-for="export_format in export_formats_sorted" :key="export_format.name">
+          <v-tab
+            v-for="export_format in export_formats_sorted"
+            :key="export_format.name"
+          >
             <v-icon left> {{ export_format.icon }} </v-icon>
             <span class="text-button">{{ export_format.name }}</span>
           </v-tab>
-          <v-tab-item v-for="export_format in export_formats_sorted" :key="export_format.name">
+          <v-tab-item
+            v-for="export_format in export_formats_sorted"
+            :key="export_format.name"
+          >
             <v-card flat height="100%">
               <v-card-title>{{ export_format.name }} </v-card-title>
               <v-card-text>
-                <Parameters :videoIds="[videoId]" :parameters="export_format.parameters">
+                <Parameters
+                  :videoIds="[videoId]"
+                  :parameters="export_format.parameters"
+                >
                 </Parameters>
               </v-card-text>
 
               <v-card-actions class="pt-0">
-                <v-btn @click="
-                  downloadExport(
-                    export_format.export,
-                    export_format.parameters
-                  )
-                  ">{{ $t("modal.export.export") }}</v-btn>
+                <v-btn
+                  @click="
+                    downloadExport(
+                      export_format.export,
+                      export_format.parameters,
+                    )
+                  "
+                  >{{ $t("modal.export.export") }}</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-tab-item>
@@ -139,6 +151,12 @@ export default {
             },
           ],
         },
+        {
+          name: this.$t("modal.export.data.export_name"),
+          icon: "mdi-file",
+          export: "data",
+          parameters: [],
+        },
       ],
     };
   },
@@ -147,7 +165,9 @@ export default {
       return this.playerStore.videoId;
     },
     export_formats_sorted() {
-      return this.export_formats.slice(0).sort((a, b) => a.name.localeCompare(b.name));
+      return this.export_formats
+        .slice(0)
+        .sort((a, b) => a.name.localeCompare(b.name));
     },
     ...mapStores(useVideoStore, usePlayerStore),
   },

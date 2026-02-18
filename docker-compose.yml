@@ -8,9 +8,6 @@ services:
 
     volumes:
       - type: bind
-        source: ./data/inference_ray_venv
-        target: /app/.venv
-      - type: bind
         source: ./data/analyser
         target: /data/
       - type: bind
@@ -40,15 +37,13 @@ services:
 
     working_dir: /app/
 
-    command: uv run --package inference_ray serve run /app/inference_ray/deploy.yml
+    command: uv run --package inference_ray serve run inference_ray/deploy.yml
+    # command: ls inference_ray/deploy.yml
 
   analyser:
     image: ghcr.io/astral-sh/uv:debian
 
     volumes:
-      - type: bind
-        source: ./data/analyser_venv
-        target: /app/.venv
       - type: bind
         source: ./inference_ray
         target: /app/inference_ray
@@ -102,9 +97,6 @@ services:
 
     volumes:
       - type: bind
-        source: ./data/celery_venv
-        target: /app/.venv
-      - type: bind
         source: ./inference_ray
         target: /app/inference_ray
       - type: bind
@@ -153,9 +145,6 @@ services:
       - 8000:8000
 
     volumes:
-      - type: bind
-        source: ./data/backend_venv
-        target: /app/.venv
       - type: bind
         source: ./inference_ray
         target: /app/inference_ray
