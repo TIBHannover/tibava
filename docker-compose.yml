@@ -41,7 +41,7 @@ services:
 
     working_dir: /app/
 
-    command: serve run inference_ray/deploy.yml
+    command: uv run --package inference_ray serve run inference_ray/deploy.yml
     # command: ls inference_ray/deploy.yml
 
   analyser:

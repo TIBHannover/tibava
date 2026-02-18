@@ -222,10 +222,10 @@ applications:
 
           runtime_env:
             uv:
-              - scikit-learn==1.4.0
-              - opencv-python-headless==4.9.0.80
-              - onnxruntime-gpu==1.17.0
-              - onnx==1.15.0
+              - scikit-learn>=1.6.1
+              - opencv-python-headless>=4.11.0.86
+              - onnxruntime-cpu>=1.17.0
+              - onnx>=1.15.0
   - name: insightface_video_detector_torch
     route_prefix: /insightface_video_detector_torch
     import_path: inference_ray.main:app_builder
@@ -415,7 +415,7 @@ applications:
       model: shot_type_classifier
       data_path: /data
       params:
-        model_path: /models/shot_type_classification/shot_type_classifier_e9-s3199_cpu.pt
+        model_path: /models/shot_type_classification/shot_type_classifier_e9-s3199.pt
     deployments:
       - name: Deployment
         autoscaling_config:

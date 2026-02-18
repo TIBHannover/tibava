@@ -155,14 +155,7 @@ export default {
           name: this.$t("modal.export.data.export_name"),
           icon: "mdi-file",
           export: "data",
-          parameters: [
-            {
-              field: "checkbox",
-              name: "include_video",
-              value: true,
-              text: this.$t("modal.export.data.include_video"),
-            },
-          ],
+          parameters: [],
         },
       ],
     };
