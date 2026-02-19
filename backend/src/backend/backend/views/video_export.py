@@ -671,6 +671,9 @@ class VideoExport(View):
         )
 
         # Save the video
+        video_id_hex = video_db.id.hex if not video_db.file else video_db.file.hex
+        with open(media_path_to_video(video_id_hex, video_db.ext), "rb") as f:
+            zip_file.writestr(f"{video_id_hex}.{video_db.ext}", f.read())
 
         zip_file.writestr(f"video.yml", yaml.safe_dump(video_db.to_dict()).encode())
 
