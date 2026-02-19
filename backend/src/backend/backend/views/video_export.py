@@ -587,6 +587,7 @@ class VideoExport(View):
 
     def export_data(self, parameters, video_db):
         include_category = parameters.get("include_category", True)
+        include_video = parameters.get("include_video", True)
 
         # Create a temporary in-memory file to store the zip
         buffer = io.BytesIO()
@@ -605,7 +606,9 @@ class VideoExport(View):
                     print(plugin_run_result_db.data_id, flush=True)
                     print(plugin_run_result_db.plugin_run, flush=True)
                     # Write the CSV data to the individual file
-                    zip_file.writestr(f"{plugin_run_result_db.data_id}.zip", f.read())
+                    zip_file.writestr(
+                        f"data/{plugin_run_result_db.data_id}.zip", f.read()
+                    )
 
         timelines = []
 
@@ -653,7 +656,7 @@ class VideoExport(View):
                         )
 
                 with open(data_manager.data_path(data.id), "rb") as f:
-                    zip_file.writestr(f"{data.id}.zip", f.read())
+                    zip_file.writestr(f"data/{data.id}.zip", f.read())
 
         # Save all timelines
         zip_file.writestr(f"timelines.yml", yaml.safe_dump(timelines).encode())
@@ -676,9 +679,10 @@ class VideoExport(View):
         )
 
         # Save the video
-        video_id_hex = video_db.id.hex if not video_db.file else video_db.file.hex
-        with open(media_path_to_video(video_id_hex, video_db.ext), "rb") as f:
-            zip_file.writestr(f"{video_id_hex}.{video_db.ext}", f.read())
+        if include_video:
+            video_id_hex = video_db.id.hex if not video_db.file else video_db.file.hex
+            with open(media_path_to_video(video_id_hex, video_db.ext), "rb") as f:
+                zip_file.writestr(f"{video_id_hex}.{video_db.ext}", f.read())
 
         zip_file.writestr(f"video.yml", yaml.safe_dump(video_db.to_dict()).encode())
 
