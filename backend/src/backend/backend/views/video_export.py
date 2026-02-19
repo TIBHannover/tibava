@@ -21,6 +21,14 @@ import pandas as pd
 
 import zipfile
 
+from backend.utils import (
+    download_url,
+    download_file,
+    media_url_to_video,
+    media_path_to_video,
+    media_dir_to_video,
+)
+
 from backend.utils.color import get_closest_color
 from backend.models import (
     Video,
@@ -668,6 +676,9 @@ class VideoExport(View):
         )
 
         # Save the video
+        video_id_hex = video_db.id.hex if not video_db.file else video_db.file.hex
+        with open(media_path_to_video(video_id_hex, video_db.ext), "rb") as f:
+            zip_file.writestr(f"{video_id_hex}.{video_db.ext}", f.read())
 
         zip_file.writestr(f"video.yml", yaml.safe_dump(video_db.to_dict()).encode())
 
