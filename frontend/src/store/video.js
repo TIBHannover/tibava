@@ -89,7 +89,7 @@ export const useVideoStore = defineStore("video", {
             })
             .then(() => {
               return timelineSegmentAnnotationStore.fetchForVideo({ videoId });
-            })
+            }),
         );
       }
       if (includeAnalyser) {
@@ -99,13 +99,13 @@ export const useVideoStore = defineStore("video", {
           pluginRunStore.fetchForVideo({
             videoId: videoId,
             addResults: addResults,
-          })
+          }),
         );
         promises.push(
           pluginRunResultStore.fetchForVideo({
             videoId: videoId,
             addResults: addResults,
-          })
+          }),
         );
       }
       if (includeShortcut) {
@@ -180,14 +180,6 @@ export const useVideoStore = defineStore("video", {
       let params = {
         id: videoId,
       };
-
-      // const newVideos = { ...this.videos };
-
-      // console.log(JSON.stringify(videoId));
-      // console.log(JSON.stringify(newVideos));
-      // console.log(JSON.stringify(newVideos[videoId]));
-      // newVideos[videoId].accept_terms = true;
-      // Vue.set(this, "videos", newVideos);
 
       return axios
         .post(`${config.API_LOCATION}/video/accept_terms`, params)
@@ -274,7 +266,7 @@ export const useVideoStore = defineStore("video", {
               let blob = new Blob([filecontent], { type: `application/zip` });
               let link = document.createElement("a");
               link.href = window.URL.createObjectURL(blob);
-              link.download = `timelines.${res.data.extension}`;
+              link.download = `${res.data.video_name}.${res.data.extension}`;
               link.click();
             } else if (
               res.data.extension === "csv" ||
@@ -285,7 +277,7 @@ export const useVideoStore = defineStore("video", {
               });
               let link = document.createElement("a");
               link.href = window.URL.createObjectURL(blob);
-              link.download = `${video_id}.${res.data.extension}`;
+              link.download = `${res.data.video_name}.${res.data.extension}`;
               link.click();
             }
           }
