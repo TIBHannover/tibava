@@ -97,6 +97,10 @@
         "use_seconds": "Use seconds",
         "include_category": "Include category"
       },
+      "data": {
+        "export_name": "Export Project",
+        "include_video": "Include video"
+      },
       "json": {
         "export_name": "JSON"
       },
@@ -204,7 +208,6 @@
         "sr": "Sampling Rate",
         "n_fft": "Length of the FFT (Fast Fourier Transform) window"
       },
-
       "text_ner": {
         "plugin_name": "Named Entity Recognition and Disambiguation (NERD)",
         "timeline_name": "Named Entities",
@@ -222,7 +225,6 @@
         "plugin_description": "This plugin performs sentiment analysis based on the speaker segments of WhisperX. The predicted label is shown as well as the predicted probabilities for each sentiment.",
         "model_selector_description": "Model Type"
       },
-
       "blip": {
         "plugin_name": "Visual Question Answering (InstructBLIP)",
         "plugin_description": "This plugin uses the large vision language model <a href=\"https://arxiv.org/abs/2305.06500\">InstructBLIP</a> that is similar to GPT-4 to perform question answering over the video. It can be used for various purposes, for example, to automatically find concepts within the video. Here are some examples: <br><br> <em>Does this image show a car? Please answer with yes or no! <br> Does this image show at least three persons? Please answer with yes or no! <br> Is this photo taken in a restaurant? Please answer with yes or no!</em>",
