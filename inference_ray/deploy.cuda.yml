@@ -420,7 +420,7 @@ applications:
       model: shot_type_classifier
       data_path: /data
       params:
-        model_path: /models/shot_type_classification/shot_type_classifier_e9-s3199.pt
+        model_path: /models/shot_type_classification/shot_type_classifier_e9-s3199_gpu.pt
     deployments:
       - name: Deployment
         autoscaling_config:
