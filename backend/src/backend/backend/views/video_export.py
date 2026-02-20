@@ -866,25 +866,45 @@ class VideoExport(View):
             if request.POST.get("format") == "merged_csv":
                 result = self.export_merged_csv(parameters, video_db)
                 return JsonResponse(
-                    {"status": "ok", "file": result, "extension": "csv"}
+                    {
+                        "status": "ok",
+                        "file": result,
+                        "video_name": video_db.name,
+                        "extension": "csv",
+                    }
                 )
 
             elif request.POST.get("format") == "individual_csv":
                 result = self.export_individual_csv(parameters, video_db)
                 return JsonResponse(
-                    {"status": "ok", "file": result, "extension": "zip"}
+                    {
+                        "status": "ok",
+                        "file": result,
+                        "video_name": video_db.name,
+                        "extension": "zip",
+                    }
                 )
 
             elif request.POST.get("format") == "elan":
                 result = self.export_elan(parameters, video_db)
                 return JsonResponse(
-                    {"status": "ok", "file": result, "extension": "eaf"}
+                    {
+                        "status": "ok",
+                        "file": result,
+                        "video_name": video_db.name,
+                        "extension": "eaf",
+                    }
                 )
 
             elif request.POST.get("format") == "data":
                 result = self.export_data(parameters, video_db)
                 return JsonResponse(
-                    {"status": "ok", "file": result, "extension": "zip"}
+                    {
+                        "status": "ok",
+                        "file": result,
+                        "video_name": video_db.name,
+                        "extension": "zip",
+                    }
                 )
 
             return JsonResponse({"status": "error", "type": "unknown_format"})
