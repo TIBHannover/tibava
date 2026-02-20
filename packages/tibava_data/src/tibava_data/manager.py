@@ -51,6 +51,12 @@ class DataManager:
         data._register_fs_handler(ZipFSHandler(data_path, mode="w"))
         return data
 
+    def _create_data_path(self, data_id) -> str:
+        return self._create_file_path(data_id, "zip")
+
+    def _create_file_path(self, data_id, extension) -> str:
+        return create_data_path(self.data_dir, data_id, extension)
+
     def load(self, data_id: str):
         data_path = create_data_path(self.data_dir, data_id, "zip")
 
