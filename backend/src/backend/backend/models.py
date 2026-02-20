@@ -162,6 +162,8 @@ class PluginRunResult(models.Model):
     TYPE_CLUSTER = "CL"
     TYPE_FACE = "FA"
     TYPE_IMAGE_EMBEDDINGS = "E"
+    TYPE_BBOXES = "B"
+    TYPE_KPSS = "K"
     TYPE = {
         TYPE_VIDEO: "VIDEO",
         TYPE_IMAGES: "IMAGES",
@@ -172,6 +174,8 @@ class PluginRunResult(models.Model):
         TYPE_CLUSTER: "CLUSTER",
         TYPE_FACE: "FACE",
         TYPE_IMAGE_EMBEDDINGS: "IMAGE_EMBEDDINGS",
+        TYPE_BBOXES: "TYPE_BBOXES",
+        TYPE_KPSS: "TYPE_KPSS",
     }
 
     type = models.CharField(

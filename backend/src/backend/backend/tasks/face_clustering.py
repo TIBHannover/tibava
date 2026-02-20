@@ -100,7 +100,7 @@ class FaceClustering(Task):
             },
             inputs=facedetector_result[0],
             outputs=["images", "kpss", "faces", "bboxes"],
-            downloads=["images", "faces"],
+            downloads=["images", "kpss", "faces", "bboxes"],
         )
 
         if plugin_run is not None:
@@ -221,6 +221,20 @@ class FaceClustering(Task):
                     type=PluginRunResult.TYPE_FACE,
                 )
 
+                plugin_run_result_bboxes_db = PluginRunResult.objects.create(
+                    plugin_run=plugin_run,
+                    data_id=face_size_filter_result[1]["bboxes"].id,
+                    name="bboxes",
+                    type=PluginRunResult.TYPE_BBOXES,
+                )
+
+                plugin_run_result_kpss_db = PluginRunResult.objects.create(
+                    plugin_run=plugin_run,
+                    data_id=face_size_filter_result[1]["kpss"].id,
+                    name="kpss",
+                    type=PluginRunResult.TYPE_KPSS,
+                )
+
                 plugin_run_result_images_db = PluginRunResult.objects.create(
                     plugin_run=plugin_run,
                     data_id=face_size_filter_result[1]["images"].id,
@@ -275,6 +289,8 @@ class FaceClustering(Task):
                     "plugin_run_results": [
                         plugin_run_result_db.id.hex,
                         plugin_run_result_faces_db.id.hex,
+                        plugin_run_result_bboxes_db.id.hex,
+                        plugin_run_result_kpss_db.id.hex,
                         plugin_run_result_images_db.id.hex,
                         plugin_run_result_features_db.id.hex,
                     ],
