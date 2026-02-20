@@ -1,0 +1,17 @@
+[project]
+name = "tibava-data"
+version = "0.1.1"
+description = "Dataformat used in tibava and iart"
+readme = "README.md"
+authors = [
+    { name = "matthias springstein", email = "matthias.springstein@protonmail.com" },
+]
+requires-python = ">=3.12"
+dependencies = ["tibava-interface", "tibava-utils"]
+
+[tool.uv]
+package = true
+
+[tool.uv.sources]
+tibava-interface = { workspace = true }
+tibava-utils = { workspace = true }

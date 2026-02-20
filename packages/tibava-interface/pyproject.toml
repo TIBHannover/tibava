@@ -1,10 +1,10 @@
 [project]
-name = "interface"
+name = "tibava-interface"
 version = "0.1.0"
-description = "Add your description here"
+description = "Interface class and definition for tibava"
 readme = "README.md"
 authors = [
-    { name = "matthias springstein", email = "matthias.springstein@gmail.com" },
+    { name = "matthias springstein", email = "matthias.springstein@protonmail.com" },
 ]
 requires-python = ">=3.12"
 dependencies = ["grpcio>=1.70.0", "protobuf>=5.29.3"]

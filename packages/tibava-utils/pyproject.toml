@@ -1,0 +1,13 @@
+[project]
+name = "tibava-utils"
+version = "0.1.0"
+description = "Utils used in tibava"
+readme = "README.md"
+authors = [
+    { name = "matthias springstein", email = "matthias.springstein@protonmail.com" },
+]
+requires-python = ">=3.12"
+dependencies = []
+
+[tool.uv]
+package = true

@@ -77,6 +77,22 @@ class DataManager:
 
         return data
 
+    def load_from_io(self, io):
+        data = Data()
+        data._register_fs_handler(ZipFSHandler(io, mode="r"))
+        data_type = None
+        with data:
+            data_type = data.type
+            data_id = data.id
+            data_version = data.version
+
+        assert data_type in self._data_name_lut, f"Unknown data type {data_type}"
+
+        data = self._data_name_lut[data_type](id=data_id, version=data_version)
+        data._register_fs_handler(ZipFSHandler(io, mode="r"))
+
+        return data
+
     def delete(self, data_id: str):
         data_path = create_data_path(self.data_dir, data_id, "zip")
         if os.path.exists(data_path):
