@@ -594,16 +594,23 @@ class VideoExport(View):
         for plugin_run_result_db in PluginRunResult.objects.filter(
             plugin_run__video=video_db
         ):
-            with open(data_manager.data_path(plugin_run_result_db.data_id), "rb") as f:
-                data_id = plugin_run_result_db.data_id
-                if data_id not in data_ids:
-                    data_ids.add(data_id)
-                    print(plugin_run_result_db.data_id, flush=True)
-                    print(plugin_run_result_db.plugin_run, flush=True)
-                    # Write the CSV data to the individual file
-                    zip_file.writestr(
-                        f"data/{plugin_run_result_db.data_id}.zip", f.read()
-                    )
+            try:
+                with open(
+                    data_manager.data_path(plugin_run_result_db.data_id), "rb"
+                ) as f:
+                    data_id = plugin_run_result_db.data_id
+                    if data_id not in data_ids:
+                        data_ids.add(data_id)
+                        print(plugin_run_result_db.data_id, flush=True)
+                        print(plugin_run_result_db.plugin_run, flush=True)
+                        # Write the CSV data to the individual file
+                        zip_file.writestr(
+                            f"data/{plugin_run_result_db.data_id}.zip", f.read()
+                        )
+            except Exception as e:
+                print(
+                    f"Could not load data from PluginRunResults: {plugin_run_result_db}"
+                )
 
         timelines = []
 
