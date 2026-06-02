@@ -1098,6 +1098,50 @@ export default {
               parameters: [],
               optional_parameters: [],
             },
+
+            {
+              name: this.$t("modal.plugin.movie_pattern_intensify.plugin_name"),
+              description: this.$t("modal.plugin.movie_pattern_intensify.plugin_description"),
+              icon: "mdi-image-multiple",
+              plugin: "movie_pattern_intensify",
+              id: 509,
+              parameters: [
+                {
+                  field: "text_field",
+                  name: "timeline",
+                  value: this.$t(
+                    "modal.plugin.movie_pattern_intensify.timeline_name"
+                  ),
+                  text: this.$t("modal.plugin.timeline_name"),
+                },
+                {
+                  field: "select_timeline",
+                  name: "shot_timeline_id",
+                  text: this.$t("modal.plugin.shot_timeline_name"),
+                  hint: this.$t("modal.plugin.shot_timeline_hint"),
+                },
+              ],
+              optional_parameters: [
+                {
+                  field: "slider",
+                  min: 5,
+                  max: 20,
+                  value: 2,
+                  step: 1,
+                  name: "fps",
+                  text: this.$t("modal.plugin.fps"),
+                },
+                {
+                  field: "slider",
+                  min: 1,
+                  max: 50,
+                  value: 3,
+                  step: 1,
+                  name: "min_length",
+                  text: this.$t("modal.plugin.movie_pattern_intensify.min_length"),
+                },
+              ],
+            },
           ],
         },
         {
