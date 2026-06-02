@@ -141,7 +141,7 @@ class PlacesClassifier(
             with input_data(fps=parameters.get("fps")) as input_iterator:
                 probs = {"places365": [], "places16": [], "places3": []}
                 time = []
-                num_frames = len(input_iterator)
+                num_frames = 0
                 places_data.places = []
 
                 for i, frame in enumerate(input_iterator):
@@ -208,7 +208,7 @@ class PlacesClassifier(
                         )
                     )
 
-                    self.update_callbacks(callbacks, progress=i / num_frames)
+                    # self.update_callbacks(callbacks, progress=i / num_frames)
 
         probs_data = {}
         for level in probs.keys():
