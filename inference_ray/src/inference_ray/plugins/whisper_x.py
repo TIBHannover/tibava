@@ -95,7 +95,7 @@ class WhisperX(
                 compute_type="int8",
                 language=parameters.get("language_code"),
             )  # TODO originally compute_type="float16" but not supported by m1. probably change back for production
-            self.diarize_model = whisperx.DiarizationPipeline(device=device)
+            self.diarize_model = whisperx.diarize.DiarizationPipeline(device=device)
             self.device = device
 
         with (
