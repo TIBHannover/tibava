@@ -214,6 +214,12 @@
         "timeline_name": "Movie Pattern Intensify",
         "min_length": "Minimum Length of the Pattern in Shots"
       },
+      "movie_pattern_shot_reverse_shot": {
+        "plugin_name": "Movie Pattern Shot Reverse Shot",
+        "plugin_description": "This plugin detects the movie pattern shot reverse shot based on the shot boundaries of a selected timeline.",
+        "timeline_name": "Movie Pattern Shot Reverse Shot",
+        "min_length": "Minimum Length of the Pattern in Shots"
+      },
       "text_ner": {
         "plugin_name": "Named Entity Recognition and Disambiguation (NERD)",
         "timeline_name": "Named Entities",
