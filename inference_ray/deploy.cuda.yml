@@ -1071,3 +1071,13 @@ applications:
       - name: Deployment
         autoscaling_config:
           min_replicas: 0
+  - name: movie_pattern_shot_reverse_shot
+    route_prefix: /movie_pattern_shot_reverse_shot
+    import_path: inference_ray.main:app_builder    
+    args:
+      model: movie_pattern_shot_reverse_shot
+      data_path: /data
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
