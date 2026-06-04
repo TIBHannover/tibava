@@ -37,4 +37,5 @@ from .text_sentiment import *
 from .ocr import *
 from .nano_ocr import *
 from .movie_pattern_intensify import *
+from .movie_pattern_opposition import *
 from .movie_pattern_shot_reverse_shot import *
