@@ -39,3 +39,4 @@ from .nano_ocr import *
 from .movie_pattern_intensify import *
 from .movie_pattern_opposition import *
 from .movie_pattern_shot_reverse_shot import *
+from .movie_pattern_frameshare import *

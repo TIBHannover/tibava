@@ -1044,7 +1044,7 @@ applications:
           min_replicas: 0
   - name: movie_pattern_intensify
     route_prefix: /movie_pattern_intensify
-    import_path: inference_ray.main:app_builder    
+    import_path: inference_ray.main:app_builder
     args:
       model: movie_pattern_intensify
       data_path: /data
@@ -1054,7 +1054,7 @@ applications:
           min_replicas: 0
   - name: movie_pattern_shot_reverse_shot
     route_prefix: /movie_pattern_shot_reverse_shot
-    import_path: inference_ray.main:app_builder    
+    import_path: inference_ray.main:app_builder
     args:
       model: movie_pattern_shot_reverse_shot
       data_path: /data
@@ -1064,9 +1064,19 @@ applications:
           min_replicas: 0
   - name: movie_pattern_opposition
     route_prefix: /movie_pattern_opposition
-    import_path: inference_ray.main:app_builder    
+    import_path: inference_ray.main:app_builder
     args:
       model: movie_pattern_opposition
+      data_path: /data
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+  - name: movie_pattern_frameshare
+    route_prefix: /movie_pattern_frameshare
+    import_path: inference_ray.main:app_builder
+    args:
+      model: movie_pattern_frameshare
       data_path: /data
     deployments:
       - name: Deployment

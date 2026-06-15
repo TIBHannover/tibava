@@ -226,6 +226,12 @@
         "timeline_name": "Movie Pattern Opposition",
         "min_length": "Minimum Length of the Pattern in Shots"
       },
+      "movie_pattern_frameshare": {
+        "plugin_name": "Movie Pattern Frameshare",
+        "plugin_description": "This plugin detects the movie pattern frameshare based on the shot boundaries of a selected timeline.",
+        "timeline_name": "Movie Pattern Frameshare",
+        "min_length": "Minimum Length of the Pattern in Shots"
+      },
       "text_ner": {
         "plugin_name": "Named Entity Recognition and Disambiguation (NERD)",
         "timeline_name": "Named Entities",
