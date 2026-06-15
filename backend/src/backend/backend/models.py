@@ -202,27 +202,35 @@ def delete_pluginresult_data(sender, instance, **kwargs):
     )
     data_manager = DataManager("/predictions/")
 
-    if instance.type == PluginRunResult.TYPE_IMAGES:
-        data = data_manager.load(instance.data_id)
-        try:
-            with data:
-                data.load()
-            images = data.images
-        except AttributeError:
-            images = []
-        for image in images:
-            path = data_manager._create_file_path(image.id, image.ext)
+    # check if the data are reference somewhere else
+    for x in PluginRunResult.objects.filter(data_id=instance.data_id):
+        logger.info(f"Found exist reference to this data package: {x.to_dict()}")
+    if len(PluginRunResult.objects.filter(data_id=instance.data_id)) != 0:
+        return
+    try:
+        if instance.type == PluginRunResult.TYPE_IMAGES:
+            data = data_manager.load(instance.data_id)
+            try:
+                with data:
+                    data.load()
+                images = data.images
+            except AttributeError:
+                images = []
+            for image in images:
+                path = data_manager._create_file_path(image.id, image.ext)
+                if os.path.exists(path):
+                    os.remove(path)
+
+        for clusteritem in instance.cluster_items.all():
+            filename, ext = clusteritem.image_path.split("/")[-1].split(".")
+
+            path = data_manager._create_file_path(filename, ext)
             if os.path.exists(path):
                 os.remove(path)
 
-    for clusteritem in instance.cluster_items.all():
-        filename, ext = clusteritem.image_path.split("/")[-1].split(".")
-
-        path = data_manager._create_file_path(filename, ext)
-        if os.path.exists(path):
-            os.remove(path)
-
-    data_manager.delete(instance.data_id)
+        data_manager.delete(instance.data_id)
+    except Exception as e:
+        logger.error(f"Error deleting the data package: {instance.to_dict()} ({e})")
 
 
 class Timeline(models.Model):
@@ -600,7 +608,6 @@ class ClusterItem(models.Model):
 
 
 class VideoAnalysisState(models.Model):
-
     video = models.OneToOneField(
         Video,
         on_delete=models.CASCADE,
