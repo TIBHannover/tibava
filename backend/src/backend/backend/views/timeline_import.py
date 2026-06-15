@@ -11,7 +11,13 @@ from django.conf import settings
 
 # from django.core.exceptions import BadRequest
 from backend.utils import download_file
-from backend.models import Timeline, TimelineSegment, TimelineSegmentAnnotation, Video, Annotation
+from backend.models import (
+    Timeline,
+    TimelineSegment,
+    TimelineSegmentAnnotation,
+    Video,
+    Annotation,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -60,6 +66,7 @@ class TimelineImportEAF(View):
                     max_size=1024 * 1024 * 1024,  # 1GB
                     extensions=(".eaf"),
                 )
+                print(download_result, flush=True)
 
                 if download_result["status"] != "ok":
                     logger.error("TimelineImportEAF::download_failed")
@@ -69,12 +76,16 @@ class TimelineImportEAF(View):
                 timelines = self.import_timelines_from_eaf(download_result["path"])
                 for timeline in timelines:
                     timeline_db = Timeline.objects.create(
-                        video=video_db, name=timeline["name"], order=Timeline.objects.filter(video=video_db).count()
+                        video=video_db,
+                        name=timeline["name"],
+                        order=Timeline.objects.filter(video=video_db).count(),
                     )
 
                     for segment in timeline["segments"]:
                         segment_db = TimelineSegment.objects.create(
-                            timeline=timeline_db, start=segment["start"], end=segment["end"]
+                            timeline=timeline_db,
+                            start=segment["start"],
+                            end=segment["end"],
                         )
 
                         if segment["label"] is None:
@@ -121,15 +132,23 @@ class TimelineImportEAF(View):
             timeline_segments = []
 
             for annotation in timeline.findall("ANNOTATION/ALIGNABLE_ANNOTATION"):
-                start_time = timeslots[annotation.attrib["TIME_SLOT_REF1"]]["TIME_VALUE"]
+                start_time = timeslots[annotation.attrib["TIME_SLOT_REF1"]][
+                    "TIME_VALUE"
+                ]
                 end_time = timeslots[annotation.attrib["TIME_SLOT_REF2"]]["TIME_VALUE"]
 
                 for annotations_label in annotation:
                     timeline_segments.append(
-                        {"start": int(start_time) / 1000, "end": int(end_time) / 1000, "label": annotations_label.text}
+                        {
+                            "start": int(start_time) / 1000,
+                            "end": int(end_time) / 1000,
+                            "label": annotations_label.text,
+                        }
                     )
                     annotations += 1
-            timelines.append({"name": timeline.attrib["TIER_ID"], "segments": timeline_segments})
+            timelines.append(
+                {"name": timeline.attrib["TIER_ID"], "segments": timeline_segments}
+            )
 
         logger.debug(timelines)
         logger.info(f"{len(timelines)} timelines with {annotations} annotations found!")
