@@ -79,7 +79,7 @@ class Command(BaseCommand):
                         original_anno_id = x.id
                         x.pk = None
                         x.id = None
-                        if x.category.id in anno_cat_map:
+                        if x.category and x.category.id in anno_cat_map:
                             x.category = anno_cat_map[x.category.id]
                         x.video = video_db
                         x.owner = user_db
