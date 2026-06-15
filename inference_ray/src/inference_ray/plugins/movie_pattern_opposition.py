@@ -154,9 +154,7 @@ class MoviePatternOpposition(
 
                 shot_face_left_right_list.append(shot_results)
 
-            srso_list = self.detect_shot_reverse_shot_opposition(
-                shot_face_left_right_list
-            )
+            srso_list = self.detect_opposition(shot_face_left_right_list, min_length)
 
             logging.error(shot_face_left_right_list)
             logging.error(shot_start_end)
@@ -175,7 +173,7 @@ class MoviePatternOpposition(
             "opposition": opposition,
         }
 
-    def detect_shot_reverse_shot_opposition(self, shots, min_length=4):
+    def detect_opposition(self, shots, min_length=4):
         results = []
         n = len(shots)
         i = 0
@@ -183,15 +181,18 @@ class MoviePatternOpposition(
         while i < n - 2:
             # Check first two shots are single-person and different
             if len(shots[i]) == 1 and len(shots[i + 1]) == 1:
-                A = shots[i][0]["cluster"]
-                B = shots[i + 1][0]["cluster"]
+                person_shot_1 = shots[i][0]["cluster"]
+                person_shot_2 = shots[i + 1][0]["cluster"]
 
-                A_lr = shots[i][0]["lr"]
-                B_lr = shots[i + 1][0]["lr"]
-                if A != B and A_lr != B_lr:
+                person_shot_1_lr = shots[i][0]["lr"]
+                person_shot_2_lr = shots[i + 1][0]["lr"]
+                if (
+                    person_shot_1 != person_shot_2
+                    and person_shot_1_lr != person_shot_2_lr
+                ):
                     start = i
-                    expected = A
-                    expected_lr = A_lr
+                    expected = person_shot_1
+                    expected_lr = person_shot_1_lr
                     j = i
 
                     # Follow alternating pattern
@@ -203,14 +204,22 @@ class MoviePatternOpposition(
                             break
 
                         # Switch expected speaker
-                        expected = B if expected == A else A
-                        expected_lr = B_lr if expected_lr == A_lr else A_lr
+                        expected = (
+                            person_shot_2
+                            if expected == person_shot_1
+                            else person_shot_1
+                        )
+                        expected_lr = (
+                            person_shot_2_lr
+                            if expected_lr == person_shot_1_lr
+                            else person_shot_1_lr
+                        )
                         j += 1
 
                     length = j - start
 
                     if length >= min_length:
-                        results.append((start, j - 1, (A, B)))
+                        results.append((start, j, (person_shot_1, person_shot_2)))
                         i = j  # skip past this block
                         continue
 

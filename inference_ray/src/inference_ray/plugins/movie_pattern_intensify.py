@@ -125,25 +125,22 @@ class MoviePatternIntensify(
             logging.error(shot_annotations)
             logging.error(shot_start_end)
 
-            intensification_list = self.detect_shot_intensification(shot_annotations, min_length)
+            intensification_list = self.detect_shot_intensification(
+                shot_annotations, min_length
+            )
 
-        
             logging.error(intensification_list)
             for shot in intensification_list:
-        
                 logging.error(shot)
-                
+
                 start = shot_start_end[shot[0]][0]
                 end = shot_start_end[shot[1]][1]
                 intensify.annotations.append(
-                    Annotation(
-                        start=start, end=end, labels=["Intensification"]
-                    )
-                )  
+                    Annotation(start=start, end=end, labels=["Intensification"])
+                )
         return {
             "intensify": intensify,
         }
-    
 
     def detect_shot_intensification(self, shots, min_length=3):
         results = []
@@ -152,33 +149,33 @@ class MoviePatternIntensify(
 
         while i < n - 2:
             sequence = []
-            A = SHOT_SIZE_LABELS[shots[i]]
-            B = SHOT_SIZE_LABELS[shots[i+1]]
+            shot_size_shot_1 = SHOT_SIZE_LABELS[shots[i]]
+            shot_size_shot_2 = SHOT_SIZE_LABELS[shots[i + 1]]
             # Check first two shots
 
-            if A > B:
-                print("##", shots[i], shots[i+1])
+            if shot_size_shot_1 > shot_size_shot_2:
+                print("##", shots[i], shots[i + 1])
                 start = i
-                expected = SHOT_SIZE_LABELS[shots[i+1]]
-                j = i+2
+                expected = SHOT_SIZE_LABELS[shots[i + 1]]
+                j = i + 2
 
                 # Follow pattern
                 while j < n:
                     current = SHOT_SIZE_LABELS[shots[j]]
-                    print("####", shots[j-1], shots[j], current > expected)
+                    print("####", shots[j - 1], shots[j], current > expected)
 
                     sequence.append(current)
 
                     if current > expected:
                         break
 
-                    expected =  SHOT_SIZE_LABELS[shots[j]]
+                    expected = SHOT_SIZE_LABELS[shots[j]]
                     j += 1
 
                 length = j - start
 
                 if length >= min_length:
-                    results.append((start, j-1, sequence))
+                    results.append((start, j - 1, sequence))
                     i = j  # skip past this block
                     continue
 

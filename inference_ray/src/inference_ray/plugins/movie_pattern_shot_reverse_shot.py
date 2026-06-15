@@ -41,7 +41,7 @@ class MoviePatternShotReverseShot(
     AnalyserPlugin,
     config=default_config,
     parameters=default_parameters,
-    version="0.3",
+    version="0.4",
     requires=requires,
     provides=provides,
 ):
@@ -123,7 +123,7 @@ class MoviePatternShotReverseShot(
             if len(shots[i]) == 1 and len(shots[i + 1]) == 1:
                 A = shots[i][0]
                 B = shots[i + 1][0]
-
+                logging.error("##", A, B)
                 if A != B:
                     start = i
                     expected = A
@@ -143,7 +143,7 @@ class MoviePatternShotReverseShot(
                     length = j - start
 
                     if length >= min_length:
-                        results.append((start, j - 1, (A, B)))
+                        results.append((start, j, (A, B)))
                         i = j  # skip past this block
                         continue
 
