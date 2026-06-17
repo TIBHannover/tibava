@@ -38,6 +38,7 @@ applications:
               # - librosa==0.10.1
               # - setuptools>=75.8.0
               - librosa
+              - setuptools<82
               - numpy
               - scipy
               - soundfile
@@ -58,6 +59,7 @@ applications:
           runtime_env:
             uv:
               - librosa
+              - setuptools<82
               - numpy
               - scipy
               - soundfile
@@ -78,6 +80,7 @@ applications:
           runtime_env:
             uv:
               - librosa
+              - setuptools<82
               - numpy
               - scipy
               - soundfile
@@ -538,6 +541,7 @@ applications:
           runtime_env:
             uv:
               - librosa==0.10.1
+              - setuptools<82
               - torch==2.2.0
               - scikit-learn==1.4.0
               - transformers==4.37.2
@@ -893,6 +897,7 @@ applications:
             uv:
               - git+https://github.com/m-bain/whisperx.git
               - librosa==0.10.1
+              - setuptools<82
               - torch>=2.6.0
               - scikit-learn>=1.6.1
               - transformers>=4.48.3
@@ -912,6 +917,7 @@ applications:
           runtime_env:
             uv:
               - librosa==0.10.1
+              - setuptools<82
               - torch>=2.6.0
               - transformers>=4.48.3
               - speechbrain==1.0.2
@@ -931,6 +937,7 @@ applications:
           runtime_env:
             uv:
               - librosa==0.10.1
+              - setuptools<82
               - torch>=2.6.0
               - transformers>=4.48.3
               - speechbrain==1.0.2
@@ -950,6 +957,7 @@ applications:
           runtime_env:
             uv:
               - librosa==0.10.1
+              - setuptools<82
               - torch>=2.6.0
               - python_speech_features
               - scipy
@@ -972,6 +980,7 @@ applications:
           runtime_env:
             uv:
               - librosa==0.10.1
+              - setuptools<82
               - torch>=2.6.0
               - torchaudio # TODO specify version
   - name: text_ner
