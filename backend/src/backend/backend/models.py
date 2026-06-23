@@ -10,7 +10,7 @@ from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from backend.utils.color import rgb_to_hex, random_rgb
 
-from data import DataManager
+from tibava_data import DataManager
 from backend.utils import media_path_to_video
 from .managers import TibavaUserManager
 

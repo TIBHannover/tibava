@@ -11,7 +11,7 @@ from backend.models import (
 from backend.plugin_manager import PluginManager
 
 from ..utils.analyser_client import TaskAnalyserClient
-from data import DataManager, ListData
+from tibava_data import DataManager, ListData
 from backend.utils.parser import Parser
 from backend.utils.task import Task
 

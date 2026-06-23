@@ -1,8 +1,7 @@
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from data import ListData, ScalarData, ImagesData
+from tibava_data import ListData, ScalarData, ImagesData
 
-# from inference import InferenceServer
-from data import DataManager, Data
+from tibava_data import DataManager, Data
 
 from typing import Callable, Optional, Dict
 
@@ -117,7 +116,6 @@ class DeepfaceEmotion(
         import onnxruntime
 
         if self.model is None:
-
             self.model = onnx.load(self.model_path)
             self.session = onnxruntime.InferenceSession(
                 self.model_path,

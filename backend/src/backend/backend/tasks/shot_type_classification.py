@@ -18,9 +18,9 @@ from backend.plugin_manager import PluginManager
 from backend.utils import media_path_to_video
 
 from ..utils.analyser_client import TaskAnalyserClient
-from data import Shot, ShotsData
+from tibava_data import Shot, ShotsData
 
-from data import DataManager
+from tibava_data import DataManager
 from backend.utils.parser import Parser
 from backend.utils.task import Task
 from django.db import transaction
@@ -109,7 +109,6 @@ class ShotTypeClassifier(Task):
         result_data = {}
 
         if shots_id:
-
             annotations_result = self.run_analyser(
                 client,
                 "shot_annotator",
@@ -172,10 +171,8 @@ class ShotTypeClassifier(Task):
 
         with transaction.atomic():
             with result[1]["probs"] as data:
-
                 data.extract_all(manager)
                 for index, sub_data in zip(data.index, data.data):
-
                     plugin_run_result_db = PluginRunResult.objects.create(
                         plugin_run=plugin_run,
                         data_id=sub_data,

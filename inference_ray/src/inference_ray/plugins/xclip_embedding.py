@@ -2,7 +2,7 @@ import os
 import numpy as np
 
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from data import (
+from tibava_data import (
     VideoData,
     ScalarData,
     TextEmbedding,
@@ -15,8 +15,8 @@ from data import (
     Data,
 )
 
-from utils import VideoDecoder, VideoBatcher
-from utils.imageops import image_resize, image_crop, image_pad
+from tibava_utils import VideoDecoder, VideoBatcher
+from tibava_utils.imageops import image_resize, image_crop, image_pad
 from functools import lru_cache
 from typing import Union, List, Callable, Optional, Dict
 import logging
@@ -267,7 +267,6 @@ class XClipVideoEmbedding(
         import onnxruntime
 
         if self.model is None:
-
             self.model = onnx.load(self.model_path)
             self.session = onnxruntime.InferenceSession(
                 self.model_path,
@@ -381,7 +380,6 @@ class XClipTextEmbedding(
         import onnxruntime
 
         if self.model is None:
-
             self.tokenizer = SimpleTokenizer(self.bpe_path)
             self.model = onnx.load(self.model_path)
             self.session = onnxruntime.InferenceSession(
@@ -460,7 +458,6 @@ class XClipProbs(
         import onnxruntime
 
         if self.text_model is None:
-
             self.tokenizer = SimpleTokenizer(self.bpe_path)
 
             self.text_model = onnx.load(self.text_model_path)

@@ -4,8 +4,8 @@ import logging
 import grpc
 
 from analyser.client import AnalyserClient
-from interface import analyser_pb2
-from interface import analyser_pb2_grpc
+from tibava_interface import analyser_pb2
+from tibava_interface import analyser_pb2_grpc
 from backend.models import PluginRun
 from backend.utils import RetryOnRpcErrorClientInterceptor, ExponentialBackoff
 

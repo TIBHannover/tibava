@@ -17,7 +17,7 @@ from backend.plugin_manager import PluginManager
 from backend.utils import media_path_to_video
 
 from ..utils.analyser_client import TaskAnalyserClient
-from data import DataManager
+from tibava_data import DataManager
 from backend.utils.parser import Parser
 from backend.utils.task import Task
 from django.db import transaction
@@ -254,7 +254,7 @@ class FaceClustering(Task):
                     cluster_timeline_item_db = ClusterTimelineItem.objects.create(
                         video=video,
                         cluster_id=cluster.id,
-                        name=f"Cluster {cluster_index+1}",
+                        name=f"Cluster {cluster_index + 1}",
                         plugin_run=plugin_run,
                     )
 

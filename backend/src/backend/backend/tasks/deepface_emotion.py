@@ -16,7 +16,7 @@ from backend.plugin_manager import PluginManager
 from backend.utils import media_path_to_video
 
 from ..utils.analyser_client import TaskAnalyserClient
-from data import Shot, ShotsData, DataManager
+from tibava_data import Shot, ShotsData, DataManager
 from backend.utils.parser import Parser
 from backend.utils.task import Task
 
@@ -147,12 +147,10 @@ class DeepfaceEmotion(Task):
 
         with transaction.atomic():
             with aggregate_result[1]["aggregated_scalars"] as data:
-
                 timeline_dict = {}
                 # Annotate shots
                 annotation_timeline_db = None
                 if shots_id:
-
                     annotater_result = self.run_analyser(
                         client,
                         "shot_annotator",
@@ -163,7 +161,6 @@ class DeepfaceEmotion(Task):
                     if annotater_result is None:
                         raise Exception
                     with annotater_result[1]["annotations"] as annotations_data:
-
                         annotation_timeline_db = Timeline.objects.create(
                             video=video,
                             name=parameters.get("timeline"),
@@ -204,7 +201,6 @@ class DeepfaceEmotion(Task):
                 plugin_run_results = []
 
                 for index, sub_data in zip(data.index, data.data):
-
                     plugin_run_result_db = PluginRunResult.objects.create(
                         plugin_run=plugin_run,
                         data_id=sub_data,

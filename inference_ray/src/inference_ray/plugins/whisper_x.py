@@ -1,7 +1,7 @@
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager  # type: ignore
-from data import AudioData, AnnotationData, ListData, Annotation  # type: ignore
+from tibava_data import AudioData, AnnotationData, ListData, Annotation  # type: ignore
 
-from data import DataManager, Data  # type: ignore
+from tibava_data import DataManager, Data  # type: ignore
 
 from typing import Callable, Dict
 import logging

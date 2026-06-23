@@ -3,7 +3,7 @@ import logging
 from backend.models import PluginRun, PluginRunResult, Video, Timeline, TimelineSegment
 from backend.plugin_manager import PluginManager
 
-from data import DataManager
+from tibava_data import DataManager
 
 from backend.utils.parser import Parser
 from backend.utils.task import Task

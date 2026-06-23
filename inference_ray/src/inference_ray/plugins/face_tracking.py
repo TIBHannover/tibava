@@ -1,7 +1,7 @@
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from data import BboxesData, AnnotationData, Annotation, ShotsData, FacesData
+from tibava_data import BboxesData, AnnotationData, Annotation, ShotsData, FacesData
 
-from data import DataManager, Data
+from tibava_data import DataManager, Data
 
 import logging
 

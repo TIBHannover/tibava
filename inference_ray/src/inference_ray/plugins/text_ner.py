@@ -3,9 +3,9 @@ from pathlib import Path
 import sys
 
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager  # type: ignore
-from data import AnnotationData, ListData, Annotation  # type: ignore
+from tibava_data import AnnotationData, ListData, Annotation  # type: ignore
 
-from data import DataManager, Data  # type: ignore
+from tibava_data import DataManager, Data  # type: ignore
 
 import logging
 

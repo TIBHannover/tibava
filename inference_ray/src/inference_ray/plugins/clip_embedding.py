@@ -3,7 +3,7 @@ import logging
 import numpy as np
 
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from data import (
+from tibava_data import (
     VideoData,
     ScalarData,
     ImageEmbedding,
@@ -12,13 +12,13 @@ from data import (
     TextEmbeddings,
     ListData,
 )
-from data import DataManager, Data
+from tibava_data import DataManager, Data
 
 from typing import Callable, Optional, Dict
 
 # from inference import InferenceServer
-from utils import VideoDecoder
-from utils.imageops import image_resize, image_crop, image_pad
+from tibava_utils import VideoDecoder
+from tibava_utils.imageops import image_resize, image_crop, image_pad
 
 
 class ImagePreprozessorWrapper:

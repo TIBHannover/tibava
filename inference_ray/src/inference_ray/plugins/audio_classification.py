@@ -3,9 +3,9 @@ from pathlib import Path
 import sys
 
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager  # type: ignore
-from data import AudioData, ListData, Annotation  # type: ignore
+from tibava_data import AudioData, ListData, Annotation  # type: ignore
 
-from data import DataManager, Data  # type: ignore
+from tibava_data import DataManager, Data  # type: ignore
 
 import logging
 
@@ -160,9 +160,7 @@ class AudioClassification(
                                 for i in range(0, ceiling_len, sampling_rate * 10)
                             ]
                         )
-                    ).squeeze(
-                        1
-                    )  ## --> (N, 1600000)
+                    ).squeeze(1)  ## --> (N, 1600000)
                 else:
                     audio_segments = seg_audio_tensor
 

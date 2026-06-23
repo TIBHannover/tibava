@@ -1,9 +1,7 @@
-from pprint import pprint
-
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from utils import VideoDecoder
+from tibava_utils import VideoDecoder
 
-from data import (
+from tibava_data import (
     BboxData,
     BboxesData,
     StringData,
@@ -13,11 +11,10 @@ from data import (
     AnnotationData,
     Annotation,
 )
-from data import DataManager, Data
+from tibava_data import DataManager, Data
 
 from typing import Callable, Optional, Dict
 
-from utils import VideoDecoder
 
 import numpy as np
 import time
@@ -349,7 +346,6 @@ class OCRTextDetectorONNX(AnalyserPlugin):
         import cv2
 
         if self.textdet_model is None:
-
             self.textdet_model = onnx.load(self.textdet_model_path)
             self.session = onnxruntime.InferenceSession(
                 self.textdet_model_path, providers=["CUDAExecutionProvider"]
@@ -414,7 +410,6 @@ class OCRTextDetectorONNX(AnalyserPlugin):
             data_manager.create_data("StringsData") as strings_data,
             data_manager.create_data("AnnotationData") as annotations_data,
         ):
-
             # iterate through images to get strings and bboxes
             for fidx, frame in enumerate(iterator):
                 self.update_callbacks(callbacks, progress=fidx / num_frames)

@@ -7,7 +7,7 @@ from backend.utils import rgb_to_hex, hsv_to_rgb
 
 from ..utils.analyser_client import TaskAnalyserClient
 
-from data import Shot, ShotsData
+from tibava_data import Shot, ShotsData
 
 from backend.models import (
     Annotation,
@@ -23,7 +23,7 @@ from backend.models import (
 from backend.plugin_manager import PluginManager
 from backend.utils import media_path_to_video
 
-from data import DataManager
+from tibava_data import DataManager
 from backend.utils.parser import Parser
 from backend.utils.task import Task
 
@@ -74,7 +74,6 @@ class ShotScalarAnnotation(Task):
 
         shots = manager.create_data("ShotsData")
         with shots:
-
             shot_timeline_segments = TimelineSegment.objects.filter(
                 timeline=shot_timeline_db
             )

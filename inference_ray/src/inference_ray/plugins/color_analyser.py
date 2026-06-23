@@ -1,7 +1,7 @@
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from data import VideoData, ListData, RGBData
-from utils import VideoDecoder
-from data import DataManager, Data
+from tibava_data import VideoData, ListData, RGBData
+from tibava_utils import VideoDecoder
+from tibava_data import DataManager, Data
 
 import logging
 from typing import Callable, Optional, Dict

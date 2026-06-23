@@ -1,0 +1,17 @@
+[project]
+name = "tibava_data"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "matthias springstein", email = "matthias.springstein@gmail.com" },
+]
+requires-python = ">=3.12"
+dependencies = ["tibava_interface", "tibava_utils"]
+
+[tool.uv]
+package = true
+
+[tool.uv.sources]
+tibava_interface = { workspace = true }
+tibava_utils = { workspace = true }

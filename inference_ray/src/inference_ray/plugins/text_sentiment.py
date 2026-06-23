@@ -2,9 +2,9 @@ from typing import List, Callable, Dict
 from pathlib import Path
 
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager  # type: ignore
-from data import AnnotationData, Annotation  # type: ignore
+from tibava_data import AnnotationData, Annotation  # type: ignore
 
-from data import DataManager, Data  # type: ignore
+from tibava_data import DataManager, Data  # type: ignore
 
 import logging
 

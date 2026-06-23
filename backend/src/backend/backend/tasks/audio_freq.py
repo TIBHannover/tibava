@@ -9,7 +9,7 @@ from backend.utils import media_path_to_video
 from ..utils.analyser_client import TaskAnalyserClient
 from backend.utils.parser import Parser
 from backend.utils.task import Task
-from data import DataManager
+from tibava_data import DataManager
 from django.db import transaction
 from django.conf import settings
 
@@ -81,7 +81,6 @@ class AudioFreq(Task):
 
         with transaction.atomic():
             with result[1]["freq"] as data:
-
                 plugin_run_result_db = PluginRunResult.objects.create(
                     plugin_run=plugin_run,
                     data_id=data.id,

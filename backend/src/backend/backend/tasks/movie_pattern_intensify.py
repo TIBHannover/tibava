@@ -18,9 +18,9 @@ from backend.plugin_manager import PluginManager
 from backend.utils import media_path_to_video
 
 from ..utils.analyser_client import TaskAnalyserClient
-from data import Shot, ShotsData
+from tibava_data import Shot, ShotsData
 
-from data import DataManager
+from tibava_data import DataManager
 from backend.utils.parser import Parser
 from backend.utils.task import Task
 from django.db import transaction
@@ -126,7 +126,6 @@ class MoviePatternIntensify(Task):
 
         with transaction.atomic():
             with movie_pattern_intensify[1]["intensify"] as data:
-
                 annotation_timeline_db = Timeline.objects.create(
                     video=video,
                     name=parameters["timeline"],

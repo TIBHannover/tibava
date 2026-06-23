@@ -1,10 +1,10 @@
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
 
-from data import ImageEmbeddings, PlaceClusterData, Cluster, PlacesData
+from tibava_data import ImageEmbeddings, PlaceClusterData, Cluster, PlacesData
 
 import logging
 import numpy as np
-from data import DataManager, Data
+from tibava_data import DataManager, Data
 
 from typing import Callable, Optional, Dict
 
@@ -90,7 +90,7 @@ class PlaceClustering(
             # sort clusters and embeddings together by cluster length
             output_data.clusters = sorted(
                 output_data.clusters,
-                key=lambda cluster: (len(cluster.object_refs)),
+                key=lambda cluster: len(cluster.object_refs),
                 reverse=True,
             )
             output_data.places = places

@@ -6,8 +6,8 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "imageio[ffmpeg,pyav]>=2.37.0",
-    "interface",
-    "data",
+    "tibava_interface",
+    "tibava_data",
     "analyser",
     "grpcio>=1.70.0",
     "protobuf>=5.29.3",
@@ -25,12 +25,13 @@ dependencies = [
     "pyyaml>=6.0.2",
     "pympi-ling>=1.70.2",
     "pandas>=2.2.3",
+    "python-dotenv>=1.0.1",
 ]
 
 [tool.uv]
 package = true
 
 [tool.uv.sources]
-interface = { workspace = true }
-data = { workspace = true }
+tibava_interface = { workspace = true }
+tibava_data = { workspace = true }
 analyser = { workspace = true }

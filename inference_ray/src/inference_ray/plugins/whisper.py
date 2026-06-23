@@ -1,7 +1,6 @@
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from data import AudioData, AnnotationData, Annotation
-
-from data import DataManager, Data
+from tibava_data import AudioData, AnnotationData, Annotation
+from tibava_data import DataManager, Data
 
 from typing import Callable, Optional, Dict
 import logging

@@ -8,9 +8,9 @@ import json
 import requests
 import uuid
 
-from utils import convert_name
-from utils.plugin import Plugin, Manager
-from data import Data, DataManager
+from tibava_utils import convert_name
+from tibava_utils.plugin import Plugin, Manager
+from tibava_data import Data, DataManager
 
 from packaging import version
 from typing import Union, Dict, Any
