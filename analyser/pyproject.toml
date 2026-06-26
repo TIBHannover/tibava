@@ -5,10 +5,10 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "interface",
+    "tibava_interface",
     "inference_ray",
-    "utils",
-    "data",
+    "tibava_data",
+    "tibava_utils",
     "grpcio>=1.70.0",
     "imageio>=2.37.0",
     "msgpack>=1.1.0",
@@ -24,7 +24,7 @@ dependencies = [
 package = true
 
 [tool.uv.sources]
-interface = { workspace = true }
-data = { workspace = true }
+tibava_interface = { workspace = true }
+tibava_data = { workspace = true }
 inference_ray = { workspace = true }
-utils = { workspace = true }
+tibava_utils = { workspace = true }

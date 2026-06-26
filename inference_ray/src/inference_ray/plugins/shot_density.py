@@ -1,9 +1,9 @@
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from data import ShotsData, ScalarData
+from tibava_data import ShotsData, ScalarData
 
 import math
 import numpy as np
-from data import DataManager, Data
+from tibava_data import DataManager, Data
 
 from typing import Callable, Optional, Dict
 

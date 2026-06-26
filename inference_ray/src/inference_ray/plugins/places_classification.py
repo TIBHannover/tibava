@@ -1,6 +1,6 @@
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from utils import VideoDecoder, image_pad
-from data import (
+from tibava_utils import VideoDecoder, image_pad
+from tibava_data import (
     ListData,
     ImagesData,
     VideoData,
@@ -13,7 +13,7 @@ from data import (
 
 import csv
 import numpy as np
-from data import DataManager, Data
+from tibava_data import DataManager, Data
 
 from typing import Callable, Optional, Dict
 
@@ -137,7 +137,6 @@ class PlacesClassifier(
             data_manager.create_data("ImagesData") as images_data,
             data_manager.create_data("PlacesData") as places_data,
         ):
-
             with input_data(fps=parameters.get("fps")) as input_iterator:
                 probs = {"places365": [], "places16": [], "places3": []}
                 time = []

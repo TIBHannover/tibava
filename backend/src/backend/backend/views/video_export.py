@@ -39,8 +39,8 @@ from backend.models import (
     PluginRun,
 )
 from enum import Enum
-from data import DataManager, Shot
-from data import Annotation as Data_Annotation
+from tibava_data import DataManager, Shot
+from tibava_data import Annotation as Data_Annotation
 import numpy as np
 
 
@@ -92,7 +92,6 @@ class TimeTypeExport(Enum):
 
 
 class VideoExport(View):
-
     def get_segment_times_from_timeline(
         self, video: Video, timeline_id: str = None
     ) -> List[TimeExport]:
@@ -107,11 +106,9 @@ class VideoExport(View):
                 type=PluginRunResult.TYPE_SHOTS, plugin_run__video=video
             ).first()
             if plugin_run_result_db is not None:
-
                 data_manager = DataManager(settings.DATA_OUTPUT_PATH)
 
                 with data_manager.load(plugin_run_result_db.data_id) as shot_data:
-
                     for shot in shot_data.shots:
                         times.append(TimeExport(start=shot.start, end=shot.end))
             else:
@@ -236,7 +233,6 @@ class VideoExport(View):
         for segment_db in timeline.timelinesegment_set.all():
             annotation_labels = []
             for segment_annotation_db in segment_db.timelinesegmentannotation_set.all():
-
                 if include_category and segment_annotation_db.annotation.category:
                     annotation_labels.append(
                         segment_annotation_db.annotation.category.name
@@ -340,7 +336,7 @@ class VideoExport(View):
                 )
             )
 
-        print(f"A {time.time()-t}")
+        print(f"A {time.time() - t}")
         t = time.time()
 
         if use_seconds:
@@ -409,7 +405,7 @@ class VideoExport(View):
                 )
             )
 
-        print(f"B {time.time()-t}")
+        print(f"B {time.time() - t}")
         t = time.time()
         for timeline_db in (
             video_db.timeline_set.all()
@@ -426,7 +422,7 @@ class VideoExport(View):
                 self.export_timeline(timeline=timeline_db, segments=time_segments)
             )
 
-            print(f"{timeline_db.name} {time.time()-t}")
+            print(f"{timeline_db.name} {time.time() - t}")
             t = time.time()
 
         csv_cols = []
@@ -443,8 +439,8 @@ class VideoExport(View):
         for line in rows:
             writer.writerow(line)
 
-        print(f"C {time.time()-t}")
-        print(f"TOTAL {time.time()-start_time}")
+        print(f"C {time.time() - t}")
+        print(f"TOTAL {time.time() - start_time}")
 
         return buffer.getvalue()
 
@@ -620,14 +616,12 @@ class VideoExport(View):
                 with data_manager.create_data(
                     "AnnotationData", timeline_db.id.hex
                 ) as data:
-
                     print("ANNOTATION", data.to_dict(), flush=True)
                     shot_timeline_segments = TimelineSegment.objects.filter(
                         timeline=timeline_db
                     )
 
                     for segment in shot_timeline_segments:
-
                         annotations = []
 
                         if len(segment.timelinesegmentannotation_set.all()) > 0:

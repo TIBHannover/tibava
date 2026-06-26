@@ -2,9 +2,9 @@ from typing import List, Any, Tuple, Callable, Dict
 from pathlib import Path
 
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager  # type: ignore
-from data import AudioData, ListData, AnnotationData, Annotation  # type: ignore
+from tibava_data import AudioData, ListData, AnnotationData, Annotation  # type: ignore
 
-from data import DataManager, Data  # type: ignore
+from tibava_data import DataManager, Data  # type: ignore
 
 import logging
 
@@ -123,9 +123,7 @@ class AudioGender(
                                 for i in range(0, ceiling_len, sampling_rate * 10)
                             ]
                         )
-                    ).squeeze(
-                        1
-                    )  ## --> (N, 1600000)
+                    ).squeeze(1)  ## --> (N, 1600000)
                 else:
                     audio_segments = seg_audio_tensor
 
@@ -133,9 +131,7 @@ class AudioGender(
 
                 input_values = self.gender_processor(
                     audio_segments, sampling_rate=sampling_rate, return_tensors="pt"
-                ).input_values.squeeze(
-                    0
-                )  ## --> (N, 1600000)
+                ).input_values.squeeze(0)  ## --> (N, 1600000)
                 input_values = input_values.to(device)
 
                 with torch.no_grad():

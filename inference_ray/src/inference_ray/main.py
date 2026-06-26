@@ -3,7 +3,7 @@ from ray import serve
 from typing import Dict
 from ray.serve import Application
 
-from data import DataManager
+from tibava_data import DataManager
 from inference_ray.plugin import AnalyserPluginManager, AnalyserPlugin
 
 

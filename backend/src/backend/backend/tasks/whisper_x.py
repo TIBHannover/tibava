@@ -9,7 +9,7 @@ from backend.plugin_manager import PluginManager
 from backend.utils.parser import Parser
 from backend.utils.task import Task
 
-from data import DataManager  # type: ignore
+from tibava_data import DataManager  # type: ignore
 from backend.models import (
     Annotation,
     AnnotationCategory,

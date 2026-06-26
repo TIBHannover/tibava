@@ -14,7 +14,7 @@ from backend.models import (
 from backend.plugin_manager import PluginManager
 
 from ..utils.analyser_client import TaskAnalyserClient
-from data import DataManager, ImageEmbedding
+from tibava_data import DataManager, ImageEmbedding
 from backend.utils.parser import Parser
 from backend.utils.task import Task
 from django.db import transaction

@@ -11,7 +11,7 @@ from backend.utils.task import Task
 from backend.utils.color import color_map
 
 
-from data import DataManager  # type: ignore
+from tibava_data import DataManager  # type: ignore
 from backend.models import (
     Annotation,
     AnnotationCategory,

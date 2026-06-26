@@ -3,7 +3,7 @@ import numpy as np
 from typing import Callable, Optional, Dict
 
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from data import DataManager, Data, ImageEmbeddings, ClusterData, Cluster
+from tibava_data import DataManager, Data, ImageEmbeddings, ClusterData, Cluster
 
 
 default_config = {

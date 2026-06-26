@@ -2,12 +2,12 @@ import logging
 import sys
 
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from data import (
+from tibava_data import (
     VideoData,
     ShotsData,
     ImagesData,
 )
-from data import DataManager, Data
+from tibava_data import DataManager, Data
 
 from typing import Callable, Optional, Dict, Union
 
@@ -128,7 +128,6 @@ class TimelineVideoSampler(
                     result_images.append(end_frame)
 
             for image in result_images:
-
                 output_data.save_image(
                     image.get("frame"),
                     ext="jpg",

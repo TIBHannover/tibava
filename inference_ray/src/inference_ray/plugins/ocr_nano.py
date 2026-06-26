@@ -1,9 +1,9 @@
 from pprint import pprint
 
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from utils import VideoDecoder
+from tibava_utils import VideoDecoder
 
-from data import (
+from tibava_data import (
     BboxData,
     BboxesData,
     StringData,
@@ -13,11 +13,11 @@ from data import (
     AnnotationData,
     Annotation,
 )
-from data import DataManager, Data
+from tibava_data import DataManager, Data
 
 from typing import Callable, Optional, Dict
 
-from utils import VideoDecoder
+from tibava_utils import VideoDecoder
 
 import numpy as np
 import time

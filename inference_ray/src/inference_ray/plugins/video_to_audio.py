@@ -1,5 +1,5 @@
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from data import AudioData, VideoData, DataManager, Data
+from tibava_data import AudioData, VideoData, DataManager, Data
 
 
 from typing import Callable, Optional, Dict

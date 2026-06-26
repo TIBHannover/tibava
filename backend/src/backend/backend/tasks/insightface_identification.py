@@ -2,7 +2,7 @@ from typing import Dict, List
 import imageio.v3 as iio
 import logging
 
-from data import DataManager
+from tibava_data import DataManager
 from backend.models import PluginRun, PluginRunResult, Video, Timeline, TibavaUser
 from backend.plugin_manager import PluginManager
 

@@ -1,6 +1,6 @@
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from utils import VideoDecoder
-from data import (
+from tibava_utils import VideoDecoder
+from tibava_data import (
     ImagesData,
     ScalarData,
     ListData,
@@ -10,7 +10,7 @@ from data import (
 )
 import logging
 import numpy as np
-from data import DataManager, Data
+from tibava_data import DataManager, Data
 
 from typing import Callable, Optional, Dict
 

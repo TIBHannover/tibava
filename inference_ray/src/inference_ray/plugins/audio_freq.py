@@ -1,6 +1,6 @@
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from data import AudioData, ScalarData, HistData
-from data import DataManager, Data
+from tibava_data import AudioData, ScalarData, HistData
+from tibava_data import DataManager, Data
 
 from typing import Callable, Optional, Dict
 import numpy as np

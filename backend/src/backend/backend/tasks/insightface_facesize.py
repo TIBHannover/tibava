@@ -16,7 +16,7 @@ from backend.plugin_manager import PluginManager
 from backend.utils import media_path_to_video
 
 from ..utils.analyser_client import TaskAnalyserClient
-from data import Shot, ShotsData, DataManager
+from tibava_data import Shot, ShotsData, DataManager
 from backend.utils.parser import Parser
 from backend.utils.task import Task
 from django.db import transaction
@@ -149,7 +149,6 @@ class InsightfaceFacesize(Task):
 
         with transaction.atomic():
             with facesize_result[1]["annotations"] as annotations:
-
                 annotation_timeline_db = Timeline.objects.create(
                     video=video,
                     name=parameters.get("timeline"),

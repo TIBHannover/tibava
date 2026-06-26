@@ -7,7 +7,7 @@ from backend.utils import media_path_to_video
 import logging
 
 from ..utils.analyser_client import TaskAnalyserClient
-from data import DataManager
+from tibava_data import DataManager
 from backend.utils.parser import Parser
 from backend.utils.task import Task
 

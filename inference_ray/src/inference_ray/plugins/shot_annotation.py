@@ -1,8 +1,8 @@
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from data import Annotation, AnnotationData, ShotsData, ListData
+from tibava_data import Annotation, AnnotationData, ShotsData, ListData
 
 import numpy as np
-from data import DataManager, Data
+from tibava_data import DataManager, Data
 
 from typing import Callable, Optional, Dict
 

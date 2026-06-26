@@ -1,7 +1,7 @@
 from typing import Iterator
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from utils import VideoDecoder
-from data import (
+from tibava_utils import VideoDecoder
+from tibava_data import (
     KpssData,
     FacesData,
     ImagesData,
@@ -11,7 +11,7 @@ from data import (
 )
 import logging
 import numpy as np
-from data import DataManager, Data
+from tibava_data import DataManager, Data
 
 from typing import Callable, Optional, Dict
 
@@ -146,7 +146,6 @@ class InsightfaceFeatureExtractor(AnalyserPlugin):
         import onnxruntime
 
         if self.model is None:
-
             self.model = onnx.load(self.model_path)
             self.session = onnxruntime.InferenceSession(
                 self.model_path,

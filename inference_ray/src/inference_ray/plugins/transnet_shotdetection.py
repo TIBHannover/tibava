@@ -1,10 +1,8 @@
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
 
-from utils import VideoDecoder
-from data import Shot, ShotsData, VideoData
-
-# from inference import InferenceServer
-from data import DataManager, Data
+from tibava_utils import VideoDecoder
+from tibava_data import Shot, ShotsData, VideoData
+from tibava_data import DataManager, Data
 
 from typing import Callable, Optional, Dict
 

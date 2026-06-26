@@ -1,6 +1,6 @@
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from data import DataManager, Data
-from data import ScalarData, ListData
+from tibava_data import DataManager, Data
+from tibava_data import ScalarData, ListData
 
 from typing import Callable, Optional, Dict
 

@@ -2,9 +2,9 @@ from typing import List, Any, Tuple, Callable, Dict
 from pathlib import Path
 
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager  # type: ignore
-from data import AudioData, ListData, AnnotationData, Annotation  # type: ignore
+from tibava_data import AudioData, ListData, AnnotationData, Annotation  # type: ignore
 
-from data import DataManager, Data  # type: ignore
+from tibava_data import DataManager, Data  # type: ignore
 
 import logging
 
@@ -121,9 +121,7 @@ class AudioEmotion(
                                 for i in range(0, ceiling_len, sampling_rate * 10)
                             ]
                         )
-                    ).squeeze(
-                        1
-                    )  ## --> (N, 1600000)
+                    ).squeeze(1)  ## --> (N, 1600000)
                 else:
                     audio_segments = seg_audio_tensor
 

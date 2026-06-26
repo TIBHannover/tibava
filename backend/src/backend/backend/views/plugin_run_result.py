@@ -12,7 +12,7 @@ from django.conf import settings
 
 from backend.models import PluginRunResult, Video, PluginRun
 from backend.plugin_manager import PluginManager
-from data import DataManager
+from tibava_data import DataManager
 
 
 logger = logging.getLogger(__name__)

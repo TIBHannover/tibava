@@ -2,8 +2,8 @@ from typing import Dict, List
 import logging
 from ..utils.analyser_client import TaskAnalyserClient
 
-from data import Shot, ShotsData
-from data import DataManager
+from tibava_data import Shot, ShotsData
+from tibava_data import DataManager
 
 from backend.models import (
     Annotation,
@@ -190,7 +190,6 @@ class PlacesClassifier(Task):
                 probs.extract_all(manager)
 
                 for index, sub_data in zip(probs.index, probs.data):
-
                     plugin_run_result_db = PluginRunResult.objects.create(
                         plugin_run=plugin_run,
                         data_id=sub_data,

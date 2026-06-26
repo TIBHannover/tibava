@@ -1,5 +1,5 @@
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from data import (
+from tibava_data import (
     AnnotationData,
     Annotation,
     BboxesData,
@@ -8,7 +8,7 @@ from data import (
     ImageEmbeddings,
 )
 
-from data import DataManager, Data
+from tibava_data import DataManager, Data
 
 import logging
 from typing import Callable, Dict

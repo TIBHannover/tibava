@@ -10,7 +10,7 @@ from backend.utils.parser import Parser
 from backend.utils.task import Task
 from backend.utils.color import get_color_from_label
 
-from data import DataManager  # type: ignore
+from tibava_data import DataManager  # type: ignore
 from backend.models import (
     Annotation,
     PluginRun,

@@ -9,10 +9,10 @@ from typing import Iterator, Any
 
 import grpc
 import json
-from interface import analyser_pb2
-from interface import analyser_pb2_grpc
+from tibava_interface import analyser_pb2
+from tibava_interface import analyser_pb2_grpc
 
-from data import DataManager
+from tibava_data import DataManager
 
 import time
 import msgpack
