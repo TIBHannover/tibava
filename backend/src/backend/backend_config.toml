@@ -1,0 +1,48 @@
+# ==============================================================================
+# Tibava Backend Configuration (TOML)
+# Default values provided. Uncomment or change values to override.
+# ==============================================================================
+
+secret_key = "default_secret"
+debug = false
+force_script_name = "/"
+
+# Lists/Arrays in TOML use square brackets
+allowed_hosts = ["localhost"]
+csrf_trusted_origins = ["http://localhost", "https://localhost"]
+
+cors_origin_allow_all = true
+cors_allow_credentials = true
+
+annotation_max_length = 1000
+media_root = "/media/"
+media_url = "/media/"
+thumbnail_url = "http://localhost/thumbnails/"
+data_cache_root = "/cache/"
+data_output_path = "/predictions"
+
+# Database Configuration
+[database]
+engine = "django.db.backends.postgresql"
+name = "tibava"
+user = "postgres"
+password = "postgres"
+host = "postgres"
+port = 5432
+
+# Cache Configuration
+[cache]
+backend = "django.core.cache.backends.memcached.PyMemcacheCache"
+location = "memcached:11211"
+client_class = "django_redis.client.DefaultClient"
+
+# Analyser gRPC Service Settings
+[analyser]
+grpc_host = "analyser"
+grpc_port = 50051
+
+# User Limits Configuration
+[user.limits]
+allowance = -1
+max_video_size = -1
+max_plugin_runs = -1
