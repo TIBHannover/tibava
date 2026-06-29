@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-import yaml
+import tomllib
 from pathlib import Path
 from dotenv import load_dotenv
 from tibava_utils import get_element
@@ -32,11 +32,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(BASE_DIR / ".env")
 
-DEFAULT_CONFIG_PATH = BASE_DIR / "backend_config.yaml"
+DEFAULT_CONFIG_PATH = BASE_DIR / "backend_config.toml"
 
 YAML_CONFIG_PATH = os.getenv("DJANGO_CONFIG_PATH", DEFAULT_CONFIG_PATH)
-with open(YAML_CONFIG_PATH, "r") as f:
-    config = yaml.safe_load(f) or {}
+print(YAML_CONFIG_PATH, os.path.exists(YAML_CONFIG_PATH))
+
+with open(YAML_CONFIG_PATH, "rb") as f:
+    config = tomllib.load(f) or {}
 
 SECRET_KEY = get_value(config, "SECRET_KEY", "secret_key", "default_secret")
 DEBUG = get_value(config, "DEBUG", "debug", "False") == "True"
@@ -130,25 +132,39 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "tibava.wsgi.application"
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
-        "LOCATION": "memcached:11211",
-        "TIMEOUT": 60 * 60 * 24,
-    }
-}
-
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "tibava",
-        "USER": "postgres",
-        "PASSWORD": "postgres",
-        "HOST": "postgres",
-        "PORT": 5432,
+        "ENGINE": get_value(
+            config, "DB_ENGINE", "database.engine", "django.db.backends.postgresql"
+        ),
+        "NAME": get_value(config, "DB_NAME", "database.name", "tibava"),
+        "USER": get_value(config, "DB_USER", "database.user", "postgres"),
+        "PASSWORD": get_value(config, "DB_PASSWORD", "database.password", "postgres"),
+        "HOST": get_value(config, "DB_HOST", "database.host", "postgres"),
+        "PORT": int(get_value(config, "DB_PORT", "database.port", 5432)),
+    }
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": get_value(
+            config,
+            "CACHE_BACKEND",
+            "cache.backend",
+            "django.core.cache.backends.memcached.PyMemcacheCache",
+        ),
+        "LOCATION": get_value(
+            config, "CACHE_LOCATION", "cache.location", "memcached:11211"
+        ),
+        "OPTIONS": {
+            "CLIENT_CLASS": get_value(
+                config,
+                "CACHE_CLIENT_CLASS",
+                "cache.client_class",
+                "django_redis.client.DefaultClient",
+            ),
+        },
     }
 }
 
@@ -198,10 +214,10 @@ DATA_OUTPUT_PATH = get_value(
 
 
 GRPC_HOST = get_value(config, "ANALYSER_GRPC_HOST", "analyser.grpc_host", "analyser")
-GRPC_PORT = get_value(config, "ANALYSER_GRPC_PORT", "analyser.grpc_port", 50051)
+GRPC_PORT = int(get_value(config, "ANALYSER_GRPC_PORT", "analyser.grpc_port", 50051))
 
-ANNOTATION_MAX_LENGTH = get_value(
-    config, "ANNOTATION_MAX_LENGTH", "annotation_max_length", 1000
+ANNOTATION_MAX_LENGTH = int(
+    get_value(config, "ANNOTATION_MAX_LENGTH", "annotation_max_length", 1000)
 )
 
 MEDIA_URL = get_value(config, "MEDIA_URL", "media_url", "/media/")
@@ -213,9 +229,9 @@ THUMBNAIL_URL = get_value(
 IMAGE_RESOLUTIONS = [{"min_dim": 200, "suffix": "_m"}, {"min_dim": 1080, "suffix": ""}]
 
 
-USER_LIMITS_ALLOWANCE = get_value(
-    config, "USER_LIMITS_ALLOWANCE", "user.limits.allowance", -1
+USER_LIMITS_ALLOWANCE = int(
+    get_value(config, "USER_LIMITS_ALLOWANCE", "user.limits.allowance", -1)
 )
-USER_LIMITS_MAX_VIDEO_SIZE = get_value(
-    config, "USER_LIMITS_MAX_VIDEO_SIZE", "user.limits.max_video_size", -1
+USER_LIMITS_MAX_VIDEO_SIZE = int(
+    get_value(config, "USER_LIMITS_MAX_VIDEO_SIZE", "user.limits.max_video_size", -1)
 )
