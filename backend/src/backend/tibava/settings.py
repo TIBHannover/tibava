@@ -211,3 +211,11 @@ THUMBNAIL_URL = get_value(
 
 # the last resolution will use for indexing
 IMAGE_RESOLUTIONS = [{"min_dim": 200, "suffix": "_m"}, {"min_dim": 1080, "suffix": ""}]
+
+
+USER_LIMITS_ALLOWANCE = get_value(
+    config, "USER_LIMITS_ALLOWANCE", "user.limits.allowance", -1
+)
+USER_LIMITS_MAX_VIDEO_SIZE = get_value(
+    config, "USER_LIMITS_MAX_VIDEO_SIZE", "user.limits.max_video_size", -1
+)
