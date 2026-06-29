@@ -25,6 +25,7 @@ def random_color_string():
 class TibavaUser(AbstractUser):
     allowance = models.IntegerField(default=settings.USER_LIMITS_ALLOWANCE)
     max_video_size = models.BigIntegerField(default=settings.USER_LIMITS_MAX_VIDEO_SIZE)
+    max_plugin_runs = models.IntegerField(default=settings.USER_LIMITS_MAX_PLUGIN_RUNS)
 
     objects = TibavaUserManager()
 

@@ -168,8 +168,9 @@ def generate_plugin_run_result_cache(
                 logger.exception("Cache couldn't write")
 
 
-@shared_task(bind=True)
+@shared_task(bind=True, max_retries=None)
 def run_plugin(self, args):
+    print(dir(self), flush=True)
     plugin = args.get("plugin")
     parameters = args.get("parameters")
     video = args.get("video")

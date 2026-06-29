@@ -240,3 +240,6 @@ USER_LIMITS_ALLOWANCE = int(
 USER_LIMITS_MAX_VIDEO_SIZE = int(
     get_value(config, "USER_LIMITS_MAX_VIDEO_SIZE", "user.limits.max_video_size", -1)
 )
+USER_LIMITS_MAX_PLUGIN_RUNS = int(
+    get_value(config, "USER_LIMITS_MAX_PLUGIN_RUNS", "user.limits.max_plugin_runs", -1)
+)
