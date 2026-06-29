@@ -24,7 +24,13 @@ def get_value(config, env_name, config_path, default_value):
         value = default_value
 
     result = os.getenv(env_name, value)
-    print(config, env_name, config_path, default_value, value, result, flush=True)
+
+    if isinstance(result, str):
+        if result.lower() in ["true", "yes", "1"]:
+            result = True
+        elif result.lower() in ["false", "no", "0"]:
+            result = False
+    # print(env_name, config_path, default_value, value, result, flush=True)
     return result
 
 
@@ -35,13 +41,12 @@ load_dotenv(BASE_DIR / ".env")
 DEFAULT_CONFIG_PATH = BASE_DIR / "backend_config.toml"
 
 YAML_CONFIG_PATH = os.getenv("DJANGO_CONFIG_PATH", DEFAULT_CONFIG_PATH)
-print(YAML_CONFIG_PATH, os.path.exists(YAML_CONFIG_PATH))
 
 with open(YAML_CONFIG_PATH, "rb") as f:
     config = tomllib.load(f) or {}
 
 SECRET_KEY = get_value(config, "SECRET_KEY", "secret_key", "default_secret")
-DEBUG = get_value(config, "DEBUG", "debug", "False") == "True"
+DEBUG = get_value(config, "DEBUG", "debug", False)
 
 
 FORCE_SCRIPT_NAME = get_value(config, "FORCE_SCRIPT_NAME", "force_script_name", "/")
@@ -54,14 +59,14 @@ CSRF_TRUSTED_ORIGINS = get_value(
     ["http://localhost", "https://localhost"],
 )
 
-CORS_ORIGIN_ALLOW_ALL = (
-    get_value(config, "CORS_ORIGIN_ALLOW_ALL", "cors_origin_allow_all", "True")
-    == "True"
+CORS_ORIGIN_ALLOW_ALL = get_value(
+    config, "CORS_ORIGIN_ALLOW_ALL", "cors_origin_allow_all", True
 )
-CORS_ALLOW_CREDENTIALS = (
-    get_value(config, "CORS_ALLOW_CREDENTIALS", "cors_allow_credentials", "True")
-    == "True"
+
+CORS_ALLOW_CREDENTIALS = get_value(
+    config, "CORS_ALLOW_CREDENTIALS", "cors_allow_credentials", True
 )
+
 
 LOGGING = {
     "version": 1,

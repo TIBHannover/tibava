@@ -7,7 +7,6 @@ secret_key = "default_secret"
 debug = false
 force_script_name = "/"
 
-# Lists/Arrays in TOML use square brackets
 allowed_hosts = ["localhost"]
 csrf_trusted_origins = ["http://localhost", "https://localhost"]
 
