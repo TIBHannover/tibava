@@ -11,27 +11,55 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import yaml
+from pathlib import Path
+from dotenv import load_dotenv
+from tibava_utils import get_element
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
+def get_value(config, env_name, config_path, default_value):
+    value = get_element(config, config_path)
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "default_secret"
+    if not value:
+        value = default_value
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+    result = os.getenv(env_name, value)
+    print(config, env_name, config_path, default_value, value, result, flush=True)
+    return result
 
-# FORCE_SCRIPT_NAME = "/"
-FORCE_SCRIPT_NAME = "/"
 
-ALLOWED_HOSTS = ["localhost"]
-CSRF_TRUSTED_ORIGINS = ["http://localhost", "https://localhost"]
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
+load_dotenv(BASE_DIR / ".env")
+
+DEFAULT_CONFIG_PATH = BASE_DIR / "backend_config.yaml"
+
+YAML_CONFIG_PATH = os.getenv("DJANGO_CONFIG_PATH", DEFAULT_CONFIG_PATH)
+with open(YAML_CONFIG_PATH, "r") as f:
+    config = yaml.safe_load(f) or {}
+
+SECRET_KEY = get_value(config, "SECRET_KEY", "secret_key", "default_secret")
+DEBUG = get_value(config, "DEBUG", "debug", "False") == "True"
+
+
+FORCE_SCRIPT_NAME = get_value(config, "FORCE_SCRIPT_NAME", "force_script_name", "/")
+
+ALLOWED_HOSTS = get_value(config, "ALLOWED_HOSTS", "allowed_hosts", ["localhost"])
+CSRF_TRUSTED_ORIGINS = get_value(
+    config,
+    "CSRF_TRUSTED_ORIGINS",
+    "csrf_trusted_origins",
+    ["http://localhost", "https://localhost"],
+)
+
+CORS_ORIGIN_ALLOW_ALL = (
+    get_value(config, "CORS_ORIGIN_ALLOW_ALL", "cors_origin_allow_all", "True")
+    == "True"
+)
+CORS_ALLOW_CREDENTIALS = (
+    get_value(config, "CORS_ALLOW_CREDENTIALS", "cors_allow_credentials", "True")
+    == "True"
+)
 
 LOGGING = {
     "version": 1,
@@ -147,13 +175,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
@@ -166,58 +190,24 @@ STATIC_URL = FORCE_SCRIPT_NAME + "/static/"
 
 # MEDIA_ROOT = os.path.join(os.path.dirname(__file__), "..", "media")
 
-MEDIA_ROOT = os.path.join("/media/")
-DATA_CACHE_ROOT = os.path.join("/cache/")
-DATA_OUTPUT_PATH = os.path.join("/predictions")
+MEDIA_ROOT = get_value(config, "MEDIA_ROOT", "media_root", "/media/")
+DATA_CACHE_ROOT = get_value(config, "DATA_CACHE_ROOT", "data_cache_root", "/cache/")
+DATA_OUTPUT_PATH = get_value(
+    config, "DATA_OUTPUT_PATH", "data_output_path", "/predictions"
+)
 
 
-GRPC_HOST = "analyser"
-GRPC_PORT = 50051
+GRPC_HOST = get_value(config, "ANALYSER_GRPC_HOST", "analyser.grpc_host", "analyser")
+GRPC_PORT = get_value(config, "ANALYSER_GRPC_PORT", "analyser.grpc_port", 50051)
 
-INDEXER_PATH = "/indexer"
+ANNOTATION_MAX_LENGTH = get_value(
+    config, "ANNOTATION_MAX_LENGTH", "annotation_max_length", 1000
+)
 
-ANNOTATION_MAX_LENGTH = 1000
-
-
-try:
-    from .user_settings import *
-
-except:
-    pass
-
-MEDIA_URL = "/media/"
-THUMBNAIL_URL = "http://localhost/thumbnails/"
+MEDIA_URL = get_value(config, "MEDIA_URL", "media_url", "/media/")
+THUMBNAIL_URL = get_value(
+    config, "THUMBNAIL_URL", "thumbnail_url", "http://localhost/thumbnails/"
+)
 
 # the last resolution will use for indexing
 IMAGE_RESOLUTIONS = [{"min_dim": 200, "suffix": "_m"}, {"min_dim": 1080, "suffix": ""}]
-
-
-import json
-
-config_lut = {
-    "secret_key": "SECRET_KEY",
-    "force_script_name": "FORCE_SCRIPT_NAME",
-    "allowed_hosts": "ALLOWED_HOSTS",
-    "debug": "DEBUG",
-    "language_code": "LANGUAGE_CODE",
-    "static_url": "STATIC_URL",
-    "media_root": "MEDIA_ROOT",
-    "data_cache_root": "DATA_CACHE_ROOT",
-    "upload_root": "UPLOAD_ROOT",
-    "media_url": "MEDIA_URL",
-    "upload_url": "UPLOAD_URL",
-    "grpc_host": "GRPC_HOST",
-    "grpc_port": "GRPC_PORT",
-    "image_resolutions": "IMAGE_RESOLUTIONS",
-    "pipelines": "PIPELINES",
-}
-
-config_path = os.environ.get("TIBAVA_BACKEND_CONFIG")
-if config_path is not None and os.path.exists(config_path):
-    with open(config_path, "r") as f:
-        config = json.load(f)
-        for k, v in config.items():
-            if k not in config_lut:
-                continue
-            conf = {config_lut[k]: v}
-            globals().update(conf)
