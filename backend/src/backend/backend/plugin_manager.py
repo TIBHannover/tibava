@@ -43,7 +43,23 @@ class PluginManager:
         return export_helper
 
     def __contains__(self, plugin):
-        return plugin in self._plugins
+        return plugin in self.plugins()
+
+    def plugins(self):
+        plugins = self._plugins
+        print("#### 1", plugins, settings.PLUGIN_WHITELIST, settings.PLUGIN_BLACKLIST)
+        if settings.PLUGIN_WHITELIST is not None:
+            plugins = {
+                x: y for x, y in plugins.items() if x in settings.PLUGIN_WHITELIST
+            }
+
+        print("#### 2", plugins)
+        if settings.PLUGIN_BLACKLIST is not None:
+            plugins = {
+                x: y for x, y in plugins.items() if x not in settings.PLUGIN_BLACKLIST
+            }
+        print("#### 3", plugins)
+        return plugins
 
     def __call__(
         self,
@@ -58,7 +74,7 @@ class PluginManager:
         if parameters is None:
             parameters = []
 
-        if plugin not in self._plugins:
+        if plugin not in self.plugins():
             print("Unknown Plugin")
             return {"status": False}
 
@@ -93,7 +109,7 @@ class PluginManager:
             )
         else:
             try:
-                plugin_result = self._plugins[plugin]()(
+                plugin_result = self.plugins()[plugin]()(
                     parameters,
                     user=user,
                     video=video,

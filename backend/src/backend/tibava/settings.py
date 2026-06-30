@@ -243,3 +243,6 @@ USER_LIMITS_MAX_VIDEO_SIZE = int(
 USER_LIMITS_MAX_PLUGIN_RUNS = int(
     get_value(config, "USER_LIMITS_MAX_PLUGIN_RUNS", "user.limits.max_plugin_runs", -1)
 )
+
+PLUGIN_WHITELIST = get_value(config, "PLUGIN_WHITELIST", "plugin.whitelist", None)
+PLUGIN_BLACKLIST = get_value(config, "PLUGIN_BLACKLIST", "plugin.blacklist", None)

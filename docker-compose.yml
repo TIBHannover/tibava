@@ -137,7 +137,7 @@ services:
       # - GRPC_POLL_STRATEGY=poll
       # - GRPC_VERBOSITY=debug
       # - GRPC_TRACE=all
-    command: uv run --package backend celery -A tibava worker -l INFO
+    command: uv run --package backend celery -A tibava worker -l INFO  --concurrency=20 --pool=threads
 
   backend:
     image: ghcr.io/astral-sh/uv:debian
