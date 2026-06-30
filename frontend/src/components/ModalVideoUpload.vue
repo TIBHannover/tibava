@@ -29,10 +29,10 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <span v-if="!canUpload" class="red--text">You have uploaded the maximum amount of videos that you are allowed to. If
-      you require more, please contact eric.mueller@tib.eu.</span>
-    <span v-if="canUpload">Videos uploaded: {{ num_videos }} out of {{ allowance }}</span>
-    <span v-if="canUpload">Maximum file size: {{ max_size_in_words }}</span>
+    <span v-if="!canUpload" class="red--text">You have uploaded the maximum amount of videos that you are allowed to.
+      If you require more, please contact eric.mueller@tib.eu.</span>
+    <span v-if="canUpload && allowance > 0">Videos uploaded: {{ num_videos }} out of {{ allowance }}</span>
+    <span v-if="canUpload && max_size > 0">Maximum file size: {{ max_size_in_words }}</span>
 
 
   </v-card>
@@ -65,6 +65,9 @@ export default {
   },
   computed: {
     canUpload() {
+      if (this.userStore.allowance <= 0) {
+        return true
+      }
       return this.userStore.allowance > this.videoStore.all.length;
     },
     disabled() {
@@ -79,9 +82,13 @@ export default {
     allowance() {
       return this.userStore.allowance;
     },
+    max_plugin_runs() {
+      return this.userStore.max_plugin_runs;
+    },
     num_videos() {
       return this.videoStore.all.length;
     },
+
     max_size_in_words() {
       var size = this.userStore.max_video_size;
       var extension_id = 0;
@@ -93,7 +100,6 @@ export default {
       return size + extensions[extension_id];
     },
     max_size() {
-      console.log(this.userStore.max_video_size);
       return this.userStore.max_video_size;
     },
     ...mapStores(useVideoUploadStore, useUserStore, useVideoStore)
@@ -104,7 +110,7 @@ export default {
         this.file_valid = false;
         return 'Please select a file.';
       }
-      if (file.size > this.max_size) {
+      if (this.max_size > 0 && file.size > this.max_size) {
         this.file_valid = false;
         return 'File exceeds your maximum file size of ' + this.max_size_in_words;
       }

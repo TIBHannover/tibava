@@ -210,5 +210,5 @@ class PluginRunList(View):
             logger.debug(f"Listing plugin runs took {end - start}s")
             return JsonResponse({"status": "ok", "entries": entries})
         except Exception:
-            logger.exception('Failed to list plugin runs')
+            logger.exception("Failed to list plugin runs")
             return JsonResponse({"status": "error"})

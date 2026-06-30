@@ -31,6 +31,7 @@ export const useUserStore = defineStore("user", {
       isLoading: false,
       allowance: null,
       max_video_size: null,
+      max_plugin_runs: null,
     };
   },
   actions: {
@@ -80,6 +81,9 @@ export const useUserStore = defineStore("user", {
             if ("max_video_size" in res.data.data) {
               this.max_video_size = res.data.data.max_video_size;
             }
+            if ("max_plugin_runs" in res.data.data) {
+              this.max_plugin_runs = res.data.data.max_plugin_runs;
+            }
             this.loggedIn = true;
           } else {
             this.username = null;
@@ -87,6 +91,7 @@ export const useUserStore = defineStore("user", {
             this.loggedIn = false;
             this.allowance = 0;
             this.max_video_size = 0;
+            this.max_plugin_runs = 0;
           }
         })
         .catch(() => {
@@ -121,6 +126,9 @@ export const useUserStore = defineStore("user", {
             }
             if ("max_video_size" in res.data.data) {
               this.max_video_size = res.data.data.max_video_size;
+            }
+            if ("max_plugin_runs" in res.data.data) {
+              this.max_plugin_runs = res.data.data.max_plugin_runs;
             }
             this.loggedIn = true;
           }
