@@ -10,6 +10,7 @@ import traceback
 from django.views.decorators.csrf import csrf_protect
 from django.views import View
 
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +29,9 @@ def get_csrf_token(request):
 class UserGet(View):
     def post(self, request):
         if not request.user.is_authenticated:
-            return JsonResponse({"status": "error", "error": {"type": "not_authenticated"}})
+            return JsonResponse(
+                {"status": "error", "error": {"type": "not_authenticated"}}
+            )
 
         try:
             user = request.user
@@ -41,11 +44,12 @@ class UserGet(View):
                         "date": user.date_joined,
                         "allowance": user.allowance,
                         "max_video_size": user.max_video_size,
+                        "max_plugin_runs": user.max_plugin_runs,
                     },
                 }
             )
         except Exception:
-            logger.exception('Failed to get user info')
+            logger.exception("Failed to get user info")
             return JsonResponse({"status": "error"})
 
 
@@ -59,15 +63,15 @@ def login(request):
     try:
         data = json.loads(body)
     except Exception as e:
-        logger.exception('Could not load JSON for login')
+        logger.exception("Could not load JSON for login")
         return JsonResponse({"status": "error"})
 
     if "name" not in data["params"]:
-        logger.warning('Name not supplied for login')
+        logger.warning("Name not supplied for login")
         return JsonResponse({"status": "error", "message": "Name missing"})
 
     if "password" not in data["params"]:
-        logger.warning('Password not supplied for login')
+        logger.warning("Password not supplied for login")
         return JsonResponse({"status": "error", "message": "Password missing"})
 
     username = data["params"]["name"]
@@ -105,19 +109,19 @@ def register(request):
     try:
         data = json.loads(body)
     except Exception as e:
-        logger.exception('Could not load JSON for register')
+        logger.exception("Could not load JSON for register")
         return JsonResponse({"status": "error"})
 
     if "name" not in data["params"]:
-        logger.warning('Name not supplied for registration')
+        logger.warning("Name not supplied for registration")
         return JsonResponse({"status": "error", "message": "Name missing"})
 
     if "password" not in data["params"]:
-        logger.warning('Password not supplied for registration')
+        logger.warning("Password not supplied for registration")
         return JsonResponse({"status": "error", "message": "Password missing"})
 
     if "email" not in data["params"]:
-        logger.warning('EMail not supplied for registration')
+        logger.warning("EMail not supplied for registration")
         return JsonResponse({"status": "error", "message": "E-Mail missing"})
 
     username = data["params"]["name"]
@@ -134,8 +138,18 @@ def register(request):
 
     # TODO Add EMail register here
     user = auth.get_user_model().objects.create_user(username, email, password)
+
+    # Set all limits from the current settings
+
+    # Maybe this is not nessesary because django set the
+    # current value and not the value from the init
+    user.allowance = settings.USER_LIMITS_ALLOWANCE
+    user.max_video_size = settings.USER_LIMITS_MAX_VIDEO_SIZE
+    user.max_plugin_runs = settings.USER_LIMITS_MAX_PLUGIN_RUNS
+    user.save()
+
     user = auth.authenticate(username=username, password=password)
-    logger.info('New user registered')
+    logger.info("New user registered")
 
     if user is not None:
         auth.login(request, user)

@@ -34,14 +34,13 @@ def download_file(file, output_dir, output_name=None, max_size=None, extensions=
             if not check_extension(path, extensions):
                 return {"status": "error", "type": "wrong_file_extension"}
         # TODO add parameter
-        if max_size is not None:
+        if max_size is not None and max_size > 0:
             if file.size > max_size:
                 return {"status": "error", "type": "file_too_large"}
 
         os.makedirs(output_dir, exist_ok=True)
 
         with open(os.path.join(output_dir, output_path), "wb") as f:
-
             for i, chunk in enumerate(file.chunks()):
                 f.write(chunk)
 
@@ -63,14 +62,12 @@ def download_url(url, output_dir, output_name=None, max_size=None, extensions=No
             ext = "".join(Path(filename).suffixes)
             if extensions is not None:
                 if ext not in extensions:
-
                     return {
                         "status": "error",
                         "type": "wrong_file_extension",
                     }
 
         elif response.headers.get("Content-Type") != None:
-
             ext = mimetypes.guess_extension(response.headers.get("Content-Type"))
             if ext is None:
                 return {"status": "error", "type": "downloading_error"}
@@ -95,7 +92,7 @@ def download_url(url, output_dir, output_name=None, max_size=None, extensions=No
             for chunk in response.iter_content(1024):
                 size += 1024
 
-                if size > max_size:
+                if size > max_size and max_size > 0:
                     return {"status": "error", "type": "file_too_large"}
                 f.write(chunk)
 

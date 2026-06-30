@@ -106,7 +106,9 @@ class VideoUpload(View):
                     plugins=["thumbnail"] + analyers, video=video_db, user=request.user
                 )
 
-                video_id_hex = video_db.id.hex if not video_db.file.hex else video_db.id.hex
+                video_id_hex = (
+                    video_db.id.hex if not video_db.file.hex else video_db.id.hex
+                )
                 return JsonResponse(
                     {
                         "status": "ok",
@@ -148,7 +150,9 @@ class VideoGet(View):
                 return JsonResponse({"status": "error"}, status=500)
 
             entries = []
-            for video in Video.objects.filter(id=request.GET.get("id"), owner=request.user):
+            for video in Video.objects.filter(
+                id=request.GET.get("id"), owner=request.user
+            ):
                 video_id_hex = video.id.hex if not video.file else video.file.hex
                 entries.append(
                     {

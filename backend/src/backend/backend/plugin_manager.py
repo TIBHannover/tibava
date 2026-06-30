@@ -7,6 +7,8 @@ from typing import List
 
 from celery import shared_task
 from backend.models import PluginRun, Video, TibavaUser, PluginRunResult
+
+from backend.exceptions import RateLimitExceededException
 from tibava_data import DataManager
 
 from django.conf import settings
@@ -170,7 +172,6 @@ def generate_plugin_run_result_cache(
 
 @shared_task(bind=True, max_retries=None)
 def run_plugin(self, args):
-    print(dir(self), flush=True)
     plugin = args.get("plugin")
     parameters = args.get("parameters")
     video = args.get("video")
@@ -181,6 +182,21 @@ def run_plugin(self, args):
 
     video_db = Video.objects.get(id=video)
     user_db = TibavaUser.objects.get(id=user)
+
+    running_plugins_db = PluginRun.objects.filter(
+        video__owner=user_db, status=PluginRun.STATUS_RUNNING
+    )
+
+    logging.info(
+        f"Check runable plugin limits for User {user_db} {len(running_plugins_db)} >= {user_db.max_plugin_runs}"
+    )
+    if (
+        user_db.max_plugin_runs > 0
+        and len(running_plugins_db) >= user_db.max_plugin_runs
+    ):
+        logging.info(f"Limits reached: {user_db} {len(running_plugins_db)}")
+        raise self.retry(exc=RateLimitExceededException(), countdown=60)
+
     plugin_run_db = None
     if not dry_run:
         plugin_run_db = PluginRun.objects.get(id=plugin_run)
