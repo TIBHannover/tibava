@@ -12,6 +12,7 @@ import { useTimelineStore } from "./timeline";
 import { useTimelineSegmentStore } from "./timeline_segment";
 import { useTimelineSegmentAnnotationStore } from "./timeline_segment_annotation";
 
+import { usePluginStore } from "./plugin";
 import { usePluginRunStore } from "./plugin_run";
 import { usePluginRunResultStore } from "./plugin_run_result";
 import { useClusterTimelineItemStore } from "./cluster_timeline_item";
@@ -58,6 +59,7 @@ export const useVideoStore = defineStore("video", {
             const timelineSegmentStore = useTimelineSegmentStore();
             const timelineSegmentAnnotationStore =
                 useTimelineSegmentAnnotationStore();
+            const pluginStore = usePluginStore();
             const pluginRunStore = usePluginRunStore();
             const pluginRunResultStore = usePluginRunResultStore();
             const shortcutStore = useShortcutStore();
@@ -67,6 +69,7 @@ export const useVideoStore = defineStore("video", {
             const shotStore = useShotStore();
 
             playerStore.clearStore();
+            promises.push(pluginStore.fetchAll());
             promises.push(playerStore.fetchVideo({ videoId }));
             promises.push(shotStore.fetchForVideo({ videoId }))
             if (includeAnnotation) {

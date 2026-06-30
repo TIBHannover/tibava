@@ -28,8 +28,8 @@
                 <div class="" style="padding-bottom: 2em;" v-html="selected.description"></div>
                 <Parameters :parameters="selected.parameters" :videoIds="videoIds"> </Parameters>
                 <v-expansion-panels v-if="selected.optional_parameters &&
-    selected.optional_parameters.length > 0
-    ">
+                  selected.optional_parameters.length > 0
+                ">
                   <v-expansion-panel>
                     <v-expansion-panel-header expand-icon="mdi-menu-down">
                       Advanced Options
@@ -52,12 +52,12 @@
         <v-btn @click="dialog = false">{{ $t("modal.plugin.close") }}</v-btn>
         <v-spacer></v-spacer>
         <v-btn v-if="selected" @click="
-    runPlugin(
-      selected.plugin,
-      selected.parameters,
-      selected.optional_parameters
-    )
-    ">{{ $t("modal.plugin.run") }}</v-btn>
+          runPlugin(
+            selected.plugin,
+            selected.parameters,
+            selected.optional_parameters
+          )
+          ">{{ $t("modal.plugin.run") }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -66,6 +66,7 @@
 <script>
 import { mapStores } from "pinia";
 import { usePluginRunStore } from "@/store/plugin_run";
+import { usePluginStore } from "@/store/plugin";
 import Parameters from "./Parameters.vue";
 // import { useTimelineStore } from "../store/timeline";
 
@@ -740,13 +741,13 @@ export default {
                   text: this.$t("modal.plugin.shot_timeline_name"),
                   hint: this.$t("modal.plugin.shot_timeline_hint"),
                 },
-//                {
-//                  field: "select_options",
-//                  text: this.$t("modal.plugin.place_clustering.encoder_name"),
-//                  hint: this.$t("modal.plugin.place_clustering.encoder_hint"),
-//                  items: ["CLIP", "Places"],
-//                  name: "encoder",
-//                },
+                //                {
+                //                  field: "select_options",
+                //                  text: this.$t("modal.plugin.place_clustering.encoder_name"),
+                //                  hint: this.$t("modal.plugin.place_clustering.encoder_hint"),
+                //                  items: ["CLIP", "Places"],
+                //                  name: "encoder",
+                //                },
                 {
                   field: "slider",
                   min: 0.05,
@@ -1551,7 +1552,15 @@ export default {
   },
   computed: {
     plugins_sorted() {
-      return this.plugins.slice(0).sort((a, b) => a.name.localeCompare(b.name));
+      const result = this.plugins.slice(0).sort((a, b) => a.name.localeCompare(b.name));
+      const allowedPlugins = this.pluginStore.all;
+      const filteredPlugins = result.map(category => ({
+        ...category,
+        children: category.children.filter(child =>
+          allowedPlugins.some(allowed => allowed.name === child.plugin)
+        )
+      })).filter(category => category.children.length > 0);
+      return filteredPlugins;
     },
     selected() {
       if (!this.active.length) return undefined;
@@ -1569,7 +1578,7 @@ export default {
     filter() {
       return (item, search, textKey) => item[textKey].indexOf(search) > -1;
     },
-    ...mapStores(usePluginRunStore),
+    ...mapStores(usePluginRunStore, usePluginStore),
   },
   methods: {
     async runPlugin(plugin, parameters, optional_parameters) {
