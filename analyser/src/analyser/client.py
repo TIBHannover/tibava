@@ -216,7 +216,7 @@ class AnalyserClient:
             if i["type"] == "image":
                 input_field.name = "image"
                 input_field.image.content = open(i["path"], "rb").read()
-            elif i["type"] == "string":
+            elif i["type"] == "text":
                 input_field.name = "text"
                 input_field.text.text = i["text"]
 

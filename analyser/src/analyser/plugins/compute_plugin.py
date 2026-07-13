@@ -120,7 +120,7 @@ class ComputePlugin(Plugin):
                     else:
                         logging.error("Missing image content")
 
-                elif value["type"] == "string":
+                elif value["type"] == "text":
                     input_field.name = "text"
                     input_field.text.text = value["content"]
 
