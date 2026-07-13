@@ -22,17 +22,11 @@ import pandas as pd
 import zipfile
 
 from backend.utils import (
-    download_url,
-    download_file,
-    media_url_to_video,
     media_path_to_video,
-    media_dir_to_video,
 )
 
-from backend.utils.color import get_closest_color
 from backend.models import (
     Video,
-    Annotation,
     Timeline,
     TimelineSegment,
     PluginRunResult,

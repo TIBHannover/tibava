@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package fileharbor;
+
+import "common.proto";
+import "data.proto";
+
+message CollectionItem {
+  string id = 1;
+  repeated Data data = 2;
+}
+
+message IndexDefinition {
+  string name = 1;
+  int32 size = 2;
+  string distance = 3;
+}
+
+message CreateRequest {
+  string collection_name = 1;
+  repeated IndexDefinition indexes = 3;
+}
+message CreateResponse {}
+message DeleteRequest { string collection_name = 1; }
+message DeleteResponse {}
+message ListRequest {}
+message ListResponse { repeated string collection_names = 1; }
+
+message AddPointsRequest {
+  string id = 1;
+  repeated Data data = 2;
+  string collection_name = 3;
+}
+
+message AddPointsReply {
+  string status = 1;
+  string id = 2;
+  string indexing_job_id = 3;
+}
+
+message QueryRequest {}
+message QueryResponse {}
+
+
+message GetRequest {
+    string collection_name = 1;
+    string id = 2;
+    repeated string include_fields = 3;
+    bool include_media = 4;
+}
+
+message GetResponse {
+    string id = 1;
+    repeated Data data = 12;
+}
+
+service Collection {
+  rpc create(CreateRequest) returns (CreateResponse) {}
+  rpc delete (DeleteRequest) returns (DeleteResponse) {}
+  rpc list(ListRequest) returns (ListResponse) {}
+  rpc add_points(stream AddPointsRequest) returns (stream AddPointsReply) {}
+  rpc query(QueryRequest) returns (QueryResponse) {}
+  rpc get(GetRequest) returns (GetResponse) {}
+}

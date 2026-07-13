@@ -11,7 +11,7 @@ from .face_data import FacesData, FaceData
 from .keypoint_data import KpssData, KpsData
 from .bounding_box_data import BboxesData, BboxData
 from .image_data import ImagesData, ImageData
-from tibava_interface import analyser_pb2
+from tibava_interface import data_pb2
 from .image_embedding import ImageEmbedding
 
 
@@ -33,7 +33,7 @@ class Cluster(Data):
         }
 
 
-@DataManager.export("ClusterData", analyser_pb2.CLUSTER_DATA)
+@DataManager.export("ClusterData", data_pb2.CLUSTER_DATA)
 @dataclass(kw_only=True)
 class ClusterData(Data):
     type: str = field(default="ClusterData")

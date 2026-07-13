@@ -11,7 +11,7 @@ import numpy as np
 
 from ..manager import DataManager
 from ..data import Data
-from tibava_interface import analyser_pb2
+from tibava_interface import data_pb2
 
 
 @dataclass(kw_only=True)
@@ -30,7 +30,7 @@ class ImageData(Data):
         }
 
 
-@DataManager.export("ImagesData", analyser_pb2.IMAGES_DATA)
+@DataManager.export("ImagesData", data_pb2.IMAGES_DATA)
 @dataclass(kw_only=True)
 class ImagesData(Data):
     type: str = field(default="ImagesData")

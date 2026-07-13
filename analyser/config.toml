@@ -1,0 +1,75 @@
+log_level = "info"
+
+[service]
+max_workers = 4
+port = 50051
+host = "0.0.0.0"
+
+[cache]
+path = "/tmp/cache"
+
+[data]
+path = "/data/data"
+
+
+[[inference]]
+name = "ray"
+type = "RayInferenceServer"
+
+[[compute_plugin]]
+name = "clip_image_vit-b-32_siglip2-256"
+type = "ClipImageEmbeddingFeature"
+inference = "ray"
+
+[compute_plugin.params]
+inference.requirements = ["torch", "open_clip_torch", "imageio", "transformers"]
+multicrop = true
+max_dim = 0
+min_dim = 244
+embedding_size = 768
+model = "hf-hub:timm/ViT-B-32-SigLIP2-256"
+
+
+[[compute_plugin]]
+name = "clip_text_vit-b-32_siglip2-256"
+type = "ClipTextEmbeddingFeature"
+inference = "ray"
+
+[compute_plugin.params]
+inference.requirements = ["torch", "open_clip_torch", "imageio", "transformers"]
+embedding_size = 768
+model = "hf-hub:timm/ViT-B-32-SigLIP2-256"
+
+
+[[compute_plugin]]
+name = "clip_classification_xlm-roberta-base-vit-b-32_laion5b_s13b_b90k"
+type = "ClipClassification"
+inference = "ray"
+
+[compute_plugin.params]
+inference.requirements = ["torch", "open_clip_torch", "imageio", "transformers"]
+
+
+[[compute_plugin]]
+name = "clip_image_xlm-roberta-base-vit-b-32_laion5b_s13b_b90k"
+type = "ClipImageEmbeddingFeature"
+inference = "ray"
+
+[compute_plugin.params]
+inference.requirements = ["torch", "open_clip_torch", "imageio", "transformers"]
+multicrop = true
+max_dim = 0
+min_dim = 244
+embedding_size = 768
+model = "xlm-roberta-base-ViT-B-32"
+
+
+[[compute_plugin]]
+name = "clip_text_xlm-roberta-base-vit-b-32_laion5b_s13b_b90k"
+type = "ClipTextEmbeddingFeature"
+inference = "ray"
+
+[compute_plugin.params]
+inference.requirements = ["torch", "open_clip_torch", "imageio", "transformers"]
+embedding_size = 768
+model = "xlm-roberta-base-ViT-B-32"

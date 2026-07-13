@@ -7,7 +7,7 @@ import numpy as np
 
 from ..manager import DataManager
 from ..data import Data
-from tibava_interface import analyser_pb2
+from tibava_interface import data_pb2
 
 
 @dataclass(kw_only=True)
@@ -15,7 +15,7 @@ class FaceData(Data):
     pass
 
 
-@DataManager.export("FacesData", analyser_pb2.FACES_DATA)
+@DataManager.export("FacesData", data_pb2.FACES_DATA)
 @dataclass(kw_only=True)
 class FacesData(Data):
     type: str = field(default="FacesData")

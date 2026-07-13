@@ -7,10 +7,10 @@ import numpy as np
 
 from ..manager import DataManager
 from ..data import Data
-from tibava_interface import analyser_pb2
+from tibava_interface import data_pb2
 
 
-@DataManager.export("ScalarData", analyser_pb2.SCALAR_DATA)
+@DataManager.export("ScalarData", data_pb2.SCALAR_DATA)
 @dataclass(kw_only=True)
 class ScalarData(Data):
     type: str = field(default="ScalarData")

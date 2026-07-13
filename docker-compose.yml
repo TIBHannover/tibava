@@ -1,44 +1,44 @@
 services:
-  inference_ray:
-    image: ghcr.io/astral-sh/uv:debian
+  # inference_ray:
+  #   image: ghcr.io/astral-sh/uv:debian
 
-    environment:
-      - HF_HOME=/models
-      - NUMBA_CACHE_DIR=/tmp
+  #   environment:
+  #     - HF_HOME=/models
+  #     - NUMBA_CACHE_DIR=/tmp
 
-    volumes:
-      - type: bind
-        source: ./data/analyser
-        target: /data/
-      - type: bind
-        source: ./data/media/
-        target: /media/
-      - type: bind
-        source: ./data/models/
-        target: /models/
-      - type: bind
-        source: ./inference_ray
-        target: /app/inference_ray
-      - type: bind
-        source: ./analyser
-        target: /app/analyser
-      - type: bind
-        source: ./packages
-        target: /app/packages
-      - type: bind
-        source: ./backend
-        target: /app/backend
-      - type: bind
-        source: ./pyproject.toml
-        target: /app/pyproject.toml
-      - type: bind
-        source: ./.python-version
-        target: /app/.python-version
+  #   volumes:
+  #     - type: bind
+  #       source: ./data/analyser
+  #       target: /data/
+  #     - type: bind
+  #       source: ./data/media/
+  #       target: /media/
+  #     - type: bind
+  #       source: ./data/models/
+  #       target: /models/
+  #     - type: bind
+  #       source: ./inference_ray
+  #       target: /app/inference_ray
+  #     - type: bind
+  #       source: ./analyser
+  #       target: /app/analyser
+  #     - type: bind
+  #       source: ./packages
+  #       target: /app/packages
+  #     - type: bind
+  #       source: ./backend
+  #       target: /app/backend
+  #     - type: bind
+  #       source: ./pyproject.toml
+  #       target: /app/pyproject.toml
+  #     - type: bind
+  #       source: ./.python-version
+  #       target: /app/.python-version
 
-    working_dir: /app/
+  #   working_dir: /app/
 
-    command: uv run --package inference_ray serve run inference_ray/deploy.yml
-    # command: ls inference_ray/deploy.yml
+  #   command: uv run --package inference_ray serve run inference_ray/deploy.yml
+  #   # command: ls inference_ray/deploy.yml
 
   analyser:
     image: ghcr.io/astral-sh/uv:debian
@@ -63,6 +63,9 @@ services:
         source: ./data/cache/
         target: /cache/
       - type: bind
+        source: ./data/
+        target: /data/
+      - type: bind
         source: ./pyproject.toml
         target: /app/pyproject.toml
       - type: bind
@@ -71,7 +74,7 @@ services:
 
     working_dir: /app/
 
-    command: uv run --package analyser analyser/src/analyser/server.py -v -c analyser/config.yml
+    command: uv run --active --package analyser analyser/src/analyser/server.py -v -c analyser/config.toml
 
   postgres:
     image: postgres:14.17

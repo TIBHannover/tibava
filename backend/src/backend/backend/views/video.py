@@ -9,21 +9,17 @@ import tempfile
 import logging
 from pathlib import Path
 
-from urllib.parse import urlparse
 import imageio
 from backend.plugin_manager import PluginManager
 
 from backend.utils import (
-    download_url,
     download_file,
     media_url_to_video,
-    media_path_to_video,
     media_dir_to_video,
 )
 
 from django.views import View
 from django.http import JsonResponse
-from django.conf import settings
 
 # from django.core.exceptions import BadRequest
 
@@ -175,7 +171,7 @@ class VideoRename(View):
                 return JsonResponse({"status": "error"}, status=500)
             try:
                 body = request.body.decode("utf-8")
-            except (UnicodeDecodeError, AttributeError):
+            except UnicodeDecodeError, AttributeError:
                 body = request.body
 
             try:
@@ -218,7 +214,7 @@ class VideoDelete(View):
                 return JsonResponse({"status": "error"}, status=500)
             try:
                 body = request.body.decode("utf-8")
-            except (UnicodeDecodeError, AttributeError):
+            except UnicodeDecodeError, AttributeError:
                 body = request.body
 
             try:

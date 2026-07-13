@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package fileharbor;
+
+import "data.proto";
+
+message RoI {
+  float x = 1;
+  float y = 2;
+  float width = 3;
+  float height = 4;
+}
+
+message ValueField {
+  string key = 1;
+
+  oneof value {
+    string string_val = 2;
+    int32 int_val = 3;
+    float float_val = 4;
+  }
+}
+
+message PluginConfig {
+  string name = 1;
+  string default = 2;
+  string type = 3;
+  string state = 4;
+}
+
+message PluginResult {
+  string plugin = 1;
+  string type = 2;
+  string version = 3;
+  Data result = 4;
+}
+
+enum DataType {
+  UNKOWN_TYPE = 0;
+  STRING_TYPE = 1;
+  INT_TYPE = 2;
+  FLOAT_TYPE = 3;
+  BOOL_TYPE = 4;
+  BYTES_TYPE = 5;
+  IMAGE_TYPE = 6;
+  BOUNDING_BOX_TYPE = 7;
+}
+
+message PluginParameter {
+  string name = 1;
+  bytes content = 2;
+  repeated int32 shape = 3;
+  DataType type = 4;
+}
+
+message PluginRun {
+  string plugin = 1;
+  repeated PluginParameter parameters = 2;
+  repeated Data inputs = 3;
+}

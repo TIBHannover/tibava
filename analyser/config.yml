@@ -12,4 +12,4 @@ inference:
   params:
     host: inference_ray
     port: 8000
-    status_port: 52365
+    status_port: 8265

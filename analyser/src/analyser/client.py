@@ -9,11 +9,19 @@ from typing import Iterator, Any
 
 import grpc
 import json
-from tibava_interface import analyser_pb2
-from tibava_interface import analyser_pb2_grpc
 
 from tibava_data import DataManager
 
+from tibava_interface import (
+    data_pb2,
+    common_pb2,
+    analyser_pb2,
+    analyser_pb2_grpc,
+    searcher_pb2,
+    searcher_pb2_grpc,
+    collection_pb2,
+    collection_pb2_grpc,
+)
 import time
 import msgpack
 
@@ -34,6 +42,7 @@ def parse_args():
             "run_plugin",
             "download_data",
             "get_plugin_status",
+            "analyse",
         ],
     )
     parser.add_argument("--path")
@@ -41,6 +50,12 @@ def parse_args():
     parser.add_argument("--inputs")
     parser.add_argument("--parameters")
     parser.add_argument("--id")
+
+    parser.add_argument("--plugins", nargs="+", help="")
+    parser.add_argument("--image_paths", help="")
+    parser.add_argument("--analyse_inputs", help="")
+    parser.add_argument("--analyse_parameters", help="")
+
     args = parser.parse_args()
     return args
 
@@ -54,6 +69,21 @@ class AnalyserClient:
         else:
             self.manager = manager
         self.channel = grpc.insecure_channel(f"{self.host}:{self.port}")
+
+    def plugin_list(self):
+        channel = grpc.insecure_channel(f"{self.host}:{self.port}")
+        stub = analyser_pb2_grpc.AnalyserStub(channel)
+        response = stub.list_plugins(analyser_pb2.ListPluginsRequest())
+
+        result = {}
+
+        for plugin in response.plugin_infos:
+            if plugin.type not in result:
+                result[plugin.type] = []
+
+            result[plugin.type].append(plugin.name)
+
+        return result
 
     def list_plugins(self):
         stub = analyser_pb2_grpc.AnalyserStub(self.channel)
@@ -177,6 +207,35 @@ class AnalyserClient:
         logging.error("Error while run plugin ...")
         return None
 
+    def analyse(self, inputs, parameters, plugin: str = None):
+        channel = grpc.insecure_channel(f"{self.host}:{self.port}")
+        stub = analyser_pb2_grpc.AnalyserStub(channel)
+        request = analyser_pb2.AnalyseRequest()
+        for i in inputs:
+            input_field = request.plugin_run.inputs.add()
+            if i["type"] == "image":
+                input_field.name = "image"
+                input_field.image.content = open(i["path"], "rb").read()
+            elif i["type"] == "string":
+                input_field.name = "text"
+                input_field.text.text = i["text"]
+
+        for p in parameters:
+            parameter_field = request.plugin_run.parameters.add()
+            parameter_field.name = p["name"]
+            parameter_field.content = str(p["value"]).encode()
+
+            if isinstance(p["value"], float):
+                parameter_field.type = common_pb2.FLOAT_TYPE
+            if isinstance(p["value"], int):
+                parameter_field.type = common_pb2.INT_TYPE
+            if isinstance(p["value"], str):
+                parameter_field.type = common_pb2.STRING_TYPE
+
+        request.plugin_run.plugin = plugin
+        response = stub.analyse(request)
+        return response
+
     def get_plugin_status(self, job_id):
         get_plugin_request = analyser_pb2.GetPluginStatusRequest(id=job_id)
 
@@ -254,20 +313,42 @@ def main():
     if args.task == "list_plugins":
         result = client.list_plugins()
 
-    if args.task == "upload_file":
+    elif args.task == "upload_file":
         result = client.upload_file(args.path)
 
-    if args.task == "run_plugin":
+    elif args.task == "run_plugin":
         result = client.run_plugin(
             args.plugin, json.loads(args.inputs), json.loads(args.parameters)
         )
 
-    if args.task == "get_plugin_status":
+    elif args.task == "get_plugin_status":
         result = client.get_plugin_status(args.id)
 
-    if args.task == "download_data":
+    elif args.task == "download_data":
         result = client.download_data(args.id, args.path)
 
+    elif args.task == "analyse":
+        available_plugins = client.plugin_list()
+        print(available_plugins)
+        plugins = []
+        plugins_selected = None
+        if args.plugins:
+            plugins_selected = [x.lower() for x in args.plugins]
+        for t, plugin_list in available_plugins.items():
+            for plugin in plugin_list:
+                if plugins_selected is not None:
+                    if plugin.lower() in plugins_selected:
+                        plugins.append(plugin)
+                else:
+                    plugins.append(plugin)
+
+        print(
+            client.analyse(
+                json.loads(args.analyse_inputs),
+                json.loads(args.analyse_parameters),
+                plugins[0],
+            )
+        )
     return 0
 
 

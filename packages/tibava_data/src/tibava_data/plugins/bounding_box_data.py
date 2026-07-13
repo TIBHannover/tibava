@@ -7,7 +7,7 @@ import numpy as np
 
 from ..manager import DataManager
 from ..data import Data
-from tibava_interface import analyser_pb2
+from tibava_interface import data_pb2
 
 
 @dataclass(kw_only=True)
@@ -38,7 +38,7 @@ class BboxData(Data):
         }
 
 
-@DataManager.export("BboxesData", analyser_pb2.BBOXES_DATA)
+@DataManager.export("BboxesData", data_pb2.BBOXES_DATA)
 @dataclass(kw_only=True)
 class BboxesData(Data):
     type: str = field(default="BboxesData")

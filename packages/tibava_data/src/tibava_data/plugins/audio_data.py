@@ -7,10 +7,10 @@ import numpy as np
 
 from ..manager import DataManager
 from ..data import Data
-from tibava_interface import analyser_pb2
+from tibava_interface import data_pb2
 
 
-@DataManager.export("AudioData", analyser_pb2.AUDIO_DATA)
+@DataManager.export("AudioData", data_pb2.AUDIO_DATA)
 @dataclass(kw_only=True)
 class AudioData(Data):
     type: str = field(default="AudioData")

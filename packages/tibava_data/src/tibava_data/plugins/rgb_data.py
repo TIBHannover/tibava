@@ -7,10 +7,10 @@ import numpy as np
 
 from ..manager import DataManager
 from ..data import Data
-from tibava_interface import analyser_pb2
+from tibava_interface import data_pb2
 
 
-@DataManager.export("RGBData", analyser_pb2.RGB_DATA)
+@DataManager.export("RGBData", data_pb2.RGB_DATA)
 @dataclass(kw_only=True)
 class RGBData(Data):
     type: str = field(default="RGBData")

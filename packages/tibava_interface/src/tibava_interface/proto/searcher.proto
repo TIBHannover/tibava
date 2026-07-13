@@ -1,0 +1,180 @@
+
+syntax = "proto3";
+option java_multiple_files = true;
+
+// python -m grpc_tools.protoc -I../web --python_out=. --grpc_python_out=.
+// ../web/tunnel.proto python -m grpc_tools.protoc -I../backend --python_out=.
+// --grpc_python_out=. ../backend/tunnel.proto create json stringds
+
+package fileharbor;
+
+import "data.proto";
+import "common.proto";
+import "collection.proto";
+
+service Searcher {
+  rpc search(SearchRequest) returns (SearchReply) {}
+  rpc list_search_result(ListSearchResultRequest)
+      returns (ListSearchResultReply) {}
+}
+
+// Search Request
+message TextSearchTerm {
+  string query = 1;
+  string field = 2;
+
+  enum Flag {
+    MUST = 0;
+    SHOULD = 1;
+    NOT = 2;
+  }
+
+  Flag flag = 3;
+
+  string language = 4;
+}
+
+message NumberSearchTerm {
+  string field = 1;
+
+  oneof query {
+    string string_query = 2;
+    int32 int_query = 3;
+    float float_query = 4;
+  }
+
+  enum Relation {
+    EQ = 0;
+    GREATER = 1;
+    GREATER_EQ = 2;
+    LESS_EQ = 3;
+    LESS = 4;
+  }
+
+  Relation relation = 5;
+
+  enum Flag {
+    MUST = 0;
+    SHOULD = 1;
+    NOT = 2;
+  }
+
+  Flag flag = 6;
+}
+
+message PluginVectorSearchIndex {
+  string name = 1;
+  float weight = 2;
+}
+
+message PluginVectorSearchTerm {
+  PluginRun analyse = 1;
+  repeated PluginVectorSearchIndex vector_indexes = 4;
+
+  enum Flag {
+    POSITIVE = 0;
+    NEGATIVE = 1;
+  }
+  Flag flag = 5;
+}
+
+message VectorSearchTerm {
+  repeated Data inputs = 1;
+  repeated PluginVectorSearchIndex vector_indexes = 4;
+
+  enum Flag {
+    POSITIVE = 0;
+    NEGATIVE = 1;
+  }
+  Flag flag = 5;
+}
+
+message SearchTerm {
+  oneof term {
+    TextSearchTerm text = 1;
+    NumberSearchTerm number = 2;
+    PluginVectorSearchTerm plugin_vector = 3;
+    VectorSearchTerm vector = 4;
+  }
+}
+
+message AggregateRequest {
+  repeated string fields = 1;
+  int32 size = 2;
+  bool use_query = 3;
+}
+
+message SearchRequest {
+  repeated SearchTerm terms = 1;
+
+  enum Sorting {
+    SORTING_DEFAULT = 0;
+    SORTING_CLASSIFIER = 1;
+    SORTING_FEATURE = 2;
+    SORTING_RANDOM = 3;
+    SORTING_RANDOM_FEATURE = 4;
+    SORTING_RANDOM_CLUSTER = 5;
+  }
+  Sorting sorting = 2;
+
+  enum Mapping {
+    MAPPING_DEFAULT = 0;
+    MAPPING_UMAP = 1;
+  }
+  Mapping mapping = 3;
+
+  // AggregateRequest aggregate = 4;
+  string random_seed = 5;
+
+  enum Extra {
+    EXTRA_FEATURES = 0;
+  }
+  repeated Extra extras = 6;
+
+  repeated ValueField mapping_options = 7;
+
+  enum Clustering {
+    CLUSTERING_DEFAULT = 0;
+    CLUSTERING_GM = 1;
+    CLUSTERING_KMEANS = 2;
+    CLUSTERING_AGGLOMERATIVE = 3;
+  }
+  Clustering clustering = 8;
+
+  repeated ValueField clustering_options = 9;
+  repeated string collections = 10;
+  bool include_default_collection = 11;
+  repeated string ids = 12;
+
+  // Fields to include in the returned search results
+  repeated string include_fields = 13;
+  repeated string include_fields_aggregate = 14;
+
+  // Maximum number of results to return
+  int64 limit = 15;
+
+  // Include image and media information
+  bool include_media = 16;
+}
+
+message SearchReply { string id = 1; }
+
+message SearchResultEntry {
+  string id = 1;
+  repeated float coordinates = 6;
+  int64 cluster = 7;
+  float distance = 8;
+  bool padded = 10;
+  repeated Data data = 12;
+}
+
+message AggregateResult {
+  string field_name = 1;
+  repeated ValueField entries = 2;
+}
+
+message ListSearchResultRequest { string id = 1; }
+message ListSearchResultReply {
+  repeated SearchResultEntry entries = 1;
+  repeated AggregateResult aggregate = 2;
+}

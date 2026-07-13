@@ -7,10 +7,10 @@ import numpy as np
 
 from ..manager import DataManager
 from ..data import Data
-from tibava_interface import analyser_pb2
+from tibava_interface import data_pb2
 
 
-@DataManager.export("StringData", analyser_pb2.STRING_DATA)
+@DataManager.export("StringData", data_pb2.STRING_DATA)
 @dataclass(kw_only=True)
 class StringData(Data):
     type: str = field(default="StringData")
@@ -39,7 +39,7 @@ class StringData(Data):
         return {"text": self.text}
 
 
-@DataManager.export("StringsData", analyser_pb2.TEXT_EMBEDDING_DATA)
+@DataManager.export("StringsData", data_pb2.TEXT_EMBEDDING_DATA)
 @dataclass(kw_only=True)
 class StringsData(Data):
     type: str = field(default="StringsData")

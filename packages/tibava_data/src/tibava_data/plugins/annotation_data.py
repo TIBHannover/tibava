@@ -7,7 +7,7 @@ import numpy as np
 
 from ..manager import DataManager
 from ..data import Data
-from tibava_interface import analyser_pb2
+from tibava_interface import data_pb2
 
 
 @dataclass(kw_only=True)
@@ -20,7 +20,7 @@ class Annotation:
         return {"start": self.start, "end": self.end, "labels": self.labels}
 
 
-@DataManager.export("AnnotationData", analyser_pb2.ANNOTATION_DATA)
+@DataManager.export("AnnotationData", data_pb2.ANNOTATION_DATA)
 @dataclass(kw_only=True)
 class AnnotationData(Data):
     type: str = field(default="AnnotationData")

@@ -1,29 +1,17 @@
-import os
-import shutil
-import sys
 import json
 from time import time
-import uuid
 import logging
-import traceback
-import tempfile
-from pathlib import Path
 
-from urllib.parse import urlparse
-import imageio
-from numpy import isin
-import time
-
-import wand.image as wimage
-
-from backend.utils import download_url, download_file, media_url_to_video
 
 from django.views import View
 from django.http import HttpResponse, JsonResponse
-from django.conf import settings
-# from django.core.exceptions import BadRequest
 
-from backend.models import TimelineSegment, TimelineSegmentAnnotation, Annotation, AnnotationCategory
+from backend.models import (
+    TimelineSegment,
+    TimelineSegmentAnnotation,
+    Annotation,
+    AnnotationCategory,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -32,11 +20,10 @@ logger = logging.getLogger(__name__)
 class TimelineSegmentAnnoatationCreate(View):
     def post(self, request):
         try:
-
             # decode data
             try:
                 body = request.body.decode("utf-8")
-            except (UnicodeDecodeError, AttributeError):
+            except UnicodeDecodeError, AttributeError:
                 body = request.body
 
             try:
@@ -46,7 +33,9 @@ class TimelineSegmentAnnoatationCreate(View):
 
             # get segment
             try:
-                segment_db = TimelineSegment.objects.get(id=data.get("timeline_segment_id"))
+                segment_db = TimelineSegment.objects.get(
+                    id=data.get("timeline_segment_id")
+                )
             except TimelineSegment.DoesNotExist:
                 return JsonResponse({"status": "error", "type": "not_exist"})
 
@@ -64,22 +53,27 @@ class TimelineSegmentAnnoatationCreate(View):
                 ):
                     return JsonResponse({"status": "error", "type": "exist"})
 
-                timeline_segment_annotation_db = TimelineSegmentAnnotation.objects.create(
-                    timeline_segment=segment_db, annotation=annotation_db
+                timeline_segment_annotation_db = (
+                    TimelineSegmentAnnotation.objects.create(
+                        timeline_segment=segment_db, annotation=annotation_db
+                    )
                 )
                 # if not created:
                 #     return JsonResponse({"status": "error", "type": "creation_failed"})
-                return JsonResponse({"status": "ok", "entry": timeline_segment_annotation_db.to_dict()})
+                return JsonResponse(
+                    {"status": "ok", "entry": timeline_segment_annotation_db.to_dict()}
+                )
 
             # create a annotation from exisitng categories
             elif "annotation_name" in data and "annotation_category_id" in data:
                 try:
-                    annotation_category_db = AnnotationCategory.objects.get(id=data.get("annotation_category_id"))
+                    annotation_category_db = AnnotationCategory.objects.get(
+                        id=data.get("annotation_category_id")
+                    )
                 except AnnotationCategory.DoesNotExist:
                     return JsonResponse({"status": "error", "type": "not_exist"})
 
                 if "annotation_color" in data:
-
                     annotation_db = Annotation.objects.create(
                         category=annotation_category_db,
                         name=data.get("annotation_name"),
@@ -91,16 +85,19 @@ class TimelineSegmentAnnoatationCreate(View):
                         name=data.get("annotation_name"),
                     )
 
-                timeline_segment_annotation_db = TimelineSegmentAnnotation.objects.create(
-                    timeline_segment=segment_db, annotation=annotation_db
+                timeline_segment_annotation_db = (
+                    TimelineSegmentAnnotation.objects.create(
+                        timeline_segment=segment_db, annotation=annotation_db
+                    )
                 )
                 # if not created:
                 #     return JsonResponse({"status": "error", "type": "creation_failed"})
-                return JsonResponse({"status": "ok", "entry": timeline_segment_annotation_db.to_dict()})
+                return JsonResponse(
+                    {"status": "ok", "entry": timeline_segment_annotation_db.to_dict()}
+                )
 
             elif "annotation_name" in data and "annotation_category_name" in data:
                 if "annotation_category_color" in data:
-
                     annotation_category_db = AnnotationCategory.objects.create(
                         name=data.get("annotation_category_name"),
                         color=data.get("annotation_category_color"),
@@ -122,12 +119,16 @@ class TimelineSegmentAnnoatationCreate(View):
                         name=data.get("annotation_name"),
                     )
 
-                timeline_segment_annotation_db = TimelineSegmentAnnotation.objects.create(
-                    timeline_segment=segment_db, annotation=annotation_db
+                timeline_segment_annotation_db = (
+                    TimelineSegmentAnnotation.objects.create(
+                        timeline_segment=segment_db, annotation=annotation_db
+                    )
                 )
                 # if not created:
                 #     return JsonResponse({"status": "error", "type": "creation_failed"})
-                return JsonResponse({"status": "ok", "entry": timeline_segment_annotation_db.to_dict()})
+                return JsonResponse(
+                    {"status": "ok", "entry": timeline_segment_annotation_db.to_dict()}
+                )
 
             return JsonResponse({"status": "error", "type": "missing_values"})
         except Exception:
@@ -146,7 +147,9 @@ class TimelineSegmentAnnoatationToggle(View):
 
             for timeline_segment_id in data.get("timeline_segment_ids"):
                 if not isinstance(timeline_segment_id, str):
-                    return JsonResponse({"status": "error", "type": "wrong_request_body"})
+                    return JsonResponse(
+                        {"status": "error", "type": "wrong_request_body"}
+                    )
                 timeline_segment_ids.append(timeline_segment_id)
 
         elif "timeline_segment_id" in data:
@@ -160,7 +163,9 @@ class TimelineSegmentAnnoatationToggle(View):
         timeline_segment_dbs = []
         for timeline_segment_id in timeline_segment_ids:
             try:
-                timeline_segment_db = TimelineSegment.objects.get(id=timeline_segment_id)
+                timeline_segment_db = TimelineSegment.objects.get(
+                    id=timeline_segment_id
+                )
                 timeline_segment_dbs.append(timeline_segment_db)
             except TimelineSegment.DoesNotExist:
                 return JsonResponse({"status": "error", "type": "not_exist"})
@@ -181,12 +186,13 @@ class TimelineSegmentAnnoatationToggle(View):
         # create a annotation from exisitng categories
         elif "annotation_name" in data and "annotation_category_id" in data:
             try:
-                annotation_category_db = AnnotationCategory.objects.get(id=data.get("annotation_category_id"))
+                annotation_category_db = AnnotationCategory.objects.get(
+                    id=data.get("annotation_category_id")
+                )
             except AnnotationCategory.DoesNotExist:
                 return JsonResponse({"status": "error", "type": "not_exist"})
 
             if "annotation_color" in data:
-
                 annotation_db = Annotation.objects.create(
                     category=annotation_category_db,
                     name=data.get("annotation_name"),
@@ -204,7 +210,6 @@ class TimelineSegmentAnnoatationToggle(View):
 
         elif "annotation_name" in data and "annotation_category_name" in data:
             if "annotation_category_color" in data:
-
                 annotation_category_db = AnnotationCategory.objects.create(
                     name=data.get("annotation_category_name"),
                     color=data.get("annotation_category_color"),
@@ -235,11 +240,10 @@ class TimelineSegmentAnnoatationToggle(View):
     def post(self, request):
         start = time.time()
         try:
-
             # decode data
             try:
                 body = request.body.decode("utf-8")
-            except (UnicodeDecodeError, AttributeError):
+            except UnicodeDecodeError, AttributeError:
                 body = request.body
 
             try:
@@ -261,29 +265,42 @@ class TimelineSegmentAnnoatationToggle(View):
             timeline_segment_annotation_deleted = []
             timeline_segment_annotation_added = []
             for timeline_segment_db in timeline_segment_dbs:
-
                 try:
-                    timeline_segment_annotation_db = TimelineSegmentAnnotation.objects.get(
-                        timeline_segment=timeline_segment_db, annotation=annotation_db
+                    timeline_segment_annotation_db = (
+                        TimelineSegmentAnnotation.objects.get(
+                            timeline_segment=timeline_segment_db,
+                            annotation=annotation_db,
+                        )
                     )
-                    timeline_segment_annotation_deleted.append(timeline_segment_annotation_db.id.hex)
+                    timeline_segment_annotation_deleted.append(
+                        timeline_segment_annotation_db.id.hex
+                    )
                     timeline_segment_annotation_db.delete()
                 except TimelineSegmentAnnotation.DoesNotExist:
-                    timeline_segment_annotation_db = TimelineSegmentAnnotation.objects.create(
-                        timeline_segment=timeline_segment_db, annotation=annotation_db
+                    timeline_segment_annotation_db = (
+                        TimelineSegmentAnnotation.objects.create(
+                            timeline_segment=timeline_segment_db,
+                            annotation=annotation_db,
+                        )
                     )
 
-                    timeline_segment_annotation_added.append(timeline_segment_annotation_db.to_dict())
+                    timeline_segment_annotation_added.append(
+                        timeline_segment_annotation_db.to_dict()
+                    )
                 except TimelineSegmentAnnotation.MultipleObjectsReturned:
-
-                    timeline_segment_annotation_db = TimelineSegmentAnnotation.objects.filter(
-                        timeline_segment=timeline_segment_db, annotation=annotation_db
+                    timeline_segment_annotation_db = (
+                        TimelineSegmentAnnotation.objects.filter(
+                            timeline_segment=timeline_segment_db,
+                            annotation=annotation_db,
+                        )
                     )
-                    timeline_segment_annotation_deleted.extend([x.id.hex for x in timeline_segment_annotation_db])
+                    timeline_segment_annotation_deleted.extend(
+                        [x.id.hex for x in timeline_segment_annotation_db]
+                    )
                     timeline_segment_annotation_db.delete()
 
             end = time.time()
-            logger.debug(f"Timeline annotation toggle request took {end-start}s")
+            logger.debug(f"Timeline annotation toggle request took {end - start}s")
             return JsonResponse(
                 {
                     "status": "ok",
@@ -295,7 +312,7 @@ class TimelineSegmentAnnoatationToggle(View):
             )
 
         except Exception:
-            logger.exception('Failed to load timeline annotation toggle')
+            logger.exception("Failed to load timeline annotation toggle")
             return JsonResponse({"status": "error"})
 
 
@@ -306,10 +323,14 @@ class TimelineSegmentAnnoatationList(View):
             query_args = {}
 
             if "timeline_segment_id" in request.GET:
-                query_args["timeline_segment_set__id"] = request.GET.get("timeline_segment_id")
+                query_args["timeline_segment_set__id"] = request.GET.get(
+                    "timeline_segment_id"
+                )
 
             if "video_id" in request.GET:
-                query_args["timeline_segment__timeline__video__id"] = request.GET.get("video_id")
+                query_args["timeline_segment__timeline__video__id"] = request.GET.get(
+                    "video_id"
+                )
 
             query_results = (
                 TimelineSegmentAnnotation.objects.filter(**query_args)
@@ -322,10 +343,10 @@ class TimelineSegmentAnnoatationList(View):
                 entries.append(timeline_segment_annotation.to_dict())
 
             end = time.time()
-            logger.debug(f"Getting TimelineSegmentAnnotationList took {end-start}s")
+            logger.debug(f"Getting TimelineSegmentAnnotationList took {end - start}s")
             return JsonResponse({"status": "ok", "entries": entries})
         except Exception:
-            logger.exception('Failed to get timeline annotations')
+            logger.exception("Failed to get timeline annotations")
             return JsonResponse({"status": "error"})
 
 
@@ -333,11 +354,10 @@ class TimelineSegmentAnnoatationList(View):
 class TimelineSegmentAnnoatationDelete(View):
     def post(self, request):
         try:
-
             # decode data
             try:
                 body = request.body.decode("utf-8")
-            except (UnicodeDecodeError, AttributeError):
+            except UnicodeDecodeError, AttributeError:
                 body = request.body
 
             try:
@@ -353,7 +373,7 @@ class TimelineSegmentAnnoatationDelete(View):
                 ).delete()
             except TimelineSegment.DoesNotExist:
                 return JsonResponse({"status": "error", "type": "not_exist"})
-            logger.debug(f'Deleted {num_deleted} timeline annotations')
+            logger.debug(f"Deleted {num_deleted} timeline annotations")
             if num_deleted == 1:
                 return JsonResponse({"status": "ok"})
             return JsonResponse({"status": "error"})

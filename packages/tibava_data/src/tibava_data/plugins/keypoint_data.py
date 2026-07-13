@@ -7,7 +7,7 @@ import numpy as np
 
 from ..manager import DataManager
 from ..data import Data
-from tibava_interface import analyser_pb2
+from tibava_interface import data_pb2
 
 
 @dataclass(kw_only=True)
@@ -31,7 +31,7 @@ class KpsData(Data):
         }
 
 
-@DataManager.export("KpssData", analyser_pb2.KPSS_DATA)
+@DataManager.export("KpssData", data_pb2.KPSS_DATA)
 @dataclass(kw_only=True)
 class KpssData(Data):
     type: str = field(default="KpssData")

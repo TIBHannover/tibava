@@ -7,7 +7,7 @@ import numpy as np
 
 from ..manager import DataManager
 from ..data import Data
-from tibava_interface import analyser_pb2
+from tibava_interface import data_pb2
 
 
 @dataclass(kw_only=True)
@@ -40,7 +40,7 @@ class TimeNDEmbedding(Data):
         }
 
 
-@DataManager.export("TimeNDEmbeddings", analyser_pb2.IMAGE_EMBEDDING_DATA)
+@DataManager.export("TimeNDEmbeddings", data_pb2.IMAGE_EMBEDDING_DATA)
 @dataclass(kw_only=True)
 class TimeNDEmbeddings(Data):
     type: str = field(default="TimeNDEmbeddings")

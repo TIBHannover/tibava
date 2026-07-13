@@ -1,0 +1,125 @@
+syntax = "proto3";
+
+package fileharbor;
+
+message ImageData {
+  bytes content = 2;
+  string ext = 3;
+}
+
+message TextData {
+  string text = 1;
+  string language = 2;
+}
+
+message Concept {
+  string concept = 1;
+  string type = 2;
+  float prob = 3;
+}
+
+message ClassifierResult {
+  string plugin = 1;
+  repeated Concept concepts = 2;
+}
+
+message BinaryFeature { string binary = 1; }
+
+// message PluginInfo {
+//   string name = 1;
+//   string version = 2;
+// }
+
+message Feature {
+  // PluginInfo plugin = 1;
+  string type = 2;
+  repeated int32 shape = 3;
+  repeated float feature = 4;
+}
+
+message BoundingBox {
+  float x = 1;
+  float y = 2;
+  float w = 3;
+  float h = 4;
+  float score = 5;
+}
+
+enum PoseType {
+  POSE_TYPE_COCO = 0;
+}
+
+message Pose {
+  PoseType type = 1;
+  repeated float x = 2;
+  repeated float y = 3;
+  repeated float scores = 4;
+}
+
+message BoolData { bool value = 1; }
+
+message IntData { int64 value = 1; }
+
+message FloatData { float value = 1; }
+
+message GeoData {
+  float lat = 1;
+  float lon = 2;
+}
+
+message Data {
+  string id = 1;
+  string name = 2;
+  string ref_id = 3;
+  oneof data {
+    ImageData image = 4;
+    TextData text = 5;
+    ClassifierResult classifier = 6;
+    Feature feature = 7;
+    BinaryFeature binary_feature = 8;
+    BoundingBox bounding_box = 9;
+    Pose pose = 10;
+    BoolData bool = 11;
+    IntData int = 12;
+    FloatData float = 13;
+    GeoData geo = 14;
+  }
+}
+
+enum PluginDataType {
+  UNKOWN_DATA = 0;
+  VIDEO_DATA = 1;
+  IMAGE_DATA = 2;
+  BBOXES_DATA = 3;
+  AUDIO_DATA = 4;
+  SCALAR_DATA = 5;
+  SHOTS_DATA = 6;
+  IMAGES_DATA = 7;
+  LIST_DATA = 8;
+  RGB_DATA = 9;
+  HIST_DATA = 10;
+  RGB_HIST_DATA = 11;
+  ANNOTATION_DATA = 12;
+  IMAGE_EMBEDDING_DATA = 13;
+  TEXT_EMBEDDING_DATA = 14;
+  KPSS_DATA = 15;
+  FACES_DATA = 16;
+  CONTAINER_DATA = 17;
+  VIDEO_TEMPORAL_EMBEDDING_DATA = 18;
+  TEXT_DATA = 19;
+
+  FACE_CLUSTER_DATA = 20;
+  PLACE_CLUSTER_DATA = 21;
+  PLACES_DATA = 22;
+
+  CLUSTER_DATA = 23;
+  META_DATA = 24;
+
+  BOOL_DATA = 25;
+  INT_DATA = 26;
+  FLOAT_DATA = 27;
+
+  GEO_DATA = 28;
+  FEATURE_DATA = 29;
+  FEATURES_DATA = 30;
+}

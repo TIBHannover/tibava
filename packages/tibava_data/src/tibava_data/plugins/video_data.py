@@ -2,13 +2,13 @@ import logging
 
 from ..manager import DataManager
 from ..data import Data
-from tibava_interface import analyser_pb2
+from tibava_interface import data_pb2
 from dataclasses import dataclass, field, fields
 from collections.abc import Iterable
 from tibava_utils import VideoDecoder
 
 
-@DataManager.export("VideoData", analyser_pb2.VIDEO_DATA)
+@DataManager.export("VideoData", data_pb2.VIDEO_DATA)
 @dataclass(kw_only=True)
 class VideoData(Data):
     type: str = field(default="VideoData")

@@ -7,7 +7,7 @@ import numpy as np
 
 from ..manager import DataManager
 from ..data import Data
-from tibava_interface import analyser_pb2
+from tibava_interface import data_pb2
 
 
 @dataclass(kw_only=True)
@@ -34,7 +34,7 @@ class TextEmbedding(Data):
         }
 
 
-@DataManager.export("TextEmbeddings", analyser_pb2.TEXT_EMBEDDING_DATA)
+@DataManager.export("TextEmbeddings", data_pb2.TEXT_EMBEDDING_DATA)
 @dataclass(kw_only=True)
 class TextEmbeddings(Data):
     type: str = field(default="TextEmbeddings")

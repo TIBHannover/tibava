@@ -7,10 +7,10 @@ import numpy as np
 
 from ..manager import DataManager
 from ..data import Data
-from tibava_interface import analyser_pb2
+from tibava_interface import data_pb2
 
 
-@DataManager.export("HistData", analyser_pb2.HIST_DATA)
+@DataManager.export("HistData", data_pb2.HIST_DATA)
 @dataclass(kw_only=True)
 class HistData(Data):
     type: str = field(default="HistData")

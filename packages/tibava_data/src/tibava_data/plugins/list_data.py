@@ -10,10 +10,10 @@ import numpy as np
 from ..manager import DataManager
 from ..data import Data
 from ..fs_handler import LocalFSHandler, ZipFSHandler
-from tibava_interface import analyser_pb2
+from tibava_interface import data_pb2
 
 
-@DataManager.export("ListData", analyser_pb2.LIST_DATA)
+@DataManager.export("ListData", data_pb2.LIST_DATA)
 @dataclass(kw_only=True)
 class ListData(Data):
     type: str = field(default="ListData")

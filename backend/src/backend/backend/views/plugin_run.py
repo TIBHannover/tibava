@@ -1,28 +1,15 @@
-import os
 import re
-import shutil
-import sys
 import json
 import uuid
 import logging
-import traceback
-import tempfile
-from pathlib import Path
 import tempfile
 import time
 
-from urllib.parse import urlparse
-import imageio
 
-import wand.image as wimage
-
-from backend.utils import download_url, download_file, media_url_to_video
+from backend.utils import download_file
 
 from django.views import View
 from django.http import HttpResponse, JsonResponse
-from django.conf import settings
-
-# from django.core.exceptions import BadRequest
 
 from backend.models import Video, PluginRun
 from backend.plugin_manager import PluginManager
@@ -146,7 +133,7 @@ class PluginRunDelete(View):
 
             try:
                 body = request.body.decode("utf-8")
-            except (UnicodeDecodeError, AttributeError):
+            except UnicodeDecodeError, AttributeError:
                 body = request.body
 
             try:

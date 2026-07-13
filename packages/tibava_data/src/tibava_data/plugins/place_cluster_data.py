@@ -9,12 +9,12 @@ from ..manager import DataManager
 from ..data import Data
 from .place_data import PlacesData, PlaceData
 from .image_data import ImagesData, ImageData
-from tibava_interface import analyser_pb2
+from tibava_interface import data_pb2
 from .image_embedding import ImageEmbedding
 from .cluster_data import Cluster
 
 
-@DataManager.export("PlaceClusterData", analyser_pb2.PLACE_CLUSTER_DATA)
+@DataManager.export("PlaceClusterData", data_pb2.PLACE_CLUSTER_DATA)
 @dataclass(kw_only=True)
 class PlaceClusterData(Data):
     type: str = field(default="PlaceClusterData")

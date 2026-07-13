@@ -14,6 +14,7 @@ from tibava_data import Data, DataManager
 
 from packaging import version
 from typing import Union, Dict, Any
+from ray import serve
 
 # from analyser.inference.callback import AnalyserPluginCallback
 
@@ -134,6 +135,10 @@ class AnalyserPluginManager(Manager):
     def plugin_status(self):
         print(f"{self.status_base_url}/api/serve/applications/", flush=True)
         try:
+            print(
+                requests.get(f"{self.status_base_url}/api/serve/applications/"),
+                flush=True,
+            )
             status = requests.get(
                 f"{self.status_base_url}/api/serve/applications/"
             ).json()

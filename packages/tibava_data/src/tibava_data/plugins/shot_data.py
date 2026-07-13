@@ -7,7 +7,7 @@ import numpy as np
 
 from ..manager import DataManager
 from ..data import Data
-from tibava_interface import analyser_pb2
+from tibava_interface import data_pb2
 
 
 @dataclass(kw_only=True)
@@ -19,7 +19,7 @@ class Shot:
         return {"start": self.start, "end": self.end}
 
 
-@DataManager.export("ShotsData", analyser_pb2.SHOTS_DATA)
+@DataManager.export("ShotsData", data_pb2.SHOTS_DATA)
 @dataclass(kw_only=True)
 class ShotsData(Data):
     type: str = field(default="ShotsData")
