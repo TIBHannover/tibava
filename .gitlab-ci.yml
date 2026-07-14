@@ -1,0 +1,18 @@
+stages:
+  - deploy
+
+deploy_job:
+  stage: deploy
+  image: cytopia/ansible:latest # Uses a lightweight image with Ansible installed
+  before_script:
+    # Set up the SSH agent so Ansible can connect to your target server securely
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    # Optional: Disable host key checking if you don't want to manage known_hosts
+    - export ANSIBLE_HOST_KEY_CHECKING=False
+  script:
+    - ansible-playbook -i inventory.ini deploy.yml
+  only:
+    - main # Only deploy when changes land on the main branch

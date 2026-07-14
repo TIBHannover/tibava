@@ -1,0 +1,40 @@
+- name: Deploy GitLab Project Application
+  hosts: production
+  become: true
+  tasks:
+    - name: Ensure target directory exists
+      ansible.builtin.file:
+        path: /var/www/my-app
+        state: directory
+        owner: ansible
+        group: ansible
+        mode: "0755"
+
+    - name: Pull latest code from GitLab
+      ansible.builtin.git:
+        repo: "https://github.com/TIBHannover/tibava.git"
+        dest: /var/www/my-app
+        version: main
+        force: true
+
+    - name: Copy systemd service file
+      ansible.builtin.template:
+        src: templates/tibava_backend.service.j2
+        dest: /etc/systemd/system/tibava_backend.service
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Reload systemd and restart app
+
+    - name: Restart application service (Example)
+      ansible.builtin.systemd:
+        name: tibava_backend.service
+
+        state: restarted
+  handlers:
+    - name: Reload systemd and restart app
+      ansible.builtin.systemd_service:
+        name: tibava_backend.service
+        state: restarted
+        daemon_reload: true
+        enabled: true
