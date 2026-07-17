@@ -1,6 +1,6 @@
 services:
   inference_ray:
-    image: ghcr.io/astral-sh/uv:debian
+    build: .
 
     environment:
       - HF_HOME=/models
@@ -37,11 +37,11 @@ services:
 
     working_dir: /app/
 
-    command: uv run --package inference_ray serve run inference_ray/deploy.yml
+    command: uv run --active --package inference_ray serve run inference_ray/deploy.yml
     # command: ls inference_ray/deploy.yml
 
   analyser:
-    image: ghcr.io/astral-sh/uv:debian
+    build: .
 
     volumes:
       - type: bind
@@ -93,7 +93,7 @@ services:
       - "127.0.0.1:6380:6380"
 
   celery:
-    image: ghcr.io/astral-sh/uv:debian
+    build: .
 
     volumes:
       - type: bind
@@ -140,7 +140,7 @@ services:
     command: uv run --package backend celery -A tibava worker -l INFO  --concurrency=20 --pool=threads
 
   backend:
-    image: ghcr.io/astral-sh/uv:debian
+    build: .
     ports:
       - 8000:8000
 
