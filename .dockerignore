@@ -1,0 +1,47 @@
+# --- Python & Environment Artifacts ---
+# Block your local virtual environment entirely
+.venv/
+venv/
+ENV/
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# --- uv & Package Manager Caches ---
+.uv/
+.cache/
+
+# --- Local Project Data & Media (Crucial!) ---
+# Since you bind-mount ./data at runtime, keep it out of the build context
+data/
+*.db
+*.log
+
+# --- IDEs & System Junk ---
+.idea/
+.vscode/
+.git/
+.gitignore
+.DS_Store
+Thumbs.db
+
+# --- Optional: Documentation & Tests ---
+# If you don't need tests running *inside* the final production image
+tests/
+docs/
+
+# Ansible
+templates/
+.vagrant/
+.gitlab-ci.yml
+*inventory.ini
+Vagrantfile
+
+# Python packages
+dist/
+
+
+# Standard development files you don't want in production
+.dockerignore
+docker-compose*.yml

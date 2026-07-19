@@ -1,58 +1,66 @@
 services:
   inference_ray:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        WORKSPACE_MEMBER: inference_ray
 
     environment:
       - HF_HOME=/models
       - NUMBA_CACHE_DIR=/tmp
 
     volumes:
-      - type: bind
-        source: ./data/analyser
-        target: /data/
+      # - type: bind
+      #   source: ./data/analyser
+      #   target: /data/
       - type: bind
         source: ./data/media/
         target: /media/
       - type: bind
         source: ./data/models/
         target: /models/
-      - type: bind
-        source: ./inference_ray
-        target: /app/inference_ray
-      - type: bind
-        source: ./analyser
-        target: /app/analyser
+      # - type: bind
+      #   source: ./inference_ray
+      #   target: /app/inference_ray
+      # - type: bind
+      #   source: ./analyser
+      #   target: /app/analyser
       - type: bind
         source: ./packages
         target: /app/packages
       - type: bind
         source: ./backend
         target: /app/backend
-      - type: bind
-        source: ./pyproject.toml
-        target: /app/pyproject.toml
-      - type: bind
-        source: ./.python-version
-        target: /app/.python-version
+      # - type: bind
+      #   source: ./pyproject.toml
+      #   target: /app/pyproject.toml
+      # - type: bind
+      #   source: ./.python-version
+      #   target: /app/.python-version
 
     working_dir: /app/
 
-    command: uv run --active --package inference_ray serve run inference_ray/deploy.yml
+    command: serve run inference_ray/deploy.yml
     # command: ls inference_ray/deploy.yml
 
   analyser:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        WORKSPACE_MEMBER: analyser
 
     volumes:
-      - type: bind
-        source: ./inference_ray
-        target: /app/inference_ray
-      - type: bind
-        source: ./analyser
-        target: /app/analyser
-      - type: bind
-        source: ./packages
-        target: /app/packages
+      # - type: bind
+      #   source: ./inference_ray
+      #   target: /app/inference_ray
+      # - type: bind
+      #   source: ./analyser
+      #   target: /app/analyser
+      # - type: bind
+      #   source: ./packages
+      #   target: /app/packages
       - type: bind
         source: ./data/analyser
         target: /data/
@@ -62,16 +70,16 @@ services:
       - type: bind
         source: ./data/cache/
         target: /cache/
-      - type: bind
-        source: ./pyproject.toml
-        target: /app/pyproject.toml
-      - type: bind
-        source: ./.python-version
-        target: /app/.python-version
+      # - type: bind
+      #   source: ./pyproject.toml
+      #   target: /app/pyproject.toml
+      # - type: bind
+      #   source: ./.python-version
+      #   target: /app/.python-version
 
     working_dir: /app/
 
-    command: uv run --package analyser analyser/src/analyser/server.py -v -c analyser/config.yml
+    command: python analyser/src/analyser/server.py -v -c analyser/config.yml
 
   postgres:
     image: postgres:14.17
@@ -93,21 +101,25 @@ services:
       - "127.0.0.1:6380:6380"
 
   celery:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        WORKSPACE_MEMBER: backend
 
     volumes:
-      - type: bind
-        source: ./inference_ray
-        target: /app/inference_ray
-      - type: bind
-        source: ./analyser
-        target: /app/analyser
-      - type: bind
-        source: ./packages
-        target: /app/packages
-      - type: bind
-        source: ./backend/
-        target: /app/backend
+      # - type: bind
+      #   source: ./inference_ray
+      #   target: /app/inference_ray
+      # - type: bind
+      #   source: ./analyser
+      #   target: /app/analyser
+      # - type: bind
+      #   source: ./packages
+      #   target: /app/packages
+      # - type: bind
+      #   source: ./backend/
+      #   target: /app/backend
       - type: bind
         source: ./data/media/
         target: /media
@@ -120,12 +132,12 @@ services:
       - type: bind
         source: ./data/tmp
         target: /tmp
-      - type: bind
-        source: ./pyproject.toml
-        target: /app/pyproject.toml
-      - type: bind
-        source: ./.python-version
-        target: /app/.python-version
+      # - type: bind
+      #   source: ./pyproject.toml
+      #   target: /app/pyproject.toml
+      # - type: bind
+      #   source: ./.python-version
+      #   target: /app/.python-version
 
     depends_on:
       - postgres
@@ -137,26 +149,31 @@ services:
       # - GRPC_POLL_STRATEGY=poll
       # - GRPC_VERBOSITY=debug
       # - GRPC_TRACE=all
-    command: uv run --package backend celery -A tibava worker -l INFO  --concurrency=20 --pool=threads
+    command: celery -A tibava worker -l INFO  --concurrency=20 --pool=threads
 
   backend:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        WORKSPACE_MEMBER: backend
+
     ports:
       - 8000:8000
 
     volumes:
-      - type: bind
-        source: ./inference_ray
-        target: /app/inference_ray
-      - type: bind
-        source: ./analyser
-        target: /app/analyser
-      - type: bind
-        source: ./packages
-        target: /app/packages
-      - type: bind
-        source: ./backend/
-        target: /app/backend
+      # - type: bind
+      #   source: ./inference_ray
+      #   target: /app/inference_ray
+      # - type: bind
+      #   source: ./analyser
+      #   target: /app/analyser
+      # - type: bind
+      #   source: ./packages
+      #   target: /app/packages
+      # - type: bind
+      #   source: ./backend/
+      #   target: /app/backend
       - type: bind
         source: ./data/media/
         target: /media
@@ -169,17 +186,19 @@ services:
       - type: bind
         source: ./data/tmp
         target: /tmp
-      - type: bind
-        source: ./pyproject.toml
-        target: /app/pyproject.toml
-      - type: bind
-        source: ./.python-version
-        target: /app/.python-version
+      # - type: bind
+      #   source: ./pyproject.toml
+      #   target: /app/pyproject.toml
+      # - type: bind
+      #   source: ./.python-version
+      #   target: /app/.python-version
 
     working_dir: /app/
     environment:
-      - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
-    command: uv run --package backend python3 backend/src/backend/manage.py runserver 0.0.0.0:8000
+      - PYTHONPATH=/app/backend/:/app:/app/analyser:/app/backend/src/backend/
+    # command: uv run --package backend python3 backend/src/backend/manage.py runserver 0.0.0.0:8000
+    # command: python3 backend/src/backend/manage.py check
+    command: gunicorn --bind 0.0.0.0:8000 --env SCRIPT_NAME=/tibava/backend tibava.wsgi --capture-output --log-level info --workers=8
 
     depends_on:
       - postgres
