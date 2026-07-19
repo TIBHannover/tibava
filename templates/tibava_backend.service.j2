@@ -3,12 +3,12 @@ Description=My GitLab Deployed Application
 After=network.target
 
 [Service]
-Type=simple
-User={{ ansible_user }}
-WorkingDirectory=/var/www/my-app
-ExecStart=/usr/bin/python3 /var/www/my-app/app.py
-Restart=always
-RestartSec=5
+Type=oneshot
+User=tibava
+RemainAfterExit=yes
+WorkingDirectory=/srv/tibava/
+ExecStart=/usr/bin/docker compose up -d
+ExecStop=/usr/bin/docker compose down
 Environment=NODE_ENV=production
 
 [Install]

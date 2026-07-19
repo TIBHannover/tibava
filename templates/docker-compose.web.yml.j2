@@ -1,0 +1,207 @@
+services:
+  inference_ray:
+    build: .
+
+    environment:
+      - HF_HOME=/models
+      - NUMBA_CACHE_DIR=/tmp
+
+    volumes:
+      - type: bind
+        source: ./data/analyser
+        target: /data/
+      - type: bind
+        source: ./data/media/
+        target: /media/
+      - type: bind
+        source: ./data/models/
+        target: /models/
+      - type: bind
+        source: ./inference_ray
+        target: /app/inference_ray
+      - type: bind
+        source: ./analyser
+        target: /app/analyser
+      - type: bind
+        source: ./packages
+        target: /app/packages
+      - type: bind
+        source: ./backend
+        target: /app/backend
+      - type: bind
+        source: ./pyproject.toml
+        target: /app/pyproject.toml
+      - type: bind
+        source: ./.python-version
+        target: /app/.python-version
+
+    working_dir: /app/
+
+    command: uv run --active --package inference_ray serve run inference_ray/deploy.yml
+    # command: ls inference_ray/deploy.yml
+
+  analyser:
+    build: .
+
+    volumes:
+      - type: bind
+        source: ./inference_ray
+        target: /app/inference_ray
+      - type: bind
+        source: ./analyser
+        target: /app/analyser
+      - type: bind
+        source: ./packages
+        target: /app/packages
+      - type: bind
+        source: ./data/analyser
+        target: /data/
+      - type: bind
+        source: ./data/media/
+        target: /media/
+      - type: bind
+        source: ./data/cache/
+        target: /cache/
+      - type: bind
+        source: ./pyproject.toml
+        target: /app/pyproject.toml
+      - type: bind
+        source: ./.python-version
+        target: /app/.python-version
+
+    working_dir: /app/
+
+    command: uv run --package analyser analyser/src/analyser/server.py -v -c analyser/config.yml
+
+  postgres:
+    image: postgres:14.17
+    volumes:
+      - ./data/db/:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=tibava
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  memcached:
+    image: memcached:1.6.10-buster
+    command: -I 32m
+
+  valkey:
+    image: valkey/valkey:8.1.1-alpine
+    command: /usr/local/bin/valkey-server --port 6380 --bind 0.0.0.0
+    ports:
+      - "127.0.0.1:6380:6380"
+
+  celery:
+    build: .
+
+    volumes:
+      - type: bind
+        source: ./inference_ray
+        target: /app/inference_ray
+      - type: bind
+        source: ./analyser
+        target: /app/analyser
+      - type: bind
+        source: ./packages
+        target: /app/packages
+      - type: bind
+        source: ./backend/
+        target: /app/backend
+      - type: bind
+        source: ./data/media/
+        target: /media
+      - type: bind
+        source: ./data/predictions
+        target: /predictions
+      - type: bind
+        source: ./data/backend_cache
+        target: /cache
+      - type: bind
+        source: ./data/tmp
+        target: /tmp
+      - type: bind
+        source: ./pyproject.toml
+        target: /app/pyproject.toml
+      - type: bind
+        source: ./.python-version
+        target: /app/.python-version
+
+    depends_on:
+      - postgres
+
+    working_dir: /app/backend/src/backend/
+    environment:
+      - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
+      # - GRPC_ENABLE_FORK_SUPPORT=1
+      # - GRPC_POLL_STRATEGY=poll
+      # - GRPC_VERBOSITY=debug
+      # - GRPC_TRACE=all
+    command: uv run --package backend celery -A tibava worker -l INFO  --concurrency=20 --pool=threads
+
+  backend:
+    build: .
+    ports:
+      - 8000:8000
+
+    volumes:
+      - type: bind
+        source: ./inference_ray
+        target: /app/inference_ray
+      - type: bind
+        source: ./analyser
+        target: /app/analyser
+      - type: bind
+        source: ./packages
+        target: /app/packages
+      - type: bind
+        source: ./backend/
+        target: /app/backend
+      - type: bind
+        source: ./data/media/
+        target: /media
+      - type: bind
+        source: ./data/predictions
+        target: /predictions
+      - type: bind
+        source: ./data/backend_cache
+        target: /cache
+      - type: bind
+        source: ./data/tmp
+        target: /tmp
+      - type: bind
+        source: ./pyproject.toml
+        target: /app/pyproject.toml
+      - type: bind
+        source: ./.python-version
+        target: /app/.python-version
+
+    working_dir: /app/
+    environment:
+      - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
+    # command: uv run --package backend python3 backend/src/backend/manage.py runserver 0.0.0.0:8000
+    command: uv run --package backend gunicorn --bind 0.0.0.0:8000 --env SCRIPT_NAME=/tibava/backend tibava.wsgi --capture-output --log-level info --workers=8
+
+    depends_on:
+      - postgres
+      - memcached
+      - celery
+
+  frontend:
+    image: frontend
+    ports:
+      - 8080:8080
+      - 80:80
+    build:
+      context: ./frontend
+    volumes:
+      - type: bind
+        source: ./frontend/
+        target: /app/frontend
+      - type: bind
+        source: ./data/predictions/
+        target: /thumbnails
+      - type: bind
+        source: ./data/media/
+        target: /media
+    working_dir: /app/frontend
