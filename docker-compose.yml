@@ -196,9 +196,9 @@ services:
     working_dir: /app/
     environment:
       - PYTHONPATH=/app/backend/:/app:/app/analyser:/app/backend/src/backend/
-    # command: uv run --package backend python3 backend/src/backend/manage.py runserver 0.0.0.0:8000
+    command: python3 backend/src/backend/manage.py runserver 0.0.0.0:8000
     # command: python3 backend/src/backend/manage.py check
-    command: gunicorn --bind 0.0.0.0:8000 --env SCRIPT_NAME=/tibava/backend tibava.wsgi --capture-output --log-level info --workers=8
+    # command: gunicorn --bind 0.0.0.0:8000 --env SCRIPT_NAME=/tibava/backend tibava.wsgi --capture-output --log-level info --workers=8
 
     depends_on:
       - postgres

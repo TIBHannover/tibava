@@ -41,14 +41,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# Copy the virtual environment from the builder stage
-COPY --from=builder /app/.venv /app/.venv
-
-# Copy your actual application source code
-
-# --- Stage 2: Clean Runtime Stage ---
-WORKDIR /app
-
 # Re-declare the ARG in the new stage
 ARG WORKSPACE_MEMBER
 
