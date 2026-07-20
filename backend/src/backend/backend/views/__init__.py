@@ -24,3 +24,4 @@ from .cluster_item import *
 from backend.tasks import *
 
 from .video_analysis_state import *
+from .health import *

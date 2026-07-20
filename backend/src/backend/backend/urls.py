@@ -4,6 +4,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path("healthz/liveness", views.liveness, name="health_liveness"),
+    path("healthz/readiness", views.readiness, name="health_readiness"),
+    #
     path("user/csrf", views.get_csrf_token, name="get_csrf_token"),
     path("user/login", views.login, name="login"),
     path("user/logout", views.logout, name="logout"),

@@ -162,14 +162,7 @@ CACHES = {
         "LOCATION": get_value(
             config, "CACHE_LOCATION", "cache.location", "memcached:11211"
         ),
-        "OPTIONS": {
-            "CLIENT_CLASS": get_value(
-                config,
-                "CACHE_CLIENT_CLASS",
-                "cache.client_class",
-                "django_redis.client.DefaultClient",
-            ),
-        },
+        "OPTIONS": {},
     }
 }
 
