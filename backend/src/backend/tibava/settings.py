@@ -30,7 +30,10 @@ def get_value(config, env_name, config_path, default_value):
             result = True
         elif result.lower() in ["false", "no", "0"]:
             result = False
-    # print(env_name, config_path, default_value, value, result, flush=True)
+
+        if isinstance(default_value, list):
+            return [item.strip() for item in result.split(",") if item.strip()]
+
     return result
 
 
