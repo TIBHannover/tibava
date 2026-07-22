@@ -30,6 +30,7 @@
         name:
           - git
           - acl
+          - apptainer
         state: present
 
     - name: Pull latest code from GitLab
@@ -41,26 +42,31 @@
       become: true
       become_user: labs
 
-    - name: Copy systemd service file
+    - name: Render Apptainer definition file
       ansible.builtin.template:
         src: templates/apptainer.def.j2
-        dest: apptainer.def
+        dest: "{{ app_dir }}/apptainer.def"
         mode: "0644"
-      notify: Reload systemd and restart app
+      register: def_file_status
 
     - name: Build Apptainer .sif image
       ansible.builtin.command:
         cmd: "apptainer build --force {{ app_dir }}/apptainer.sif {{ app_dir }}/apptainer.def"
-      environment:
-        WORKSPACE_MEMBER: "{{ workspace_member }}"
       args:
         chdir: "{{ app_dir }}"
-      when: def_file_status.changed # Rebuilds ONLY when apptainer.def changes (or pass --force)
+      when: def_file_status.changed | default(false)
 
     - name: Copy systemd service file
       ansible.builtin.template:
         src: templates/tibava_analyser.service.j2
         dest: /etc/systemd/system/tibava_analyser.service
+        mode: "0644"
+      notify: Reload systemd and restart app
+
+    - name: Copy run script file
+      ansible.builtin.template:
+        src: templates/tibava.sh.j2
+        dest: /srv/tibava/run.sh
         mode: "0644"
       notify: Reload systemd and restart app
 
