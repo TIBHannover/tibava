@@ -15,5 +15,6 @@ Vagrant.configure("2") do |config|
 
     # Give it more RAM (e.g., 4096MB = 4GB, or 8192MB = 8GB)
     vb.memory = 8192
+    vb.machine_virtual_size = 256
   end
 end

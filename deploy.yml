@@ -84,7 +84,6 @@
         owner: tibava
         group: tibava
         mode: "0644"
-      notify: Reload systemd and restart app
 
     - name: Copy systemd service file
       ansible.builtin.template:
@@ -95,6 +94,30 @@
         mode: "0644"
       notify: Reload systemd and restart app
 
+    - name: Copy nginx config file
+      ansible.builtin.template:
+        src: templates/default.conf.j2
+        dest: /srv/tibava/frontend/default.conf
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Copy vue app config file
+      ansible.builtin.template:
+        src: templates/app.config.js.j2
+        dest: /srv/tibava/frontend/app.config.js
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Copy vue config file
+      ansible.builtin.template:
+        src: templates/vue.config.js.j2
+        dest: /srv/tibava/frontend/vue.config.js
+        owner: root
+        group: root
+        mode: "0644"
+
     - name: Force systemd to reload config now
       ansible.builtin.systemd:
         daemon_reload: yes
@@ -103,6 +126,58 @@
       ansible.builtin.systemd:
         name: tibava_backend.service
         state: restarted
+
+    # Update Webserver and Backend
+    - name: Wait for backend service to become healthy (HTTP)
+      ansible.builtin.uri:
+        url: "http://localhost:8000/tibava/backend/healthz/readiness"
+        status_code: 200
+      register: result
+      until: result.status == 200
+      retries: 30
+      delay: 5
+
+    - name: Run database migration inside the backend container
+      community.docker.docker_container_exec:
+        container: tibava-backend-1
+        command: python3 backend/src/backend/manage.py migrate
+      register: exec_result
+
+    - name: Run npm install inside the frontend container
+      community.docker.docker_container_exec:
+        container: tibava-frontend-1
+        command: npm install
+      register: exec_result
+
+    - name: Run npm build inside the frontend container
+      community.docker.docker_container_exec:
+        container: tibava-frontend-1
+        command: npm run build
+      register: exec_result
+
+    # Update Analyser
+    - name: Ensure base data directory exists
+      ansible.builtin.file:
+        path: "/srv/tibava/data"
+        state: directory
+        mode: "0755"
+
+    - name: Download models archive
+      ansible.builtin.get_url:
+        url: "https://tib.eu/cloud/s/kAe3TXPfsBpwtwk/download/models.tar.gz"
+        dest: "/tmp/models.tar.gz"
+        mode: "0644"
+
+    - name: Extract archive into /srv/tibava/data/
+      ansible.builtin.unarchive:
+        src: "/tmp/models.tar.gz"
+        dest: "/srv/tibava/data/"
+        remote_src: true
+
+    - name: Clean up tarball
+      ansible.builtin.file:
+        path: "/tmp/models.tar.gz"
+        state: absent
 
   handlers:
     - name: Reload systemd and restart app

@@ -7,7 +7,7 @@ Type=oneshot
 User=tibava
 RemainAfterExit=yes
 WorkingDirectory=/srv/tibava/
-ExecStart=/usr/bin/docker compose up -d
+ExecStart=/usr/bin/docker compose up -d --build --remove-orphans
 ExecStop=/usr/bin/docker compose down
 Environment=NODE_ENV=production
 

@@ -1,0 +1,17 @@
+module.exports = {
+  publicPath: '/tibava',
+  configureWebpack: {
+    devServer: {
+      contentBasePublicPath: '/',
+      publicPath: '/tibava',
+      watchOptions: {
+        ignored: [/node_modules/, /public/],
+      }
+    },
+  },
+  devServer: {
+    disableHostCheck: true,
+  },
+
+  lintOnSave: true
+}

@@ -11,38 +11,29 @@ services:
       - NUMBA_CACHE_DIR=/tmp
 
     volumes:
-      # - type: bind
-      #   source: ./data/analyser
-      #   target: /data/
       - type: bind
         source: ./data/media/
         target: /media/
       - type: bind
         source: ./data/models/
         target: /models/
-      # - type: bind
-      #   source: ./inference_ray
-      #   target: /app/inference_ray
-      # - type: bind
-      #   source: ./analyser
-      #   target: /app/analyser
+      - type: bind
+        source: ./data/analyser
+        target: /data/
       - type: bind
         source: ./packages
         target: /app/packages
       - type: bind
         source: ./backend
         target: /app/backend
-      # - type: bind
-      #   source: ./pyproject.toml
-      #   target: /app/pyproject.toml
-      # - type: bind
-      #   source: ./.python-version
-      #   target: /app/.python-version
 
     working_dir: /app/
 
     command: serve run inference_ray/deploy.yml
     # command: ls inference_ray/deploy.yml
+
+    networks:
+      - tibava-net
 
   analyser:
     build:
@@ -52,15 +43,6 @@ services:
         WORKSPACE_MEMBER: analyser
 
     volumes:
-      # - type: bind
-      #   source: ./inference_ray
-      #   target: /app/inference_ray
-      # - type: bind
-      #   source: ./analyser
-      #   target: /app/analyser
-      # - type: bind
-      #   source: ./packages
-      #   target: /app/packages
       - type: bind
         source: ./data/analyser
         target: /data/
@@ -70,16 +52,13 @@ services:
       - type: bind
         source: ./data/cache/
         target: /cache/
-      # - type: bind
-      #   source: ./pyproject.toml
-      #   target: /app/pyproject.toml
-      # - type: bind
-      #   source: ./.python-version
-      #   target: /app/.python-version
 
     working_dir: /app/
 
     command: python analyser/src/analyser/server.py -v -c analyser/config.yml
+
+    networks:
+      - tibava-net
 
   postgres:
     image: postgres:14.17
@@ -89,16 +68,29 @@ services:
       - POSTGRES_DB=tibava
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d tibava"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+    networks:
+      - tibava-net
 
   memcached:
     image: memcached:1.6.10-buster
     command: -I 32m
+
+    networks:
+      - tibava-net
 
   valkey:
     image: valkey/valkey:8.1.1-alpine
     command: /usr/local/bin/valkey-server --port 6380 --bind 0.0.0.0
     ports:
       - "127.0.0.1:6380:6380"
+
+    networks:
+      - tibava-net
 
   celery:
     build:
@@ -129,6 +121,9 @@ services:
     #   - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
     command: celery -A tibava worker -l INFO  --concurrency=20 --pool=threads
 
+    networks:
+      - tibava-net
+
   backend:
     build:
       context: .
@@ -156,12 +151,21 @@ services:
     working_dir: /app/
     environment:
       - PYTHONPATH=/app/backend/:/app:/app/analyser:/app/backend/src/backend/
+      - ALLOWED_HOSTS=*
+      - MEDIA_URL=/tibava/media/
+      - THUMBNAIL_URL=/tibava/thumbnails/
+      - CSRF_TRUSTED_ORIGINS=http://192.168.56.10,http://localhost,http://ava21.service.tib.eu
     command: gunicorn --bind 0.0.0.0:8000 --env SCRIPT_NAME=/tibava/backend tibava.wsgi --capture-output --log-level info --workers=8
-
+    #command: python3 backend/src/backend/manage.py check
     depends_on:
-      - postgres
-      - memcached
-      - celery
+      postgres:
+        condition: service_healthy # Wait until postgres is accepting connections
+      memcached:
+        condition: service_started
+      celery:
+        condition: service_started
+    networks:
+      - tibava-net
 
   frontend:
     image: frontend
@@ -176,8 +180,15 @@ services:
         target: /app/frontend
       - type: bind
         source: ./data/predictions/
-        target: /thumbnails
+        target: /data/predictions/
       - type: bind
         source: ./data/media/
-        target: /media
+        target: /data/media
     working_dir: /app/frontend
+    depends_on:
+      - backend
+    networks:
+      - tibava-net
+networks:
+  tibava-net:
+    driver: bridge
