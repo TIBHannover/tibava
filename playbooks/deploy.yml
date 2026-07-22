@@ -79,7 +79,7 @@
 
     - name: Copy docker compose file
       ansible.builtin.template:
-        src: templates/docker-compose.web.yml.j2
+        src: templates/docker-compose.dev.yml.j2
         dest: /srv/tibava/docker-compose.yml
         owner: tibava
         group: tibava

@@ -1,0 +1,164 @@
+- name: Deploy GitLab Project Application
+  hosts: all
+  become: true
+  tasks:
+    - name: Ensure the ansible group exists
+      group:
+        name: tibava
+        state: present
+
+    - name: Ensure the ansible user exists
+      user:
+        name: tibava
+        group: tibava
+        shell: /bin/bash
+        state: present
+
+    - name: Ensure dependencies are installed
+      ansible.builtin.apt:
+        name:
+          - ca-certificates
+          - curl
+          - gnupg
+          - acl
+        state: present
+        update_cache: yes
+
+    - name: Create directory for apt keyrings
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: "0755"
+
+    - name: Download Docker's official GPG key
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/debian/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: "0644"
+
+    - name: Add Docker repository to Apt sources
+      ansible.builtin.apt_repository:
+        repo: "deb [arch={{ ansible_architecture | replace('x86_64', 'amd64') }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
+        state: present
+        filename: docker
+
+    # 5. Install Docker Engine and the Compose Plugin
+    - name: Install Docker Packages
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+        state: present
+        update_cache: true
+
+    - name: Ensure user 'tibava' is in the 'docker' group
+      ansible.builtin.user:
+        name: tibava
+        groups: docker
+        append: yes
+      notify: Reload systemd and restart app
+
+    - name: Ensure target directory exists
+      ansible.builtin.file:
+        path: /srv/tibava
+        state: directory
+        owner: tibava
+        group: tibava
+        mode: "0755"
+
+    - name: Pull latest code from GitLab
+      ansible.builtin.git:
+        repo: "https://github.com/TIBHannover/tibava.git"
+        dest: /srv/tibava
+        version: "feature/ansible"
+        force: true
+      become: true
+      become_user: tibava
+
+    - name: Copy docker compose file
+      ansible.builtin.template:
+        src: templates/docker-compose.web.yml.j2
+        dest: /srv/tibava/docker-compose.yml
+        owner: tibava
+        group: tibava
+        mode: "0644"
+
+    - name: Copy systemd service file
+      ansible.builtin.template:
+        src: templates/tibava_backend.service.j2
+        dest: /etc/systemd/system/tibava_backend.service
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Reload systemd and restart app
+
+    - name: Copy nginx config file
+      ansible.builtin.template:
+        src: templates/default.conf.j2
+        dest: /srv/tibava/frontend/default.conf
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Copy vue app config file
+      ansible.builtin.template:
+        src: templates/app.config.js.j2
+        dest: /srv/tibava/frontend/app.config.js
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Copy vue config file
+      ansible.builtin.template:
+        src: templates/vue.config.js.j2
+        dest: /srv/tibava/frontend/vue.config.js
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Force systemd to reload config now
+      ansible.builtin.systemd:
+        daemon_reload: yes
+
+    - name: Restart application service (Example)
+      ansible.builtin.systemd:
+        name: tibava_backend.service
+        state: restarted
+
+    # Update Webserver and Backend
+    - name: Wait for backend service to become healthy (HTTP)
+      ansible.builtin.uri:
+        url: "http://localhost:8000/tibava/backend/healthz/readiness"
+        status_code: 200
+      register: result
+      until: result.status == 200
+      retries: 30
+      delay: 5
+
+    - name: Run database migration inside the backend container
+      community.docker.docker_container_exec:
+        container: tibava-backend-1
+        command: python3 backend/src/backend/manage.py migrate
+      register: exec_result
+
+    - name: Run npm install inside the frontend container
+      community.docker.docker_container_exec:
+        container: tibava-frontend-1
+        command: npm install
+      register: exec_result
+
+    - name: Run npm build inside the frontend container
+      community.docker.docker_container_exec:
+        container: tibava-frontend-1
+        command: npm run build
+      register: exec_result
+
+  handlers:
+    - name: Reload systemd and restart app
+      ansible.builtin.systemd_service:
+        name: tibava_backend.service
+        state: restarted
+        daemon_reload: true
+        enabled: true

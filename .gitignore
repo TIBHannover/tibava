@@ -1,5 +1,5 @@
 .vagrant/
-
+*.sif
 *.tar.gz
 
 # Byte-compiled / optimized / DLL files

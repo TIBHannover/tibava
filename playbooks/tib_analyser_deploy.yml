@@ -1,0 +1,106 @@
+- name: Deploy GitLab Project Application
+  hosts: all
+  become: true
+  vars:
+    app_dir: "/srv/tibava"
+
+  tasks:
+    - name: Ensure the ansible group exists
+      group:
+        name: labs
+        state: present
+
+    - name: Ensure the ansible user exists
+      user:
+        name: labs
+        group: labs
+        shell: /bin/bash
+        state: present
+
+    - name: Ensure target directory exists
+      ansible.builtin.file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: labs
+        group: labs
+        mode: "0755"
+
+    - name: Install Git via DNF
+      ansible.builtin.dnf:
+        name:
+          - git
+          - acl
+        state: present
+
+    - name: Pull latest code from GitLab
+      ansible.builtin.git:
+        repo: "https://github.com/TIBHannover/tibava.git"
+        dest: "{{ app_dir }}"
+        version: "feature/ansible"
+        force: true
+      become: true
+      become_user: labs
+
+    - name: Copy systemd service file
+      ansible.builtin.template:
+        src: templates/apptainer.def.j2
+        dest: apptainer.def
+        mode: "0644"
+      notify: Reload systemd and restart app
+
+    - name: Build Apptainer .sif image
+      ansible.builtin.command:
+        cmd: "apptainer build --force {{ app_dir }}/apptainer.sif {{ app_dir }}/apptainer.def"
+      environment:
+        WORKSPACE_MEMBER: "{{ workspace_member }}"
+      args:
+        chdir: "{{ app_dir }}"
+      when: def_file_status.changed # Rebuilds ONLY when apptainer.def changes (or pass --force)
+
+    - name: Copy systemd service file
+      ansible.builtin.template:
+        src: templates/tibava_analyser.service.j2
+        dest: /etc/systemd/system/tibava_analyser.service
+        mode: "0644"
+      notify: Reload systemd and restart app
+
+    - name: Force systemd to reload config now
+      ansible.builtin.systemd:
+        daemon_reload: yes
+
+    - name: Restart application service (Example)
+      ansible.builtin.systemd:
+        name: tibava_analyser.service
+        state: restarted
+
+    # Update Analyser
+    - name: Ensure base data directory exists
+      ansible.builtin.file:
+        path: "{{ app_dir }}/data"
+        state: directory
+        mode: "0755"
+
+    - name: Download models archive
+      ansible.builtin.get_url:
+        url: "https://tib.eu/cloud/s/kAe3TXPfsBpwtwk/download/models.tar.gz"
+        dest: "/tmp/models.tar.gz"
+        mode: "0644"
+
+    - name: "Extract archive into {{ app_dir }}/data/"
+      ansible.builtin.unarchive:
+        src: "/tmp/models.tar.gz"
+        dest: "{{ app_dir }}/data/"
+        remote_src: true
+
+    - name: Clean up tarball
+      ansible.builtin.file:
+        path: "/tmp/models.tar.gz"
+        state: absent
+
+  handlers:
+    - name: Reload systemd and restart app
+      ansible.builtin.systemd_service:
+        name: tibava_analyser.service
+        state: restarted
+        daemon_reload: true
+        enabled: true
