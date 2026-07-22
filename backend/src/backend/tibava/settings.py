@@ -222,9 +222,7 @@ ANNOTATION_MAX_LENGTH = int(
 )
 
 MEDIA_URL = get_value(config, "MEDIA_URL", "media_url", "/media/")
-THUMBNAIL_URL = get_value(
-    config, "THUMBNAIL_URL", "thumbnail_url", "http://localhost/thumbnails/"
-)
+THUMBNAIL_URL = get_value(config, "THUMBNAIL_URL", "thumbnail_url", "/thumbnails/")
 
 # the last resolution will use for indexing
 IMAGE_RESOLUTIONS = [{"min_dim": 200, "suffix": "_m"}, {"min_dim": 1080, "suffix": ""}]
