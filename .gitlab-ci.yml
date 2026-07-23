@@ -1,16 +1,10 @@
 stages:
   - deploy
 
-# Reusable template for basic SSH and Ansible setup
-.ansible_base:
-  stage: deploy
-  image: cytopia/ansible:latest
-  export_host_key:
-    - export ANSIBLE_HOST_KEY_CHECKING=False
-
 # Job for Server 1
 deploy_server_1:
-  extends: .ansible_base
+  stage: deploy
+  image: cytopia/ansible:latest # Uses a lightweight image with Ansible installed
   before_script:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
@@ -24,7 +18,8 @@ deploy_server_1:
 
 # Job for Server 2
 deploy_server_2:
-  extends: .ansible_base
+  stage: deploy
+  image: cytopia/ansible:latest # Uses a lightweight image with Ansible installed
   before_script:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
