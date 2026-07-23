@@ -1,18 +1,37 @@
 stages:
   - deploy
 
-deploy_job:
+# Reusable template for basic SSH and Ansible setup
+.ansible_base:
   stage: deploy
-  image: cytopia/ansible:latest # Uses a lightweight image with Ansible installed
+  image: cytopia/ansible:latest
+  export_host_key:
+    - export ANSIBLE_HOST_KEY_CHECKING=False
+
+# Job for Server 1
+deploy_server_1:
+  extends: .ansible_base
   before_script:
-    # Set up the SSH agent so Ansible can connect to your target server securely
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - echo "$SSH_PRIVATE_KEY_AVA21" | tr -d '\r' > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
-    # Optional: Disable host key checking if you don't want to manage known_hosts
     - export ANSIBLE_HOST_KEY_CHECKING=False
   script:
-    - ansible-playbook -i inventory.ini deploy.yml
-  only:
-    - main # Only deploy when changes land on the main branch
+    - ansible-playbook -i inventory/tib_backend.ini tib_backend_deploy.yml
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+# Job for Server 2
+deploy_server_2:
+  extends: .ansible_base
+  before_script:
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_PRIVATE_KEY_GPU_L4_02" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - export ANSIBLE_HOST_KEY_CHECKING=False
+  script:
+    - ansible-playbook -i inventory/tib_analyser.ini tib_analyser_deploy.yml
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
