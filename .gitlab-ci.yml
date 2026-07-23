@@ -13,8 +13,8 @@ deploy_server_1:
     - export ANSIBLE_HOST_KEY_CHECKING=False
   script:
     - ansible-playbook -i inventory/tib_backend.ini tib_backend_deploy.yml
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == "main"
 
 # Job for Server 2
 deploy_server_2:
@@ -28,5 +28,5 @@ deploy_server_2:
     - export ANSIBLE_HOST_KEY_CHECKING=False
   script:
     - ansible-playbook -i inventory/tib_analyser.ini tib_analyser_deploy.yml
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == "main"
