@@ -1,16 +1,13 @@
 [Unit]
 Description=tibava analyser
-After=network.target nfs-home.mount
-Requires=nfs-home.mount
-RequiresMountsFor=/nfs/home/labs
 
 [Service]
 Type=exec
 User=labs
 Group=labs
 Restart=on-failure
-WorkingDirectory=/data/services/labs_scripts
-ExecStart=sh /data/services/labs_scripts/tibava.gpu-l4-02.sh
+WorkingDirectory=/srv/tibava
+ExecStart=sh /srv/tibava/run.sh
 
 [Install]
 WantedBy=multi-user.target

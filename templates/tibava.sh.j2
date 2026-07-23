@@ -3,13 +3,32 @@ export CUDA_VISIBLE_DEVICES="0,1,2"
 export TIBAVA_DATA=/srv/tibava/data/
 
 cd /srv/tibava/
-apptainer exec --bind $TIBAVA_DATA/redis/:/data,/home/labs/:/home/labs/  docker://valkey/valkey:8.1.1-alpine valkey-server --port 6390 &
+apptainer exec --bind $TIBAVA_DATA/redis/:/data  docker://valkey/valkey:8.1.1-alpine valkey-server --port 6390 &
 
 
-apptainer exec --bind $TIBAVA_DATA/ray:/tmp,$TIBAVA_DATA/analyser/:/data,/data/services/tibava/data/models/:/models/,/home/labs/:/home/labs/ --env HF_HOME=/models,NUMBA_CACHE_DIR=/tmp --no-home analyser/apptainer_260707.sif uv run --package inference_ray serve run inference_ray/deploy.cuda.yml &
+apptainer exec --bind $TIBAVA_DATA/ray:/tmp,$TIBAVA_DATA/analyser/:/data,$TIBAVA_DATA/models/:/models/ \
+    --env HF_HOME=/models,NUMBA_CACHE_DIR=/tmp \
+    --no-home \
+    --no-mount /etc/localtime \
+    apptainer.sif \
+    serve run inference_ray/deploy.cuda.yml &
 
 sleep 30s
 echo "########## start server"
-apptainer exec --bind $TIBAVA_DATA/analyser/:/data,/data/services/tibava/data/models/:/models/,$TIBAVA_DATA/cache/:/cache/,/home/labs/:/home/labs/ --env HF_HOME=/models --no-home analyser/apptainer_260707.sif uv run --package analyser analyser/src/analyser/server.py  --config analyser/config.yml -v --port 54051 --cache_valkey_host localhost --cache_valkey_port 6390 --inference_ray_host localhost --inference_ray_port 8000 --inference_ray_status_port 52365 &
+apptainer exec \
+    --bind $TIBAVA_DATA/analyser/:/data,$TIBAVA_DATA/models/:/models/,$TIBAVA_DATA/cache/:/cache/ \
+    --env HF_HOME=/models \
+    --no-mount /etc/localtime \
+    --no-home \
+    apptainer.sif \
+    python analyser/src/analyser/server.py \
+        --config analyser/config.yml \
+        -v \
+        --port 54051 \
+        --cache_valkey_host localhost \
+        --cache_valkey_port 6390 \
+        --inference_ray_host localhost \
+        --inference_ray_port 8000 \
+        --inference_ray_status_port 52365 &
 
 wait
