@@ -2,7 +2,7 @@ stages:
   - deploy
 
 # Job for Server 1
-deploy_server_1:
+deploy_backend:
   stage: deploy
   image: cytopia/ansible:latest # Uses a lightweight image with Ansible installed
   before_script:
@@ -13,11 +13,11 @@ deploy_server_1:
     - export ANSIBLE_HOST_KEY_CHECKING=False
   script:
     - ansible-playbook -i inventory/tib_backend.ini tib_backend_deploy.yml
-  # rules:
-  #   - if: $CI_COMMIT_BRANCH == "main"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
 
 # Job for Server 2
-deploy_server_2:
+deploy_analyser:
   stage: deploy
   image: cytopia/ansible:latest # Uses a lightweight image with Ansible installed
   before_script:
@@ -28,5 +28,36 @@ deploy_server_2:
     - export ANSIBLE_HOST_KEY_CHECKING=False
   script:
     - ansible-playbook -i inventory/tib_analyser.ini tib_analyser_deploy.yml
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+
+# Job for Server 1
+deploy_backend:
+  stage: deploy
+  image: cytopia/ansible:latest # Uses a lightweight image with Ansible installed
+  before_script:
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_PRIVATE_KEY_AVA11" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - export ANSIBLE_HOST_KEY_CHECKING=False
+  script:
+    - ansible-playbook -i inventory/tib_backend_test.ini tib_backend_deploy.yml
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == "main"
+
+# Job for Server 2
+deploy_analyser:
+  stage: deploy
+  image: cytopia/ansible:latest # Uses a lightweight image with Ansible installed
+  before_script:
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_PRIVATE_KEY_GPU_L4_02" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - export ANSIBLE_HOST_KEY_CHECKING=False
+  script:
+    - ansible-playbook -i inventory/tib_analyser_test.ini tib_analyser_deploy.yml
   # rules:
   #   - if: $CI_COMMIT_BRANCH == "main"
