@@ -48,7 +48,7 @@ deploy_backend_test:
     - chmod 700 ~/.ssh
     - export ANSIBLE_HOST_KEY_CHECKING=False
   script:
-    - ansible-playbook -i inventory/tib_backend_test.ini tib_backend_deploy.yml
+    - ansible-playbook -i inventory/tib_backend_test.ini tib_backend_deploy.yml -e ansible_become_password=${ROOT_PASSWORD}
   # rules:
   #   - if: $CI_COMMIT_BRANCH == "main"
 
