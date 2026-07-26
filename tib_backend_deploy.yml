@@ -76,15 +76,21 @@
         force: true
       become: true
       become_user: tibava
+    # --- DEBUG CHECK (RUNS ON CI RUNNER BEFORE TEMPLATING) ---
+    - name: Debug - List local workspace files on Ansible controller
+      ansible.builtin.command: find . -maxdepth 3 -not -path '*/.*'
+      delegate_to: localhost
+      run_once: true
+      become: false
+      register: controller_files
 
-    - name: Copy docker compose file
-      ansible.builtin.template:
-        src: docker-compose.backend.yml.j2
-        dest: /srv/tibava/docker-compose.yml
-        owner: tibava
-        group: tibava
-        mode: "0644"
-
+    - name: Debug - Print found files on Ansible controller
+      ansible.builtin.debug:
+        var: controller_files.stdout_lines
+      delegate_to: localhost
+      run_once: true
+      become: false
+    # --------------------------------------------------------
     - name: Copy systemd service file
       ansible.builtin.template:
         src: templates/tibava_backend.service.j2
@@ -93,6 +99,14 @@
         group: root
         mode: "0644"
       notify: Reload systemd and restart app
+
+    - name: Copy docker compose file
+      ansible.builtin.template:
+        src: templates/docker-compose.backend.yml.j2
+        dest: /srv/tibava/docker-compose.yml
+        owner: tibava
+        group: tibava
+        mode: "0644"
 
     - name: Copy nginx config file
       ansible.builtin.template:
