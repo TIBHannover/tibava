@@ -6,6 +6,7 @@ deploy_backend:
   stage: deploy
   image: cytopia/ansible:latest # Uses a lightweight image with Ansible installed
   before_script:
+    - apt-get update -qq && apt-get install -y -qq openssh-client
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo "$SSH_PRIVATE_KEY_AVA21" | tr -d '\r' > ~/.ssh/id_rsa
@@ -21,6 +22,7 @@ deploy_analyser:
   stage: deploy
   image: cytopia/ansible:latest # Uses a lightweight image with Ansible installed
   before_script:
+    - apt-get update -qq && apt-get install -y -qq openssh-client
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo "$SSH_PRIVATE_KEY_GPU_L4_02" | tr -d '\r' > ~/.ssh/id_rsa
@@ -37,6 +39,7 @@ deploy_backend:
   stage: deploy
   image: cytopia/ansible:latest # Uses a lightweight image with Ansible installed
   before_script:
+    - apt-get update -qq && apt-get install -y -qq openssh-client
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo "$SSH_PRIVATE_KEY_AVA11" | tr -d '\r' > ~/.ssh/id_rsa
@@ -52,6 +55,7 @@ deploy_analyser:
   stage: deploy
   image: cytopia/ansible:latest # Uses a lightweight image with Ansible installed
   before_script:
+    - apt-get update -qq && apt-get install -y -qq openssh-client
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo "$SSH_PRIVATE_KEY_GPU_L4_02" | tr -d '\r' > ~/.ssh/id_rsa
