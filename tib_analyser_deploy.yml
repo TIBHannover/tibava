@@ -3,6 +3,7 @@
   become: true
   vars:
     app_dir: "/srv/tibava"
+    SCRIPT_NAME: "{{ SCRIPT_NAME | default('tibava') }}"
 
   tasks:
     - name: Ensure the ansible group exists

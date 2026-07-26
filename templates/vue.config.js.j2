@@ -1,9 +1,9 @@
 module.exports = {
-  publicPath: '/tibava',
+  publicPath: '{{ SCRIPT_NAME }}',
   configureWebpack: {
     devServer: {
       contentBasePublicPath: '/',
-      publicPath: '/tibava',
+      publicPath: '{{ SCRIPT_NAME }}',
       watchOptions: {
         ignored: [/node_modules/, /public/],
       }

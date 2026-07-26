@@ -16,7 +16,7 @@ server {
     keepalive_timeout 5;
 
 
-    location /tibava/backend/ {
+    location {{ SCRIPT_NAME }}/backend/ {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header Host $http_host;
@@ -26,31 +26,31 @@ server {
         proxy_pass http://tibava_backend_gunicorn;
     }
 
-    location /tibava/media/ {
+    location {{ SCRIPT_NAME }}/media/ {
         alias /data/media/;
     }
 
-    location /tibava/thumbnails/ {
+    location {{ SCRIPT_NAME }}/thumbnails/ {
         alias /data/predictions/;
     }
 
-    location /tibava/css/ {
+    location {{ SCRIPT_NAME }}/css/ {
        alias /app/frontend/dist/css/;
     }
 
-    location /tibava/js/ {
+    location {{ SCRIPT_NAME }}/js/ {
        alias /app/frontend/dist/js/;
     }
 
-    location /tibava/fonts/ {
+    location {{ SCRIPT_NAME }}/fonts/ {
        alias /app/frontend/dist/fonts/;
     }
 
-    location /tibava/img/ {
+    location {{ SCRIPT_NAME }}/img/ {
        alias /app/frontend/dist/img/;
     }
 
-    location /tibava {
+    location {{ SCRIPT_NAME }} {
         index  index.html;
         try_files $uri $uri/ /index.html;
     }
