@@ -59,10 +59,9 @@ deploy_analyser_test:
   before_script:
     - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
     - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY_AVA11" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - echo "$SSH_PRIVATE_KEY_GPU_L4_02" | tr -d '\r' > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
     - export ANSIBLE_HOST_KEY_CHECKING=False
   script:
     - ansible-playbook -i inventory/tib_analyser_test.ini tib_analyser_deploy.yml
