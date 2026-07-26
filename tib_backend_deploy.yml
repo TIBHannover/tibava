@@ -147,16 +147,16 @@
       community.docker.docker_container_exec:
         container: tibava-frontend-1
         command: npm install
-      env:
-        NODE_OPTIONS: "--max-old-space-size=4096"
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
       register: exec_result
 
     - name: Run npm build inside the frontend container
       community.docker.docker_container_exec:
         container: tibava-frontend-1
         command: npm run build
-      env:
-        NODE_OPTIONS: "--max-old-space-size=4096"
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
       register: exec_result
 
   handlers:
