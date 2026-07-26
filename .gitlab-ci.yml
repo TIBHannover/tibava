@@ -35,25 +35,8 @@ stages:
 #   rules:
 #     - if: $CI_COMMIT_BRANCH == "main"
 
-# # Job for Server 1
-# deploy_backend_test:
-#   stage: deploy
-#   image: willhallonline/ansible:2.18-alpine-3.20 # Uses a lightweight image with Ansible installed
-#   before_script:
-#     - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
-#     - eval $(ssh-agent -s)
-#     - mkdir -p ~/.ssh
-#     - chmod 700 ~/.ssh
-#     - echo "$SSH_PRIVATE_KEY_AVA11" | tr -d '\r' > ~/.ssh/id_rsa
-#     - chmod 600 ~/.ssh/id_rsa
-#     - export ANSIBLE_HOST_KEY_CHECKING=False
-#   script:
-#     - ansible-playbook -i inventory/tib_backend_test.ini tib_backend_deploy.yml
-#   # rules:
-#   #   - if: $CI_COMMIT_BRANCH == "main"
-
-# Job for Server 2
-deploy_analyser_test:
+# Job for Server 1
+deploy_backend_test:
   stage: deploy
   image: willhallonline/ansible:2.18-alpine-3.20 # Uses a lightweight image with Ansible installed
   before_script:
@@ -65,6 +48,23 @@ deploy_analyser_test:
     - chmod 700 ~/.ssh
     - export ANSIBLE_HOST_KEY_CHECKING=False
   script:
-    - ansible-playbook -i inventory/tib_analyser_test.ini tib_analyser_deploy.yml
+    - ansible-playbook -i inventory/tib_backend_test.ini tib_backend_deploy.yml
   # rules:
   #   - if: $CI_COMMIT_BRANCH == "main"
+
+# # Job for Server 2
+# deploy_analyser_test:
+#   stage: deploy
+#   image: willhallonline/ansible:2.18-alpine-3.20 # Uses a lightweight image with Ansible installed
+#   before_script:
+#     - echo "$SSH_PRIVATE_KEY_GPU_L4_02"
+#     - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
+#     - eval $(ssh-agent -s)
+#     - echo "$SSH_PRIVATE_KEY_GPU_L4_02" | tr -d '\r' | ssh-add -
+#     - mkdir -p ~/.ssh
+#     - chmod 700 ~/.ssh
+#     - export ANSIBLE_HOST_KEY_CHECKING=False
+#   script:
+#     - ansible-playbook -i inventory/tib_analyser_test.ini tib_analyser_deploy.yml
+#   # rules:
+#   #   - if: $CI_COMMIT_BRANCH == "main"
