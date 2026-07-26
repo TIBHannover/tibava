@@ -93,10 +93,9 @@ services:
       - ALLOWED_HOSTS=*
       - MEDIA_URL={{ SCRIPT_NAME }}/media/
       - THUMBNAIL_URL={{ SCRIPT_NAME }}/thumbnails/
-      - THUMBNAIL_URL={{ SCRIPT_NAME }}/thumbnails/
       - ANALYSER_GRPC_HOST=192.168.56.11
       - ANALYSER_GRPC_PORT=50051
-      - CSRF_TRUSTED_ORIGINS=http://192.168.56.10,http://localhost,http://ava21.service.tib.eu
+      - CSRF_TRUSTED_ORIGINS=http://192.168.56.10,http://localhost,http://ava21.service.tib.eu,http://service.tib.eu,https://service.tib.eu
     command: gunicorn --bind 0.0.0.0:8000 --env SCRIPT_NAME={{ SCRIPT_NAME }}/backend tibava.wsgi --capture-output --log-level info --workers=8
     #command: python3 backend/src/backend/manage.py check
     depends_on:
