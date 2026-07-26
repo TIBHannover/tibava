@@ -130,7 +130,7 @@
     # Update Webserver and Backend
     - name: Wait for backend service to become healthy (HTTP)
       ansible.builtin.uri:
-        url: "http://localhost:8000/tibava/backend/healthz/readiness"
+        url: "http://localhost:8000{{SCRIPT_NAME}}/backend/healthz/readiness"
         status_code: 200
       register: result
       until: result.status == 200
