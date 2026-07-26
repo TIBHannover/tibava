@@ -4,9 +4,10 @@ stages:
 # Job for Server 1
 deploy_backend:
   stage: deploy
-  image: cytopia/ansible:latest # Uses a lightweight image with Ansible installed
+  image: willhallonline/ansible:2.18-alpine-3.20 # Uses a lightweight image with Ansible installed
   before_script:
-    - apt-get update -qq && apt-get install -y -qq openssh-client
+    - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
+    - eval $(ssh-agent -s)
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo "$SSH_PRIVATE_KEY_AVA21" | tr -d '\r' > ~/.ssh/id_rsa
@@ -20,9 +21,10 @@ deploy_backend:
 # Job for Server 2
 deploy_analyser:
   stage: deploy
-  image: cytopia/ansible:latest # Uses a lightweight image with Ansible installed
+  image: willhallonline/ansible:2.18-alpine-3.20 # Uses a lightweight image with Ansible installed
   before_script:
-    - apt-get update -qq && apt-get install -y -qq openssh-client
+    - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
+    - eval $(ssh-agent -s)
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo "$SSH_PRIVATE_KEY_GPU_L4_02" | tr -d '\r' > ~/.ssh/id_rsa
@@ -33,13 +35,13 @@ deploy_analyser:
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
 
-
 # Job for Server 1
-deploy_backend:
+deploy_backend_test:
   stage: deploy
-  image: cytopia/ansible:latest # Uses a lightweight image with Ansible installed
+  image: willhallonline/ansible:2.18-alpine-3.20 # Uses a lightweight image with Ansible installed
   before_script:
-    - apt-get update -qq && apt-get install -y -qq openssh-client
+    - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
+    - eval $(ssh-agent -s)
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo "$SSH_PRIVATE_KEY_AVA11" | tr -d '\r' > ~/.ssh/id_rsa
@@ -51,11 +53,12 @@ deploy_backend:
   #   - if: $CI_COMMIT_BRANCH == "main"
 
 # Job for Server 2
-deploy_analyser:
+deploy_analyser_test:
   stage: deploy
-  image: cytopia/ansible:latest # Uses a lightweight image with Ansible installed
+  image: willhallonline/ansible:2.18-alpine-3.20 # Uses a lightweight image with Ansible installed
   before_script:
-    - apt-get update -qq && apt-get install -y -qq openssh-client
+    - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
+    - eval $(ssh-agent -s)
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo "$SSH_PRIVATE_KEY_GPU_L4_02" | tr -d '\r' > ~/.ssh/id_rsa
