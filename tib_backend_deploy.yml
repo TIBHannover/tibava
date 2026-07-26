@@ -76,21 +76,7 @@
         force: true
       become: true
       become_user: tibava
-    # --- DEBUG CHECK (RUNS ON CI RUNNER BEFORE TEMPLATING) ---
-    - name: Debug - List local workspace files on Ansible controller
-      ansible.builtin.command: find . -maxdepth 3 -not -path '*/.*'
-      delegate_to: localhost
-      run_once: true
-      become: false
-      register: controller_files
 
-    - name: Debug - Print found files on Ansible controller
-      ansible.builtin.debug:
-        var: controller_files.stdout_lines
-      delegate_to: localhost
-      run_once: true
-      become: false
-    # --------------------------------------------------------
     - name: Copy systemd service file
       ansible.builtin.template:
         src: templates/tibava_backend.service.j2
@@ -161,12 +147,16 @@
       community.docker.docker_container_exec:
         container: tibava-frontend-1
         command: npm install
+      env:
+        NODE_OPTIONS: "--max-old-space-size=4096"
       register: exec_result
 
     - name: Run npm build inside the frontend container
       community.docker.docker_container_exec:
         container: tibava-frontend-1
         command: npm run build
+      env:
+        NODE_OPTIONS: "--max-old-space-size=4096"
       register: exec_result
 
   handlers:
