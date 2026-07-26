@@ -57,13 +57,13 @@ deploy_analyser_test:
   stage: deploy
   image: willhallonline/ansible:2.18-alpine-3.20 # Uses a lightweight image with Ansible installed
   before_script:
+    - echo "$SSH_PRIVATE_KEY_AVA11"
     - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY_AVA11" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - export ANSIBLE_HOST_KEY_CHECKING=False
-    - echo "$SSH_PRIVATE_KEY_AVA11"
   script:
     - ansible-playbook -i inventory/tib_analyser_test.ini tib_analyser_deploy.yml
   # rules:
