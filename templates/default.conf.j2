@@ -2,60 +2,43 @@ upstream tibava_backend_gunicorn {
     server backend:8000 fail_timeout=0;
 }
 
-
 server {
-    # use 'listen 80 deferred;' for Linux
-    # use 'listen 80 accept_filter=httpready;' for FreeBSD
     listen 80;
     client_max_body_size 50G;
-    root /app/frontend/dist/;
-
-    # set the correct host(s) for your site
     server_name localhost;
-
     keepalive_timeout 5;
 
+{% if SCRIPT_NAME is defined and SCRIPT_NAME | length > 0 %}
+    # Global rewrite: prepend /{{ SCRIPT_NAME }}/ to any incoming URL missing it
+    rewrite ^/(?!{{ SCRIPT_NAME }}/)(.*)$ /{{ SCRIPT_NAME }}/$1 last;
 
-    location {{ SCRIPT_NAME }}/backend/ {
+    # Backend API Proxy
+    location /{{ SCRIPT_NAME }}/backend/ {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header Host $http_host;
         proxy_redirect off;
 
-        # Match your upstream definition explicitly
         proxy_pass http://tibava_backend_gunicorn;
     }
 
-    location {{ SCRIPT_NAME }}/media/ {
+    # Static Data Storage
+    location /{{ SCRIPT_NAME }}/media/ {
         alias /data/media/;
     }
 
-    location {{ SCRIPT_NAME }}/thumbnails/ {
+    location /{{ SCRIPT_NAME }}/thumbnails/ {
         alias /data/predictions/;
     }
 
-    location {{ SCRIPT_NAME }}/css/ {
-       alias /app/frontend/dist/css/;
+    # Main Frontend Single Page App (SPA)
+    location /{{ SCRIPT_NAME }}/ {
+        alias /app/frontend/dist/;
+        index index.html;
+        try_files $uri $uri/ @fallback;
     }
-
-    location {{ SCRIPT_NAME }}/js/ {
-       alias /app/frontend/dist/js/;
-    }
-
-    location {{ SCRIPT_NAME }}/fonts/ {
-       alias /app/frontend/dist/fonts/;
-    }
-
-    location {{ SCRIPT_NAME }}/img/ {
-       alias /app/frontend/dist/img/;
-    }
-
-    location {{ SCRIPT_NAME }} {
-        index  index.html;
-        try_files $uri $uri/ /index.html;
-    }
-
-    
+{% else %}
+    # Root path setup (When SCRIPT_NAME is empty)
 
     location /backend/ {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -63,7 +46,6 @@ server {
         proxy_set_header Host $http_host;
         proxy_redirect off;
 
-        # Match your upstream definition explicitly
         proxy_pass http://tibava_backend_gunicorn;
     }
 
@@ -75,26 +57,16 @@ server {
         alias /data/predictions/;
     }
 
-    location /css/ {
-       alias /app/frontend/dist/css/;
-    }
-
-    location /js/ {
-       alias /app/frontend/dist/js/;
-    }
-
-    location /fonts/ {
-       alias /app/frontend/dist/fonts/;
-    }
-
-    location /img/ {
-       alias /app/frontend/dist/img/;
-    }
-
     location / {
-        index  index.html;
+        root /app/frontend/dist;
+        index index.html;
         try_files $uri $uri/ /index.html;
     }
+{% endif %}
 
-
+    # Named fallback location
+    location @fallback {
+        root /app/frontend/dist;
+        rewrite ^ /index.html break;
+    }
 }
