@@ -2,61 +2,42 @@ upstream tibava_backend_gunicorn {
     server backend:8000 fail_timeout=0;
 }
 
-{% set prefix = SCRIPT_NAME | default('') | trim('/') %}
-
 server {
     listen 80;
     client_max_body_size 50G;
     server_name localhost;
     keepalive_timeout 5;
 
-    # Normalize multiple adjacent slashes into a single slash (fixes //backend issues)
-    merge_slashes on;
-
-{% if prefix | length > 0 %}
-    # ==========================================
-    # SUBPATH SETUP (e.g. /tibava-dev)
-    # ==========================================
-
+{% if SCRIPT_NAME is defined and SCRIPT_NAME | length > 0 %}
+    # Global rewrite: prepend /{{ SCRIPT_NAME }}/ to any incoming URL missing it
+    rewrite ^(?!{{ SCRIPT_NAME }}/)(.*)$ {{ SCRIPT_NAME }}/$1 last;
     # Backend API Proxy
-    location /{{ prefix }}/backend/ {
+    location {{ SCRIPT_NAME }}/backend/ {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header Host $http_host;
-        proxy_set_header X-Forwarded-Prefix /{{ prefix }};
         proxy_redirect off;
 
-        # Strips /tibava-dev/backend/ and forwards /backend/ to Gunicorn
-        # Remove trailing slash if Gunicorn expects the full path
-        proxy_pass http://tibava_backend_gunicorn/backend/;
+        proxy_pass http://tibava_backend_gunicorn;
     }
 
-    # Static Media Storage
-    location /{{ prefix }}/media/ {
+    # Static Data Storage
+    location {{ SCRIPT_NAME }}/media/ {
         alias /data/media/;
     }
 
-    # Static Thumbnails Storage
-    location /{{ prefix }}/thumbnails/ {
+    location {{ SCRIPT_NAME }}/thumbnails/ {
         alias /data/predictions/;
     }
 
-    # SPA Frontend (Static Assets)
-    location /{{ prefix }}/ {
+    # Main Frontend Single Page App (SPA)
+    location {{ SCRIPT_NAME }}/ {
         alias /app/frontend/dist/;
         index index.html;
-        try_files $uri $uri/ /{{ prefix }}/index.html;
+        try_files $uri $uri/ @fallback;
     }
-
-    # Redirect root '/' to '/tibava-dev/' if accessed directly on this container
-    location = / {
-        return 301 /{{ prefix }}/;
-    }
-
 {% else %}
-    # ==========================================
-    # ROOT PATH SETUP (When SCRIPT_NAME is empty)
-    # ==========================================
+    # Root path setup (When SCRIPT_NAME is empty)
 
     location /backend/ {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -81,4 +62,10 @@ server {
         try_files $uri $uri/ /index.html;
     }
 {% endif %}
+
+    # Named fallback location
+    location @fallback {
+        root /app/frontend/dist;
+        rewrite ^ /index.html break;
+    }
 }
