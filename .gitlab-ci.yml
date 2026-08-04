@@ -41,7 +41,7 @@ deploy_backend_test:
   image: willhallonline/ansible:2.18-alpine-3.20 # Uses a lightweight image with Ansible installed
   variables:
     # Custom variable set directly in YAML or defined in GitLab CI/CD UI
-    SCRIPT_NAME: "tibava-dev"
+    SCRIPT_NAME: "/tibava-dev"
   before_script:
     - echo "$SSH_PRIVATE_KEY_AVA11"
     - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
