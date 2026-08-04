@@ -2,8 +2,16 @@
   hosts: all
   become: true
   vars:
-    app_dir: "/srv/tibava"
-    SCRIPT_NAME: "{{ SCRIPT_NAME | default('tibava') }}"
+    app_dir: "{{ APP_DIR | default('/data/srv/tibava') }}"
+    script_name: "{{ SCRIPT_NAME | default('/tibava') }}"
+    analyser_port: "{{ ANALYSER_PORT | default('54051') }}"
+    valkey_host: "{{ VALKEY_HOST | default('localhost') }}"
+    valkey_port: "{{ VALKEY_PORT | default('6390') }}"
+    inference_ray_host: "{{ INFERENCE_RAY_HOST | default('localhost') }}"
+    inference_ray_port: "{{ INFERENCE_RAY_PORT | default('8000') }}"
+    inference_ray_status_port: "{{ INFERENCE_RAY_STATUS_PORT | default('52365') }}"
+    cuda_visible_devices: "{{ CUDA_VISIBLE_DEVICES | default('0') }}"
+    service_name: "{{ SERVICE_NAME | default('tibava_analyser.service') }}"
 
   tasks:
     - name: Ensure the ansible group exists
@@ -99,14 +107,14 @@
     - name: Copy systemd service file
       ansible.builtin.template:
         src: templates/tibava_analyser.service.j2
-        dest: /etc/systemd/system/tibava_analyser.service
+        dest: /etc/systemd/system/{{ service_name }}
         mode: "0644"
       notify: Reload systemd and restart app
 
     - name: Copy run script file
       ansible.builtin.template:
         src: templates/tibava.sh.j2
-        dest: /srv/tibava/run.sh
+        dest: "{{ app_dir }}/run.sh"
         mode: "0644"
       notify: Reload systemd and restart app
 
@@ -141,13 +149,13 @@
     ####
     - name: Restart application service (Example)
       ansible.builtin.systemd:
-        name: tibava_analyser.service
+        name: "{{ service_name }}"
         state: restarted
 
   handlers:
     - name: Reload systemd and restart app
       ansible.builtin.systemd_service:
-        name: tibava_analyser.service
+        name: "{{ service_name }}"
         state: restarted
         daemon_reload: true
         enabled: true

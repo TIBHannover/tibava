@@ -6,8 +6,8 @@ Type=exec
 User=labs
 Group=labs
 Restart=on-failure
-WorkingDirectory=/srv/tibava
-ExecStart=sh /srv/tibava/run.sh
+WorkingDirectory={{ app_dir }}
+ExecStart=sh {{ app_dir }}/run.sh
 
 [Install]
 WantedBy=multi-user.target

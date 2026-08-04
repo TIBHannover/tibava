@@ -1,6 +1,13 @@
 - name: Deploy GitLab Project Application
   hosts: all
   become: true
+  vars:
+    app_dir: "{{ APP_DIR | default('/srv/tibava') }}"
+    script_name: "{{ SCRIPT_NAME | default('/tibava') }}"
+    service_name: "{{ SERVICE_NAME | default('tibava_backend.service') }}"
+    analyser_host: "{{ ANALYSER_HOST | default('localhost') }}"
+    analyser_port: "{{ ANALYSER_PORT | default('54051') }}"
+
   tasks:
     - name: Ensure the tibava group exists
       group:
@@ -62,7 +69,7 @@
 
     - name: Ensure target directory exists
       ansible.builtin.file:
-        path: /srv/tibava
+        path: "{{ app_dir }}"
         state: directory
         owner: tibava
         group: tibava
@@ -71,7 +78,7 @@
     - name: Pull latest code from GitLab
       ansible.builtin.git:
         repo: "https://github.com/TIBHannover/tibava.git"
-        dest: /srv/tibava
+        dest: "{{ app_dir }}"
         version: "feature/ansible"
         force: true
       become: true
@@ -80,7 +87,7 @@
     - name: Copy systemd service file
       ansible.builtin.template:
         src: templates/tibava_backend.service.j2
-        dest: /etc/systemd/system/tibava_backend.service
+        dest: /etc/systemd/system/{{ service_name }}
         owner: root
         group: root
         mode: "0644"
@@ -89,7 +96,7 @@
     - name: Copy docker compose file
       ansible.builtin.template:
         src: templates/docker-compose.backend.yml.j2
-        dest: /srv/tibava/docker-compose.yml
+        dest: "{{ app_dir }}/docker-compose.yml"
         owner: tibava
         group: tibava
         mode: "0644"
@@ -97,7 +104,7 @@
     - name: Copy nginx config file
       ansible.builtin.template:
         src: templates/default.conf.j2
-        dest: /srv/tibava/frontend/default.conf
+        dest: "{{ app_dir }}/frontend/default.conf"
         owner: root
         group: root
         mode: "0644"
@@ -105,7 +112,7 @@
     - name: Copy vue app config file
       ansible.builtin.template:
         src: templates/app.config.js.j2
-        dest: /srv/tibava/frontend/app.config.js
+        dest: "{{ app_dir }}/frontend/app.config.js"
         owner: root
         group: root
         mode: "0644"
@@ -113,7 +120,7 @@
     - name: Copy vue config file
       ansible.builtin.template:
         src: templates/vue.config.js.j2
-        dest: /srv/tibava/frontend/vue.config.js
+        dest: "{{ app_dir }}/frontend/vue.config.js"
         owner: root
         group: root
         mode: "0644"
@@ -124,13 +131,13 @@
 
     - name: Restart application service (Example)
       ansible.builtin.systemd:
-        name: tibava_backend.service
+        name: "{{ service_name }}"
         state: restarted
 
     # Update Webserver and Backend
     - name: Wait for backend service to become healthy (HTTP)
       ansible.builtin.uri:
-        url: "http://localhost:8000{{SCRIPT_NAME}}/backend/healthz/readiness"
+        url: "http://localhost:8000{{script_name}}/backend/healthz/readiness"
         status_code: 200
       register: result
       until: result.status == 200
@@ -162,7 +169,7 @@
   handlers:
     - name: Reload systemd and restart app
       ansible.builtin.systemd_service:
-        name: tibava_backend.service
+        name: "{{ service_name }}"
         state: restarted
         daemon_reload: true
         enabled: true

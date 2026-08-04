@@ -9,12 +9,12 @@ server {
     keepalive_timeout 5;
     merge_slashes on;
 
-{% if SCRIPT_NAME is defined and SCRIPT_NAME | length > 0 %}
-    # Global rewrite: prepend /{{ SCRIPT_NAME }}/ to any incoming URL missing it
-    rewrite ^/(?!{{ SCRIPT_NAME | regex_replace('^/', '') }}/)(.*)$ {{ SCRIPT_NAME }}/$1 last;
+{% if script_name is defined and script_name | length > 0 %}
+    # Global rewrite: prepend /{{ script_name }}/ to any incoming URL missing it
+    rewrite ^/(?!{{ script_name | regex_replace('^/', '') }}/)(.*)$ {{ script_name }}/$1 last;
     
     # Backend API Proxy
-    location {{ SCRIPT_NAME }}/backend/ {
+    location {{ script_name }}/backend/ {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header Host $http_host;
@@ -24,22 +24,22 @@ server {
     }
 
     # Static Data Storage
-    location {{ SCRIPT_NAME }}/media/ {
+    location {{ script_name }}/media/ {
         alias /data/media/;
     }
 
-    location {{ SCRIPT_NAME }}/thumbnails/ {
+    location {{ script_name }}/thumbnails/ {
         alias /data/predictions/;
     }
 
     # Main Frontend Single Page App (SPA)
-    location {{ SCRIPT_NAME }}/ {
+    location {{ script_name }}/ {
         alias /app/frontend/dist/;
         index index.html;
         try_files $uri $uri/ @fallback;
     }
 {% else %}
-    # Root path setup (When SCRIPT_NAME is empty)
+    # Root path setup (When script_name is empty)
 
     location /backend/ {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

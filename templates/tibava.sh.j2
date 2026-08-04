@@ -1,9 +1,9 @@
 #!/bin/bash
-export CUDA_VISIBLE_DEVICES="0,1,2"
-export TIBAVA_DATA=/srv/tibava/data/
+export CUDA_VISIBLE_DEVICES="{{ cuda_visible_devices }}"
+export TIBAVA_DATA={{ app_dir }}/data/
 
-cd /srv/tibava/
-apptainer exec --bind $TIBAVA_DATA/redis/:/data  docker://valkey/valkey:8.1.1-alpine valkey-server --port 6390 &
+cd {{ app_dir }}
+apptainer exec --bind $TIBAVA_DATA/redis/:/data  docker://valkey/valkey:8.1.1-alpine valkey-server --port {{ valkey_port }} &
 
 
 apptainer exec --bind $TIBAVA_DATA/ray:/tmp,$TIBAVA_DATA/analyser/:/data,$TIBAVA_DATA/models/:/models/ \
@@ -24,11 +24,11 @@ apptainer exec \
     python analyser/src/analyser/server.py \
         --config analyser/config.yml \
         -v \
-        --port 54051 \
-        --cache_valkey_host localhost \
-        --cache_valkey_port 6390 \
-        --inference_ray_host localhost \
-        --inference_ray_port 8000 \
-        --inference_ray_status_port 52365 &
+        --port {{ analyser_port }} \
+        --cache_valkey_host {{ valkey_host }} \
+        --cache_valkey_port {{ valkey_port }} \
+        --inference_ray_host {{ inference_ray_host }} \
+        --inference_ray_port {{ inference_ray_port }} \
+        --inference_ray_status_port {{ inference_ray_status_port }} &
 
 wait

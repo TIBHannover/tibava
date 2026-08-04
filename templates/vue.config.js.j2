@@ -1,9 +1,9 @@
 module.exports = {
-  publicPath: '{{ SCRIPT_NAME }}',
+  publicPath: '{{ script_name }}',
   configureWebpack: {
     devServer: {
       contentBasePublicPath: '/',
-      publicPath: '{{ SCRIPT_NAME }}',
+      publicPath: '{{ script_name }}',
       watchOptions: {
         ignored: [/node_modules/, /public/],
       }
