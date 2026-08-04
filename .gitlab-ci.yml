@@ -35,28 +35,28 @@ stages:
 #   rules:
 #     - if: $CI_COMMIT_BRANCH == "main"
 
-# Job for Server 1
-deploy_backend_dev:
-  stage: deploy
-  image: willhallonline/ansible:2.18-alpine-3.20 # Uses a lightweight image with Ansible installed
-  variables:
-    # Custom variable set directly in YAML or defined in GitLab CI/CD UI
-    SCRIPT_NAME: "/tibava-dev"
-    SERVICE_NAME: "tibava_dev_backend.service"
-    ANALYSER_HOST: gpu-l4-02.research.tib.eu
-    ANALYSER_PORT: 54052
-  before_script:
-    - echo "$SSH_PRIVATE_KEY_AVA11"
-    - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY_AVA11" | tr -d '\r' | ssh-add -
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - export ANSIBLE_HOST_KEY_CHECKING=False
-  script:
-    - ansible-playbook -i inventory/tib_backend_dev.ini tib_backend_deploy.yml -e ansible_become_password=${ROOT_PASSWORD} -e "SCRIPT_NAME=${SCRIPT_NAME}" -e "SERVICE_NAME=${SERVICE_NAME}" -e "ANALYSER_HOST=${ANALYSER_HOST}" -e "ANALYSER_PORT=${ANALYSER_PORT}"
-  # rules:
-  #   - if: $CI_COMMIT_BRANCH == "main"
+# # Job for Server 1
+# deploy_backend_dev:
+#   stage: deploy
+#   image: willhallonline/ansible:2.18-alpine-3.20 # Uses a lightweight image with Ansible installed
+#   variables:
+#     # Custom variable set directly in YAML or defined in GitLab CI/CD UI
+#     SCRIPT_NAME: "/tibava-dev"
+#     SERVICE_NAME: "tibava_dev_backend.service"
+#     ANALYSER_HOST: gpu-l4-02.research.tib.eu
+#     ANALYSER_PORT: 54052
+#   before_script:
+#     - echo "$SSH_PRIVATE_KEY_AVA11"
+#     - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
+#     - eval $(ssh-agent -s)
+#     - echo "$SSH_PRIVATE_KEY_AVA11" | tr -d '\r' | ssh-add -
+#     - mkdir -p ~/.ssh
+#     - chmod 700 ~/.ssh
+#     - export ANSIBLE_HOST_KEY_CHECKING=False
+#   script:
+#     - ansible-playbook -i inventory/tib_backend_dev.ini tib_backend_deploy.yml -e ansible_become_password=${ROOT_PASSWORD} -e "SCRIPT_NAME=${SCRIPT_NAME}" -e "SERVICE_NAME=${SERVICE_NAME}" -e "ANALYSER_HOST=${ANALYSER_HOST}" -e "ANALYSER_PORT=${ANALYSER_PORT}"
+#   # rules:
+#   #   - if: $CI_COMMIT_BRANCH == "main"
 
 # Job for Server 2
 deploy_analyser_dev:
