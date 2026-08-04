@@ -7,10 +7,12 @@ server {
     client_max_body_size 50G;
     server_name localhost;
     keepalive_timeout 5;
+    merge_slashes on;
 
 {% if SCRIPT_NAME is defined and SCRIPT_NAME | length > 0 %}
     # Global rewrite: prepend /{{ SCRIPT_NAME }}/ to any incoming URL missing it
-    rewrite ^(?!{{ SCRIPT_NAME }}/)(.*)$ {{ SCRIPT_NAME }}/$1 last;
+    rewrite ^/(?!{{ SCRIPT_NAME | regex_replace('^/', '') }}/)(.*)$ {{ SCRIPT_NAME }}/$1 last;
+    
     # Backend API Proxy
     location {{ SCRIPT_NAME }}/backend/ {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
