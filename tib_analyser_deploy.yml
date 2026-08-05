@@ -118,6 +118,12 @@
         mode: "0644"
       notify: Reload systemd and restart app
 
+    - name: Copy deploy config service file
+      ansible.builtin.template:
+        src: templates/deploy.cuda.yml.j2
+        dest: "{{ app_dir }}/inference_ray/deploy.cuda.yml"
+        mode: "0644"
+
     - name: Force systemd to reload config now
       ansible.builtin.systemd:
         daemon_reload: yes
