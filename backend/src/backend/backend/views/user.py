@@ -27,7 +27,7 @@ def get_csrf_token(request):
 
 
 class UserGet(View):
-    def post(self, request):
+    def get(self, request):
         if not request.user.is_authenticated:
             return JsonResponse(
                 {"status": "error", "error": {"type": "not_authenticated"}}

@@ -1,0 +1,168 @@
+- name: Deploy GitLab Project Application
+  hosts: all
+  become: true
+  vars:
+    app_dir: "{{ APP_DIR | default('/data/srv/tibava') }}"
+    script_name: "{{ SCRIPT_NAME | default('/tibava') }}"
+    analyser_port: "{{ ANALYSER_PORT | default('54051') }}"
+    valkey_host: "{{ VALKEY_HOST | default('localhost') }}"
+    valkey_port: "{{ VALKEY_PORT | default('6390') }}"
+    ray_port: "{{ RAY_PORT | default('6379') }}"
+    inference_ray_host: "{{ INFERENCE_RAY_HOST | default('localhost') }}"
+    inference_ray_port: "{{ INFERENCE_RAY_PORT | default('8000') }}"
+    inference_ray_status_port: "{{ INFERENCE_RAY_STATUS_PORT | default('52365') }}"
+    cuda_visible_devices: "{{ CUDA_VISIBLE_DEVICES | default('0') }}"
+    service_name: "{{ SERVICE_NAME | default('tibava_analyser.service') }}"
+
+  tasks:
+    - name: Ensure the ansible group exists
+      group:
+        name: labs
+        state: present
+
+    - name: Ensure the ansible user exists
+      user:
+        name: labs
+        group: labs
+        shell: /bin/bash
+        state: present
+
+    - name: Ensure target directory exists
+      ansible.builtin.file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: labs
+        group: labs
+        mode: "0755"
+
+    - name: Install Git via DNF
+      ansible.builtin.dnf:
+        name:
+          - git
+          - acl
+          - apptainer
+        state: present
+
+    - name: Pull latest code from GitLab
+      ansible.builtin.git:
+        repo: "https://github.com/TIBHannover/tibava.git"
+        dest: "{{ app_dir }}"
+        version: "feature/ansible"
+        force: true
+      become: true
+      become_user: labs
+
+    - name: Ensure data directory exists
+      ansible.builtin.file:
+        path: "{{ app_dir }}/data/cache"
+        state: directory
+        owner: labs
+        group: labs
+        mode: "0755"
+
+    - name: Ensure data directory exists
+      ansible.builtin.file:
+        path: "{{ app_dir }}/data/redis"
+        state: directory
+        owner: labs
+        group: labs
+        mode: "0755"
+
+    - name: Ensure data directory exists
+      ansible.builtin.file:
+        path: "{{ app_dir }}/data/analyser"
+        state: directory
+        owner: labs
+        group: labs
+        mode: "0755"
+
+    - name: Ensure data directory exists
+      ansible.builtin.file:
+        path: "{{ app_dir }}/data/ray"
+        state: directory
+        owner: labs
+        group: labs
+        mode: "0755"
+
+    - name: Ensure valid timezone link exists on host
+      ansible.builtin.file:
+        src: /usr/share/zoneinfo/UTC # Or your timezone, e.g. /usr/share/zoneinfo/Europe/Berlin
+        dest: /etc/localtime
+        state: link
+        force: yes
+
+    - name: Render Apptainer definition file
+      ansible.builtin.template:
+        src: templates/apptainer.def.j2
+        dest: "{{ app_dir }}/apptainer.def"
+        mode: "0644"
+      register: def_file_status
+
+    - name: Build Apptainer .sif image
+      ansible.builtin.command:
+        cmd: "apptainer build --force {{ app_dir }}/apptainer.sif {{ app_dir }}/apptainer.def"
+      args:
+        chdir: "{{ app_dir }}"
+      when: def_file_status.changed | default(false)
+
+    - name: Copy systemd service file
+      ansible.builtin.template:
+        src: templates/tibava_analyser.service.j2
+        dest: /etc/systemd/system/{{ service_name }}
+        mode: "0644"
+      notify: Reload systemd and restart app
+
+    - name: Copy run script file
+      ansible.builtin.template:
+        src: templates/tibava.sh.j2
+        dest: "{{ app_dir }}/run.sh"
+        mode: "0644"
+      notify: Reload systemd and restart app
+
+    - name: Copy deploy config service file
+      ansible.builtin.template:
+        src: templates/deploy.cuda.yml.j2
+        dest: "{{ app_dir }}/inference_ray/deploy.cuda.yml"
+        mode: "0644"
+
+    - name: Force systemd to reload config now
+      ansible.builtin.systemd:
+        daemon_reload: yes
+
+    #### Update Analyser
+    - name: Ensure base data directory exists
+      ansible.builtin.file:
+        path: "{{ app_dir }}/data"
+        state: directory
+        mode: "0755"
+
+    - name: Download models archive
+      ansible.builtin.get_url:
+        url: "https://tib.eu/cloud/s/kAe3TXPfsBpwtwk/download/models.tar.gz"
+        dest: "/tmp/models.tar.gz"
+        mode: "0644"
+
+    - name: "Extract archive into {{ app_dir }}/data/"
+      ansible.builtin.unarchive:
+        src: "/tmp/models.tar.gz"
+        dest: "{{ app_dir }}/data/"
+        remote_src: true
+
+    - name: Clean up tarball
+      ansible.builtin.file:
+        path: "/tmp/models.tar.gz"
+        state: absent
+
+    ####
+    - name: Restart application service (Example)
+      ansible.builtin.systemd:
+        name: "{{ service_name }}"
+        state: restarted
+
+  handlers:
+    - name: Reload systemd and restart app
+      ansible.builtin.systemd_service:
+        name: "{{ service_name }}"
+        state: restarted
+        daemon_reload: true
+        enabled: true

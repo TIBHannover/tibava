@@ -63,7 +63,7 @@ export const useUserStore = defineStore("user", {
       this.isLoading = true;
 
       return axios
-        .post(`${config.API_LOCATION}/user/get`)
+        .get(`${config.API_LOCATION}/user/get`)
         .then((res) => {
           if (res.data.status === "ok") {
             if ("username" in res.data.data) {

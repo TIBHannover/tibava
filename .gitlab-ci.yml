@@ -1,0 +1,88 @@
+stages:
+  - deploy
+
+# # Job for Server 1
+# deploy_backend:
+#   stage: deploy
+#   image: willhallonline/ansible:2.18-alpine-3.20 # Uses a lightweight image with Ansible installed
+#   before_script:
+#     - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
+#     - eval $(ssh-agent -s)
+#     - mkdir -p ~/.ssh
+#     - chmod 700 ~/.ssh
+#     - echo "$SSH_PRIVATE_KEY_AVA21" | tr -d '\r' > ~/.ssh/id_rsa
+#     - chmod 600 ~/.ssh/id_rsa
+#     - export ANSIBLE_HOST_KEY_CHECKING=False
+#   script:
+#     - ansible-playbook -i inventory/tib_backend.ini tib_backend_deploy.yml
+#   rules:
+#     - if: $CI_COMMIT_BRANCH == "main"
+
+# # Job for Server 2
+# deploy_analyser:
+#   stage: deploy
+#   image: willhallonline/ansible:2.18-alpine-3.20 # Uses a lightweight image with Ansible installed
+#   before_script:
+#     - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
+#     - eval $(ssh-agent -s)
+#     - mkdir -p ~/.ssh
+#     - chmod 700 ~/.ssh
+#     - echo "$SSH_PRIVATE_KEY_GPU_L4_02" | tr -d '\r' > ~/.ssh/id_rsa
+#     - chmod 600 ~/.ssh/id_rsa
+#     - export ANSIBLE_HOST_KEY_CHECKING=False
+#   script:
+#     - ansible-playbook -i inventory/tib_analyser.ini tib_analyser_deploy.yml
+#   rules:
+#     - if: $CI_COMMIT_BRANCH == "main"
+
+# Job for Server 1
+deploy_backend_dev:
+  stage: deploy
+  image: willhallonline/ansible:2.18-alpine-3.20 # Uses a lightweight image with Ansible installed
+  variables:
+    # Custom variable set directly in YAML or defined in GitLab CI/CD UI
+    SCRIPT_NAME: "/tibava-dev"
+    SERVICE_NAME: "tibava_dev_backend.service"
+    ANALYSER_HOST: gpu-l4-02.research.tib.eu
+    ANALYSER_PORT: 54052
+  before_script:
+    - echo "$SSH_PRIVATE_KEY_AVA11"
+    - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY_AVA11" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - export ANSIBLE_HOST_KEY_CHECKING=False
+  script:
+    - ansible-playbook -i inventory/tib_backend_dev.ini tib_backend_deploy.yml -e ansible_become_password=${ROOT_PASSWORD} -e "SCRIPT_NAME=${SCRIPT_NAME}" -e "SERVICE_NAME=${SERVICE_NAME}" -e "ANALYSER_HOST=${ANALYSER_HOST}" -e "ANALYSER_PORT=${ANALYSER_PORT}"
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == "main"
+
+# Job for Server 2
+deploy_analyser_dev:
+  stage: deploy
+  image: willhallonline/ansible:2.18-alpine-3.20 # Uses a lightweight image with Ansible installed
+  variables:
+    # Custom variable set directly in YAML or defined in GitLab CI/CD UI
+    APP_DIR: "/data/srv/tibava-dev"
+    ANALYSER_PORT: 54052
+    VALKEY_HOST: "localhost"
+    VALKEY_PORT: 6391
+    RAY_PORT: 6380
+    INFERENCE_RAY_HOST: "localhost"
+    INFERENCE_RAY_PORT: 8001
+    INFERENCE_RAY_STATUS_PORT: 52366
+    CUDA_VISIBLE_DEVICES: "2,3"
+    SERVICE_NAME: "tibava_dev_analyser.service"
+  before_script:
+    - echo "$SSH_PRIVATE_KEY_GPU_L4_02"
+    - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY_GPU_L4_02" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - export ANSIBLE_HOST_KEY_CHECKING=False
+  script:
+    - ansible-playbook -i inventory/tib_analyser_dev.ini tib_analyser_deploy.yml -e ansible_become_password=${ROOT_PASSWORD}  -e "APP_DIR=${APP_DIR}" -e "SCRIPT_NAME=${SCRIPT_NAME}" -e "ANALYSER_PORT=${ANALYSER_PORT}" -e "VALKEY_HOST=${VALKEY_HOST}" -e "VALKEY_PORT=${VALKEY_PORT}" -e "INFERENCE_RAY_HOST=${INFERENCE_RAY_HOST}" -e "INFERENCE_RAY_PORT=${INFERENCE_RAY_PORT}" -e "INFERENCE_RAY_STATUS_PORT=${INFERENCE_RAY_STATUS_PORT}" -e "CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES}" -e "SERVICE_NAME=${SERVICE_NAME}"
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == "main"

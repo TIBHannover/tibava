@@ -30,7 +30,10 @@ def get_value(config, env_name, config_path, default_value):
             result = True
         elif result.lower() in ["false", "no", "0"]:
             result = False
-    # print(env_name, config_path, default_value, value, result, flush=True)
+
+        if isinstance(default_value, list):
+            return [item.strip() for item in result.split(",") if item.strip()]
+
     return result
 
 
@@ -162,14 +165,7 @@ CACHES = {
         "LOCATION": get_value(
             config, "CACHE_LOCATION", "cache.location", "memcached:11211"
         ),
-        "OPTIONS": {
-            "CLIENT_CLASS": get_value(
-                config,
-                "CACHE_CLIENT_CLASS",
-                "cache.client_class",
-                "django_redis.client.DefaultClient",
-            ),
-        },
+        "OPTIONS": {},
     }
 }
 
@@ -226,9 +222,7 @@ ANNOTATION_MAX_LENGTH = int(
 )
 
 MEDIA_URL = get_value(config, "MEDIA_URL", "media_url", "/media/")
-THUMBNAIL_URL = get_value(
-    config, "THUMBNAIL_URL", "thumbnail_url", "http://localhost/thumbnails/"
-)
+THUMBNAIL_URL = get_value(config, "THUMBNAIL_URL", "thumbnail_url", "/thumbnails/")
 
 # the last resolution will use for indexing
 IMAGE_RESOLUTIONS = [{"min_dim": 200, "suffix": "_m"}, {"min_dim": 1080, "suffix": ""}]

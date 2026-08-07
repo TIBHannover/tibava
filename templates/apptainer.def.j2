@@ -1,0 +1,42 @@
+# --- Stage 1: Builder ---
+Bootstrap: docker
+From: python:3.12-slim-bookworm
+Stage: builder
+
+%files
+    # Copy official uv binaries from ghcr.io image or local system
+    # (Alternatively, uv can be installed via curl in %post)
+    uv.lock /app/uv.lock
+    .python-version /app/.python-version
+    pyproject.toml /app/pyproject.toml
+    packages/* /app/packages/
+    backend/* /app/backend/
+    analyser/* /app/analyser/
+    inference_ray/* /app/inference_ray/
+
+%environment
+    export UV_COMPILE_BYTECODE=1
+    export PATH="/app/.venv/bin:$PATH"
+    export PATH="/root/.local/bin:$PATH"
+
+
+%post
+
+    export UV_COMPILE_BYTECODE=1
+    export PATH="/root/.local/bin:/app/.venv/bin:$PATH"
+    # Install system dependencies
+    apt-get update && apt-get install -y --no-install-recommends \
+        libmagickwand-dev imagemagick curl ca-certificates
+    rm -rf /var/lib/apt/lists/*
+
+    # Install uv directly inside the container
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+
+    cd /app
+
+    # Install dependencies into virtual environment
+    uv sync --frozen --no-dev --package analyser --no-editable
+
+%runscript
+    # Default entrypoint behavior when running `apptainer run container.sif`
+    exec "$@"

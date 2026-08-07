@@ -1,0 +1,17 @@
+module.exports = {
+  publicPath: '{{ script_name }}',
+  configureWebpack: {
+    devServer: {
+      contentBasePublicPath: '/',
+      publicPath: '{{ script_name }}',
+      watchOptions: {
+        ignored: [/node_modules/, /public/],
+      }
+    },
+  },
+  devServer: {
+    disableHostCheck: true,
+  },
+
+  lintOnSave: true
+}

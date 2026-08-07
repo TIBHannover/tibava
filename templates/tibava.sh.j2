@@ -1,0 +1,57 @@
+#!/bin/bash
+set -e
+
+export CUDA_VISIBLE_DEVICES="{{ cuda_visible_devices }}"
+export TIBAVA_DATA={{ app_dir }}/data/
+
+cd {{ app_dir }}
+
+# 1. Start Valkey in background
+apptainer exec --bind "$TIBAVA_DATA/redis/:/data" \
+    docker://valkey/valkey:8.1.1-alpine valkey-server --port {{ valkey_port }} &
+
+# 2. Start Ray Head Daemon in background
+apptainer exec --bind "$TIBAVA_DATA/ray:/tmp,$TIBAVA_DATA/analyser/:/data,$TIBAVA_DATA/models/:/models/" \
+    --env HF_HOME=/models,NUMBA_CACHE_DIR=/tmp \
+    --no-home \
+    --no-mount /etc/localtime \
+    apptainer.sif \
+    ray start --head \
+      --port={{ ray_port }} \
+      --dashboard-agent-listen-port={{ inference_ray_status_port }} --block &
+
+# 3. Wait for Ray GCS socket to open
+echo "Waiting for Ray head node to initialize..."
+until nc -z 127.0.0.1 {{ ray_port }}; do sleep 1; done
+
+# 4. Deploy Ray Serve application
+apptainer exec --bind "$TIBAVA_DATA/ray:/tmp,$TIBAVA_DATA/analyser/:/data,$TIBAVA_DATA/models/:/models/" \
+    --env HF_HOME=/models,NUMBA_CACHE_DIR=/tmp \
+    --no-home \
+    --no-mount /etc/localtime \
+    apptainer.sif \
+    serve run --address="127.0.0.1:{{ ray_port }}" inference_ray/deploy.cuda.yml &
+
+# 5. Wait for Ray Serve HTTP endpoint to respond
+echo "Waiting for Ray Serve proxies to come up..."
+until nc -z 127.0.0.1 {{ inference_ray_port }}; do sleep 2; done
+
+echo "########## starting main server"
+apptainer exec \
+    --bind "$TIBAVA_DATA/analyser/:/data,$TIBAVA_DATA/models/:/models/,$TIBAVA_DATA/cache/:/cache/" \
+    --env HF_HOME=/models \
+    --no-mount /etc/localtime \
+    --no-home \
+    apptainer.sif \
+    python analyser/src/analyser/server.py \
+        --config analyser/config.yml \
+        -v \
+        --port {{ analyser_port }} \
+        --cache_valkey_host {{ valkey_host }} \
+        --cache_valkey_port {{ valkey_port }} \
+        --inference_ray_host {{ inference_ray_host }} \
+        --inference_ray_port {{ inference_ray_port }} \
+        --inference_ray_status_port {{ inference_ray_status_port }} &
+
+# Block unit execution so systemd tracks all background processes
+wait -n

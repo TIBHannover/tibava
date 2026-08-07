@@ -1,0 +1,15 @@
+[Unit]
+Description=My GitLab Deployed Application
+After=network.target
+
+[Service]
+Type=oneshot
+User=tibava
+RemainAfterExit=yes
+WorkingDirectory=/srv/tibava/
+ExecStart=/usr/bin/docker compose up -d --build --remove-orphans
+ExecStop=/usr/bin/docker compose down
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
