@@ -68,6 +68,7 @@ deploy_analyser_dev:
     ANALYSER_PORT: 54052
     VALKEY_HOST: "localhost"
     VALKEY_PORT: 6391
+    RAY_PORT: 6380
     INFERENCE_RAY_HOST: "localhost"
     INFERENCE_RAY_PORT: 8001
     INFERENCE_RAY_STATUS_PORT: 52366

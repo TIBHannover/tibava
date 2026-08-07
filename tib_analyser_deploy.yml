@@ -7,6 +7,7 @@
     analyser_port: "{{ ANALYSER_PORT | default('54051') }}"
     valkey_host: "{{ VALKEY_HOST | default('localhost') }}"
     valkey_port: "{{ VALKEY_PORT | default('6390') }}"
+    ray_port: "{{ RAY_PORT | default('6379') }}"
     inference_ray_host: "{{ INFERENCE_RAY_HOST | default('localhost') }}"
     inference_ray_port: "{{ INFERENCE_RAY_PORT | default('8000') }}"
     inference_ray_status_port: "{{ INFERENCE_RAY_STATUS_PORT | default('52365') }}"
