@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('backend', '0022_auto_20240507_0815'),
+        ('backend', '0024_tibavauser_max_plugin_runs_and_more'),
     ]
 
     operations = [
