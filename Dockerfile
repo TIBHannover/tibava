@@ -2,7 +2,7 @@
 FROM python:3.12-slim-bookworm AS builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libmagickwand-dev imagemagick
+    libmagickwand-dev imagemagick git
 
 # Install uv using the official standalone installer
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
@@ -37,7 +37,7 @@ FROM python:3.12-slim-bookworm
 
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libmagickwand-dev imagemagick
+    libmagickwand-dev imagemagick git
 
 WORKDIR /app
 
@@ -47,15 +47,15 @@ ARG WORKSPACE_MEMBER
 # Copy the isolated virtual environment
 COPY --from=builder /app/.venv /app/.venv
 
-# Copy ONLY the target package's source code into the final image     
-COPY .python-version /app/.python-version   
-COPY analyser/ /app/analyser/   
-COPY backend/ /app/backend/ 
-COPY frontend/ /app/frontend/   
-COPY inference_ray/ /app/inference_ray/  
-COPY packages/ /app/packages/   
-COPY pyproject.toml /app/pyproject.toml  
-COPY uv.lock /app/uv.lock 
+# Copy ONLY the target package's source code into the final image
+COPY .python-version /app/.python-version
+COPY analyser/ /app/analyser/
+COPY backend/ /app/backend/
+COPY frontend/ /app/frontend/
+COPY inference_ray/ /app/inference_ray/
+COPY packages/ /app/packages/
+COPY pyproject.toml /app/pyproject.toml
+COPY uv.lock /app/uv.lock
 
 # Place the virtual environment's binaries at the front of the PATH
 ENV PATH="/app/.venv/bin:$PATH"

@@ -13,11 +13,10 @@ from tibava_data import (
     AnnotationData,
     Annotation,
 )
-from data import DataManager, Data
+from tibava_data import DataManager, Data
 
 from typing import Callable, Optional, Dict
 
-from utils import VideoDecoder
 
 import numpy as np
 import time

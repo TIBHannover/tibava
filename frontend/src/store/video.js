@@ -57,6 +57,7 @@ export const useVideoStore = defineStore("video", {
       this.isLoading = true;
       let promises = [];
       const playerStore = usePlayerStore();
+      const pluginStore = usePluginStore();
       const annotationCategoryStore = useAnnotationCategoryStore();
       const annotationStore = useAnnotationStore();
       const timelineStore = useTimelineStore();
@@ -72,6 +73,7 @@ export const useVideoStore = defineStore("video", {
       const shotStore = useShotStore();
 
       playerStore.clearStore();
+      promises.push(pluginStore.fetchAll());
       promises.push(playerStore.fetchVideo({ videoId }));
       promises.push(shotStore.fetchForVideo({ videoId }));
       if (includeAnnotation) {
