@@ -17,7 +17,6 @@ from tibava_data import DataManager, Data
 
 from typing import Callable, Optional, Dict
 
-from tibava_utils import VideoDecoder
 
 import numpy as np
 import time

@@ -588,23 +588,29 @@ class VideoExport(View):
         # Create a temporary in-memory file to store the zip
         buffer = io.BytesIO()
         zip_file = zipfile.ZipFile(buffer, "w")
-
         data_manager = DataManager("/predictions/")
 
         data_ids = set()
         for plugin_run_result_db in PluginRunResult.objects.filter(
             plugin_run__video=video_db
         ):
-            with open(data_manager.data_path(plugin_run_result_db.data_id), "rb") as f:
-                data_id = plugin_run_result_db.data_id
-                if data_id not in data_ids:
-                    data_ids.add(data_id)
-                    print(plugin_run_result_db.data_id, flush=True)
-                    print(plugin_run_result_db.plugin_run, flush=True)
-                    # Write the CSV data to the individual file
-                    zip_file.writestr(
-                        f"data/{plugin_run_result_db.data_id}.zip", f.read()
-                    )
+            try:
+                with open(
+                    data_manager.data_path(plugin_run_result_db.data_id), "rb"
+                ) as f:
+                    data_id = plugin_run_result_db.data_id
+                    if data_id not in data_ids:
+                        data_ids.add(data_id)
+                        print(plugin_run_result_db.data_id, flush=True)
+                        print(plugin_run_result_db.plugin_run, flush=True)
+                        # Write the CSV data to the individual file
+                        zip_file.writestr(
+                            f"data/{plugin_run_result_db.data_id}.zip", f.read()
+                        )
+            except Exception as e:
+                print(
+                    f"Could not load data from PluginRunResults: {plugin_run_result_db}"
+                )
 
         timelines = []
 
@@ -616,12 +622,14 @@ class VideoExport(View):
                 with data_manager.create_data(
                     "AnnotationData", timeline_db.id.hex
                 ) as data:
+
                     print("ANNOTATION", data.to_dict(), flush=True)
                     shot_timeline_segments = TimelineSegment.objects.filter(
                         timeline=timeline_db
                     )
 
                     for segment in shot_timeline_segments:
+
                         annotations = []
 
                         if len(segment.timelinesegmentannotation_set.all()) > 0:
@@ -777,7 +785,7 @@ class VideoExport(View):
                     end_time = int(segment_db.end * 1000)
                     # print(f"{start_time} - {end_time}")
                     # TODO: check why this occurs
-                    if start_time >= end_time:
+                    if start_time <= end_time:
                         continue
                     annotations = []
                     # if the timeline contains annotations, export them
@@ -860,25 +868,45 @@ class VideoExport(View):
             if request.POST.get("format") == "merged_csv":
                 result = self.export_merged_csv(parameters, video_db)
                 return JsonResponse(
-                    {"status": "ok", "file": result, "extension": "csv"}
+                    {
+                        "status": "ok",
+                        "file": result,
+                        "video_name": video_db.name,
+                        "extension": "csv",
+                    }
                 )
 
             elif request.POST.get("format") == "individual_csv":
                 result = self.export_individual_csv(parameters, video_db)
                 return JsonResponse(
-                    {"status": "ok", "file": result, "extension": "zip"}
+                    {
+                        "status": "ok",
+                        "file": result,
+                        "video_name": video_db.name,
+                        "extension": "zip",
+                    }
                 )
 
             elif request.POST.get("format") == "elan":
                 result = self.export_elan(parameters, video_db)
                 return JsonResponse(
-                    {"status": "ok", "file": result, "extension": "eaf"}
+                    {
+                        "status": "ok",
+                        "file": result,
+                        "video_name": video_db.name,
+                        "extension": "eaf",
+                    }
                 )
 
             elif request.POST.get("format") == "data":
                 result = self.export_data(parameters, video_db)
                 return JsonResponse(
-                    {"status": "ok", "file": result, "extension": "zip"}
+                    {
+                        "status": "ok",
+                        "file": result,
+                        "video_name": video_db.name,
+                        "extension": "zip",
+                    }
                 )
 
             return JsonResponse({"status": "error", "type": "unknown_format"})

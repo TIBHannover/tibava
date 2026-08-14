@@ -11,9 +11,9 @@ services:
       - NUMBA_CACHE_DIR=/tmp
 
     volumes:
-      # - type: bind
-      #   source: ./data/analyser
-      #   target: /data/
+      - type: bind
+        source: ./data/analyser
+        target: /data/
       - type: bind
         source: ./data/media/
         target: /media/
@@ -42,6 +42,7 @@ services:
     working_dir: /app/
 
     command: serve run inference_ray/deploy.yml
+    #command: uv run --package inference_ray serve run inference_ray/deploy.yml
     # command: ls inference_ray/deploy.yml
 
   analyser:
