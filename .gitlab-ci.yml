@@ -55,6 +55,9 @@ deploy_backend_dev:
     - export ANSIBLE_HOST_KEY_CHECKING=False
   script:
     - ansible-playbook -i inventory/tib_backend_dev.ini tib_backend_deploy.yml -e ansible_become_password=${ROOT_PASSWORD} -e "SCRIPT_NAME=${SCRIPT_NAME}" -e "SERVICE_NAME=${SERVICE_NAME}" -e "ANALYSER_HOST=${ANALYSER_HOST}" -e "ANALYSER_PORT=${ANALYSER_PORT}"
+  after_script:
+    - docker builder prune -f --filter "until=24h"
+    - docker container prune -f --filter "until=24h"
   # rules:
   #   - if: $CI_COMMIT_BRANCH == "main"
 
