@@ -103,6 +103,9 @@
         cmd: "apptainer build --force {{ app_dir }}/apptainer.sif {{ app_dir }}/apptainer.def"
       args:
         chdir: "{{ app_dir }}"
+      environment:
+        APPTAINER_TMPDIR: /data/tmp
+        APPTAINER_CACHEDIR: /data/tmp
       when: def_file_status.changed | default(false)
 
     - name: Copy systemd service file
