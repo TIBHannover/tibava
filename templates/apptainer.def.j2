@@ -26,7 +26,7 @@ Stage: builder
     export PATH="/root/.local/bin:/app/.venv/bin:$PATH"
     # Install system dependencies
     apt-get update && apt-get install -y --no-install-recommends \
-        libmagickwand-dev imagemagick curl ca-certificates
+        libmagickwand-dev imagemagick curl ca-certificates git
     rm -rf /var/lib/apt/lists/*
 
     # Install uv directly inside the container
