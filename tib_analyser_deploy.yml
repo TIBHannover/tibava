@@ -107,7 +107,7 @@
       environment:
         APPTAINER_TMPDIR: "{{ tmp_dir }}"
         APPTAINER_CACHEDIR: "{{ tmp_dir }}"
-      when: def_file_status.changed | default(false)
+      # when: def_file_status.changed | default(false)
 
     - name: Copy systemd service file
       ansible.builtin.template:
