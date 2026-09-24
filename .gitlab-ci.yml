@@ -65,6 +65,7 @@ deploy_analyser_dev:
   variables:
     # Custom variable set directly in YAML or defined in GitLab CI/CD UI
     APP_DIR: "/data/srv/tibava-dev"
+    TMP_DIR: "/data/tmp"
     ANALYSER_PORT: 54052
     VALKEY_HOST: "localhost"
     VALKEY_PORT: 6391

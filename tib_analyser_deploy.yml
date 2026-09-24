@@ -2,6 +2,7 @@
   hosts: all
   become: true
   vars:
+    tmp_dir: "{{ TMP_DIR | default('/tmp') }}"
     app_dir: "{{ APP_DIR | default('/data/srv/tibava') }}"
     script_name: "{{ SCRIPT_NAME | default('/tibava') }}"
     analyser_port: "{{ ANALYSER_PORT | default('54051') }}"
@@ -104,8 +105,8 @@
       args:
         chdir: "{{ app_dir }}"
       environment:
-        APPTAINER_TMPDIR: /data/tmp
-        APPTAINER_CACHEDIR: /data/tmp
+        APPTAINER_TMPDIR: { { tmp_dir } }
+        APPTAINER_CACHEDIR: { { tmp_dir } }
       when: def_file_status.changed | default(false)
 
     - name: Copy systemd service file
@@ -142,18 +143,18 @@
     - name: Download models archive
       ansible.builtin.get_url:
         url: "https://tib.eu/cloud/s/kAe3TXPfsBpwtwk/download/models.tar.gz"
-        dest: "/tmp/models.tar.gz"
+        dest: "{{ tmp_dir }}/models.tar.gz"
         mode: "0644"
 
     - name: "Extract archive into {{ app_dir }}/data/"
       ansible.builtin.unarchive:
-        src: "/tmp/models.tar.gz"
+        src: "{{ tmp_dir }}/models.tar.gz"
         dest: "{{ app_dir }}/data/"
         remote_src: true
 
     - name: Clean up tarball
       ansible.builtin.file:
-        path: "/tmp/models.tar.gz"
+        path: "{{ tmp_dir }}/models.tar.gz"
         state: absent
 
     ####
