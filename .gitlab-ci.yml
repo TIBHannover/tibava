@@ -84,6 +84,6 @@ deploy_analyser_dev:
     - chmod 700 ~/.ssh
     - export ANSIBLE_HOST_KEY_CHECKING=False
   script:
-    - ansible-playbook -i inventory/tib_analyser_dev.ini tib_analyser_deploy.yml -e ansible_become_password=${ROOT_PASSWORD}  -e "APP_DIR=${APP_DIR}" -e "SCRIPT_NAME=${SCRIPT_NAME}" -e "ANALYSER_PORT=${ANALYSER_PORT}" -e "VALKEY_HOST=${VALKEY_HOST}" -e "VALKEY_PORT=${VALKEY_PORT}" -e "INFERENCE_RAY_HOST=${INFERENCE_RAY_HOST}" -e "INFERENCE_RAY_PORT=${INFERENCE_RAY_PORT}" -e "INFERENCE_RAY_STATUS_PORT=${INFERENCE_RAY_STATUS_PORT}" -e "CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES}" -e "SERVICE_NAME=${SERVICE_NAME}"
+    - ansible-playbook -i inventory/tib_analyser_dev.ini tib_analyser_deploy.yml -e ansible_become_password=${ROOT_PASSWORD}  -e "TMP_DIR=${TMP_DIR}" -e "APP_DIR=${APP_DIR}" -e "SCRIPT_NAME=${SCRIPT_NAME}" -e "ANALYSER_PORT=${ANALYSER_PORT}" -e "VALKEY_HOST=${VALKEY_HOST}" -e "VALKEY_PORT=${VALKEY_PORT}" -e "INFERENCE_RAY_HOST=${INFERENCE_RAY_HOST}" -e "INFERENCE_RAY_PORT=${INFERENCE_RAY_PORT}" -e "INFERENCE_RAY_STATUS_PORT=${INFERENCE_RAY_STATUS_PORT}" -e "CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES}" -e "SERVICE_NAME=${SERVICE_NAME}"
   # rules:
   #   - if: $CI_COMMIT_BRANCH == "main"
