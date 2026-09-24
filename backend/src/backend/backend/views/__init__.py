@@ -22,6 +22,7 @@ from .cluster_item import *
 
 # TODO this is not the best way to do it
 from backend.tasks import *
+from backend.exporter import *
 
 from .video_analysis_state import *
 from .health import *

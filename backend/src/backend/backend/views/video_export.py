@@ -11,6 +11,7 @@ from dataclasses import dataclass
 
 from typing import List, Tuple
 
+from backend.exporter_manager import ExporterManager
 from django.views import View
 from django.http import JsonResponse
 from django.conf import settings
@@ -877,6 +878,8 @@ class VideoExport(View):
                 )
 
             elif request.POST.get("format") == "individual_csv":
+                export_manager = ExportManager()
+                export_manager("csv", video_db)
                 result = self.export_individual_csv(parameters, video_db)
                 return JsonResponse(
                     {

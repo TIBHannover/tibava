@@ -1,19 +1,19 @@
 import logging
 import os
-from random import random
 import uuid
+from random import random
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
-from backend.utils.color import rgb_to_hex, random_rgb
-
 from tibava_data import DataManager
-from backend.utils import media_path_to_video
-from .managers import TibavaUserManager
 
+from backend.utils import media_path_to_video
+from backend.utils.color import random_rgb, rgb_to_hex
+
+from .managers import TibavaUserManager
 
 logger = logging.getLogger(__name__)
 
@@ -104,6 +104,50 @@ class Plugin(models.Model):
         result = {
             "id": self.id.hex,
         }
+        return result
+
+
+class ExporterRun(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    update_date = models.DateTimeField(auto_now_add=True)
+    type = models.CharField(max_length=256)
+    progress = models.FloatField(default=0.0)
+    in_scheduler = models.BooleanField(default=False)
+
+    STATUS_UNKNOWN = "U"
+    STATUS_ERROR = "E"
+    STATUS_DONE = "D"
+    STATUS_RUNNING = "R"
+    STATUS_QUEUED = "Q"
+    STATUS_WAITING = "W"
+    STATUS = {
+        STATUS_UNKNOWN: "UNKNOWN",
+        STATUS_ERROR: "ERROR",
+        STATUS_DONE: "DONE",
+        STATUS_RUNNING: "RUNNING",
+        STATUS_QUEUED: "QUEUED",
+        STATUS_WAITING: "WAITING",
+    }
+
+    status = models.CharField(
+        max_length=2,
+        choices=[(k, v) for k, v in STATUS.items()],
+        default=STATUS_UNKNOWN,
+    )
+
+    def to_dict(self, include_refs_hashes=True, include_refs=False, **kwargs):
+        result = {
+            "id": self.id.hex,
+            "type": self.type,
+            "date": self.date,
+            "update_date": self.update_date,
+            "progress": self.progress,
+            "status": self.STATUS[self.status],
+        }
+        if include_refs_hashes:
+            result["video_id"] = self.video.id.hex
         return result
 
 

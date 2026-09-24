@@ -85,6 +85,9 @@ services:
 
     volumes:
       - type: bind
+        source: ./backend/
+        target: /app/backend
+      - type: bind
         source: ./data/media/
         target: /media
       - type: bind
@@ -116,6 +119,9 @@ services:
       - 8000:8000
 
     volumes:
+      - type: bind
+        source: ./backend/
+        target: /app/backend
       - type: bind
         source: ./data/media/
         target: /media
@@ -156,4 +162,7 @@ services:
       - type: bind
         source: ./data/media/
         target: /media
+      - type: bind
+        source: ./data/tmp
+        target: /tmp
     working_dir: /app/frontend

@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from backend.models import TibavaUser , Video
 from backend.views import VideoExport
+from backend.exporter_manager import ExporterManager
 import os
 
 class Command(BaseCommand):
@@ -20,8 +21,10 @@ class Command(BaseCommand):
                 video_dbs.extend(Video.objects.filter(owner=user))
         if options["video_ids"]:
             for video_id in options["video_ids"]:
-                video_dbs.append(Video.objects.get(video_id))
+                print(video_id)
+                video_dbs.append(Video.objects.get(id=video_id))
 
+        exporter_manager = ExporterManager()
         video_export_view = VideoExport()
         parameters = {
             "include_category":True,
@@ -33,6 +36,7 @@ class Command(BaseCommand):
 
         os.makedirs(options["output_folder"], exist_ok=True)
         for video_db in video_dbs:
-            with open(os.path.join(options["output_folder"],f"{video_db.name}.cvs"), "w") as f:
-                f.write(video_export_view.export_merged_csv(parameters=parameters, video_db=video_db))
-            
+
+            exporter_manager("csv", video_db)
+            # with open(os.path.join(options["output_folder"],f"{video_db.name}.cvs"), "w") as f:
+            #     f.write(video_export_view.export_merged_csv(parameters=parameters, video_db=video_db))

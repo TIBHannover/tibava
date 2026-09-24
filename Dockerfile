@@ -19,11 +19,11 @@ ARG WORKSPACE_MEMBER
 COPY uv.lock /app/uv.lock
 COPY .python-version /app/.python-version
 COPY pyproject.toml /app/pyproject.toml
-# COPY README.md /app/README.md
 COPY packages/ /app/packages/
-COPY backend/ /app/backend/
 COPY analyser/ /app/analyser/
 COPY inference_ray/ /app/inference_ray/
+# Copy only the pyproject.toml for the rest of the sub projects
+COPY backend/pyproject.toml /app/backend/pyproject.toml
 
 # Install dependencies into a virtual environment at /app/.venv
 # We use --no-install-project because the application code isn't copied yet

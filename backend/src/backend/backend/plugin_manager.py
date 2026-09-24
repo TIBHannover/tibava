@@ -1,17 +1,17 @@
-import logging
-import traceback
-import sys
-import os
 import json
-from typing import List
+import logging
+import os
+import sys
+import traceback
+from typing import Any, List
 
 from celery import shared_task
-from backend.models import PluginRun, Video, TibavaUser, PluginRunResult
-
-from backend.exceptions import RateLimitExceededException
+from django.conf import settings
 from tibava_data import DataManager
 
-from django.conf import settings
+from backend.exceptions import RateLimitExceededException
+from backend.models import PluginRun, PluginRunResult, TibavaUser, Video
+from backend.utils.parser import Parser
 
 # class PluginRunResults(datacla):
 
@@ -27,8 +27,8 @@ class PluginManager:
         super().__init__(**kwargs)
 
     @classmethod
-    def export_parser(cls, name):
-        def export_helper(parser):
+    def export_parser(cls, name: str):
+        def export_helper(parser: Parser):
             cls._parser[name] = parser
             return parser
 
@@ -47,24 +47,15 @@ class PluginManager:
 
     def plugins(self):
         plugins = self._plugins
-        print(
-            "#### 1",
-            plugins,
-            settings.PLUGIN_WHITELIST,
-            settings.PLUGIN_BLACKLIST,
-            flush=True,
-        )
         if settings.PLUGIN_WHITELIST is not None:
             plugins = {
                 x: y for x, y in plugins.items() if x in settings.PLUGIN_WHITELIST
             }
 
-        print("#### 2", plugins, flush=True)
         if settings.PLUGIN_BLACKLIST is not None:
             plugins = {
                 x: y for x, y in plugins.items() if x not in settings.PLUGIN_BLACKLIST
             }
-        print("#### 3", plugins, flush=True)
         return plugins
 
     def __call__(
