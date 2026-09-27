@@ -18,7 +18,11 @@ from backend.models import (
 )
 from backend.plugin_manager import PluginManager
 from backend.utils import image_normalize, image_resize, media_path_to_video
-from backend.utils.llm_client import GeolocationLLMClient, build_geolocation_prompt
+from backend.utils.llm_client import (
+    GeolocationLLMClient,
+    MockGeolocationLLMClient,
+    build_geolocation_prompt,
+)
 from backend.utils.parser import Parser
 from backend.utils.task import Task
 from django.conf import settings
@@ -124,12 +128,22 @@ class Geolocation(Task):
         if not shot_timeline_id:
             raise ValueError("Geolocation requires a shot_timeline_id")
 
-        api_url = settings.GEOLOCATION_LLM_API_URL
-        api_key = settings.GEOLOCATION_LLM_API_KEY
-        if not api_url or not api_key:
-            raise ValueError(
-                "Geolocation LLM is not configured: set GEOLOCATION_LLM_API_URL "
-                "and GEOLOCATION_LLM_API_KEY"
+        if settings.DEBUG:
+            client = MockGeolocationLLMClient()
+        else:
+            api_url = settings.GEOLOCATION_LLM_API_URL
+            api_key = settings.GEOLOCATION_LLM_API_KEY
+            model = settings.GEOLOCATION_LLM_API_MODEL
+            if not api_url or not api_key or not model:
+                raise ValueError(
+                    "Geolocation LLM is not configured: set GEOLOCATION_LLM_API_URL, "
+                    "GEOLOCATION_LLM_API_KEY, and GEOLOCATION_LLM_API_MODEL"
+                )
+            client = GeolocationLLMClient(
+                api_url=api_url,
+                api_key=api_key,
+                model=model,
+                timeout=settings.GEOLOCATION_LLM_TIMEOUT_SECONDS,
             )
 
         if plugin_run is not None:
@@ -152,7 +166,6 @@ class Geolocation(Task):
         frames_by_shot = _extract_shot_frames(video_path, shots_with_timestamps)
 
         prompt = build_geolocation_prompt(parameters.get("year"), parameters.get("prompt"))
-        client = GeolocationLLMClient(api_url=api_url, api_key=api_key)
 
         results_by_shot = {}
         n_shots = len(shot_segments)
@@ -163,7 +176,15 @@ class Geolocation(Task):
                 results_by_shot[shot.id] = []
             else:
                 encoded_frames = [_encode_frame_jpeg(frame) for frame in frames]
-                candidates = client.locate(encoded_frames, prompt)
+                candidates = client.locate(
+                    encoded_frames, prompt, request_label=f"shot={shot.id}"
+                )
+                logger.info(
+                    "Geolocation parsed candidates shot=%s (threshold=%s): %s",
+                    shot.id,
+                    confidence_threshold,
+                    [(c["label"], c["confidence"]) for c in candidates],
+                )
                 results_by_shot[shot.id] = [
                     c for c in candidates if c["confidence"] >= confidence_threshold
                 ]
