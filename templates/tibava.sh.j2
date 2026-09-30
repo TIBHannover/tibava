@@ -12,7 +12,7 @@ apptainer exec --bind "$TIBAVA_DATA/redis/:/data" \
 
 # 2. Start Ray Head Daemon in background
 apptainer exec --bind "$TIBAVA_DATA/ray:/tmp,$TIBAVA_DATA/analyser/:/data,$TIBAVA_DATA/models/:/models/" \
-    --env HF_HOME=/models,NUMBA_CACHE_DIR=/tmp \
+    --env HF_HOME=/models,NUMBA_CACHE_DIR=/tmp,HF_TOKEN={{ hf_token }} \
     --no-home \
     --no-mount /etc/localtime \
     apptainer.sif \
