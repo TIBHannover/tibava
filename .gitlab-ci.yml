@@ -75,7 +75,7 @@ deploy_analyser_dev:
     INFERENCE_RAY_STATUS_PORT: 52366
     CUDA_VISIBLE_DEVICES: "2,3"
     SERVICE_NAME: "tibava_dev_analyser.service"
-    HF_TOKEN: "$HF_TOKEN"
+    # HF_TOKEN: "$HF_TOKEN"
   before_script:
     - echo "$SSH_PRIVATE_KEY_GPU_L4_02"
     - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
