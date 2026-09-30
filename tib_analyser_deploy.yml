@@ -14,6 +14,7 @@
     inference_ray_status_port: "{{ INFERENCE_RAY_STATUS_PORT | default('52365') }}"
     cuda_visible_devices: "{{ CUDA_VISIBLE_DEVICES | default('0') }}"
     service_name: "{{ SERVICE_NAME | default('tibava_analyser.service') }}"
+    hf_token: "{{ HF_TOKEN }}"
 
   tasks:
     - name: Ensure the ansible group exists
