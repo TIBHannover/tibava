@@ -23,40 +23,6 @@ provides = {
 }
 
 
-def get_speaker_turns(
-    speaker_segments, gap: float = 0.01
-) -> Dict[str, list[Annotation]]:
-    speaker_turns = []
-    for segment in sorted(speaker_segments, key=lambda x: x["start"]):
-        spk_turn_segment = {
-            "start": segment["start"],
-            "end": segment["end"],
-            "text": segment.get("text", "").strip(),
-            "speaker": segment.get("speaker", "Unknown"),
-        }
-
-        if not speaker_turns:
-            speaker_turns.append(spk_turn_segment)
-        else:
-            last_turn = speaker_turns[-1]
-            if last_turn["speaker"] == spk_turn_segment["speaker"]:
-                last_turn["end"] = spk_turn_segment["end"]
-                last_turn["text"] += " " + spk_turn_segment["text"]
-            else:
-                if spk_turn_segment["start"] - last_turn["end"] <= gap:
-                    spk_turn_segment["start"] = last_turn["end"] + gap
-                speaker_turns.append(spk_turn_segment)
-
-    speakers = {}
-    for turn in speaker_turns:
-        if not turn["speaker"] in speakers.keys():
-            speakers[turn["speaker"]] = []
-        speakers[turn["speaker"]].append(
-            Annotation(start=turn["start"], end=turn["end"], labels=[turn["text"]])
-        )
-    return speakers
-
-
 @AnalyserPluginManager.export("whisper_x")
 class WhisperX(
     AnalyserPlugin,
@@ -126,12 +92,35 @@ class WhisperX(
                 speaker_transcription = whisperx.assign_word_speakers(
                     diarize_segments, aligned_transcription
                 )
-                speaker_turns = get_speaker_turns(speaker_transcription["segments"])
 
-                for speaker, annotations in speaker_turns.items():
-                    with output_data.create_data("AnnotationData") as ann_data:
-                        ann_data.annotations.extend(annotations)
-                        ann_data.name = speaker
+                transcript = []
+                speakers = []
+                for segment in sorted(
+                    speaker_transcription["segments"], key=lambda x: x["start"]
+                ):
+                    transcript.append(
+                        Annotation(
+                            start=segment["start"],
+                            end=segment["end"],
+                            labels=[segment.get("text", "").strip()],
+                        )
+                    )
+
+                    speakers.append(
+                        Annotation(
+                            start=segment["start"],
+                            end=segment["end"],
+                            labels=[segment.get("speaker", "Unknown")],
+                        )
+                    )
+
+                with output_data.create_data("AnnotationData") as ann_data:
+                    ann_data.annotations.extend(transcript)
+                    ann_data.name = "Speech Transcript"
+
+                with output_data.create_data("AnnotationData") as ann_data:
+                    ann_data.annotations.extend(speakers)
+                    ann_data.name = "Speaker"
 
                 self.update_callbacks(callbacks, progress=1.0)
                 return {"annotations": output_data}
