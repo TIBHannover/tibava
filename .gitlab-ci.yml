@@ -46,7 +46,6 @@ deploy_backend_dev:
     ANALYSER_HOST: gpu-l4-02.research.tib.eu
     ANALYSER_PORT: 54052
   before_script:
-    - echo "$SSH_PRIVATE_KEY_AVA11"
     - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY_AVA11" | tr -d '\r' | ssh-add -
@@ -77,7 +76,6 @@ deploy_analyser_dev:
     SERVICE_NAME: "tibava_dev_analyser.service"
     # HF_TOKEN: "$HF_TOKEN"
   before_script:
-    - echo "$SSH_PRIVATE_KEY_GPU_L4_02"
     - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY_GPU_L4_02" | tr -d '\r' | ssh-add -

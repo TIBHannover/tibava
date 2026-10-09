@@ -61,7 +61,7 @@ services:
       - THUMBNAIL_URL={{ script_name }}/thumbnails/
       - ANALYSER_GRPC_HOST={{ analyser_host }}
       - ANALYSER_GRPC_PORT={{ analyser_port }}
-    
+
     command: celery -A tibava worker -l INFO  --concurrency=20 --pool=threads
 
     networks:
@@ -128,7 +128,7 @@ services:
         target: /data/predictions/
       - type: bind
         source: ./data/media/
-        target: /dat/media
+        target: /data/media
     working_dir: /app/frontend
     depends_on:
       - backend
