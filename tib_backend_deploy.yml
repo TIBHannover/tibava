@@ -1,6 +1,7 @@
 - name: Deploy GitLab Project Application
   hosts: all
   become: true
+  become_method: su
   vars:
     app_dir: "{{ APP_DIR | default('/srv/tibava') }}"
     script_name: "{{ SCRIPT_NAME | default('/tibava') }}"
@@ -12,12 +13,12 @@
     - name: Run build and deployment tasks
       block:
         - name: Ensure the tibava group exists
-          group:
+          ansible.builtin.group:
             name: tibava
             state: present
 
         - name: Ensure the tibava user exists
-          user:
+          ansible.builtin.user:
             name: tibava
             group: tibava
             shell: /bin/bash
@@ -31,7 +32,7 @@
               - gnupg
               - acl
             state: present
-            update_cache: yes
+            update_cache: true
 
         - name: Create directory for apt keyrings
           ansible.builtin.file:
@@ -39,7 +40,7 @@
             state: directory
             mode: "0755"
 
-        - name: Download Docker's official GPG key
+        - name: Download Docker official GPG key
           ansible.builtin.get_url:
             url: https://download.docker.com/linux/debian/gpg
             dest: /etc/apt/keyrings/docker.asc
@@ -51,7 +52,6 @@
             state: present
             filename: docker
 
-        # 5. Install Docker Engine and the Compose Plugin
         - name: Install Docker Packages
           ansible.builtin.apt:
             name:
@@ -62,12 +62,11 @@
             state: present
             update_cache: true
 
-        - name: Ensure user 'tibava' is in the 'docker' group
+        - name: Ensure user tibava is in the docker group
           ansible.builtin.user:
             name: tibava
             groups: docker
-            append: yes
-          notify: Reload systemd and restart app
+            append: true
 
         - name: Ensure target directory exists
           ansible.builtin.file:
@@ -89,11 +88,10 @@
         - name: Copy systemd service file
           ansible.builtin.template:
             src: templates/tibava_backend.service.j2
-            dest: /etc/systemd/system/{{ service_name }}
+            dest: "/etc/systemd/system/{{ service_name }}"
             owner: root
             group: root
             mode: "0644"
-          notify: Reload systemd and restart app
 
         - name: Copy docker compose file
           ansible.builtin.template:
@@ -127,19 +125,29 @@
             group: root
             mode: "0644"
 
-        - name: Force systemd to reload config now
-          ansible.builtin.systemd:
-            daemon_reload: yes
+        - name: Build Docker images using BuildKit
+          ansible.builtin.command:
+            cmd: docker compose build
+            chdir: "{{ app_dir }}"
+          environment:
+            DOCKER_BUILDKIT: "1"
+            COMPOSE_DOCKER_CLI_BUILD: "1"
+          become: true
+          become_user: tibava
 
-        - name: Restart application service (Example)
+        - name: Reload systemd configuration
+          ansible.builtin.systemd:
+            daemon_reload: true
+
+        - name: Restart application service
           ansible.builtin.systemd:
             name: "{{ service_name }}"
             state: restarted
+            enabled: true
 
-        # Update Webserver and Backend
-        - name: Wait for backend service to become healthy (HTTP)
+        - name: Wait for backend service to become healthy
           ansible.builtin.uri:
-            url: "http://localhost:8000{{script_name}}/backend/healthz/readiness"
+            url: "http://localhost:8000{{ script_name }}/backend/healthz/readiness"
             status_code: 200
           register: result
           until: result.status == 200
@@ -167,15 +175,12 @@
             env:
               NODE_OPTIONS: "--max-old-space-size=4096"
           register: exec_result
+
       always:
-        - name: Clean up unused Docker build cache and layers
-          ansible.builtin.command: docker builder prune -f
+        - name: Clean up old Docker build cache
+          ansible.builtin.command: docker builder prune -f --filter "until=24h"
           changed_when: false
 
-  handlers:
-    - name: Reload systemd and restart app
-      ansible.builtin.systemd_service:
-        name: "{{ service_name }}"
-        state: restarted
-        daemon_reload: true
-        enabled: true
+        - name: Clean up dangling container images
+          ansible.builtin.command: docker image prune -f
+          changed_when: false

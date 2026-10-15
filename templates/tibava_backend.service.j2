@@ -1,14 +1,26 @@
 [Unit]
-Description=My GitLab Deployed Application
-After=network.target
+Description=TIB-AV-A Backend Service
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
 
 [Service]
 Type=oneshot
-User=tibava
 RemainAfterExit=yes
-WorkingDirectory=/srv/tibava/
-ExecStart=/usr/bin/docker compose up -d --build --remove-orphans
-ExecStop=/usr/bin/docker compose down
+User=tibava
+Group=tibava
+WorkingDirectory={{ app_dir }}
+
+# Clean up any leftover or crashed containers before starting
+ExecStartPre=-/usr/bin/docker compose down --remove-orphans
+
+# Start existing built images without triggering a full rebuild on reboot
+ExecStart=/usr/bin/docker compose up -d --remove-orphans
+
+# Graceful stop with adequate timeout
+ExecStop=/usr/bin/docker compose down --remove-orphans
+TimeoutStopSec=60
+
 Environment=NODE_ENV=production
 
 [Install]

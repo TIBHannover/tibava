@@ -27,7 +27,7 @@ COPY inference_ray/ /app/inference_ray/
 
 # Install dependencies into a virtual environment at /app/.venv
 # We use --no-install-project because the application code isn't copied yet
-RUN --mount=type=cache,target=/root/.cache/uv \
+RUN --mount=type=cache,target=/root/.cache/uv,sharing=locked \
     # uv sync --frozen --no-dev --package ${WORKSPACE_MEMBER}
     uv sync --frozen --no-dev --package ${WORKSPACE_MEMBER} --no-editable
 
