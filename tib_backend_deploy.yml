@@ -81,7 +81,7 @@
           ansible.builtin.git:
             repo: "https://github.com/TIBHannover/tibava.git"
             dest: "{{ app_dir }}"
-            version: "feature/ansible"
+            version: "main"
             force: true
           become: true
           become_user: tibava

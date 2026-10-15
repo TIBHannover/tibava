@@ -49,7 +49,7 @@
       ansible.builtin.git:
         repo: "https://github.com/TIBHannover/tibava.git"
         dest: "{{ app_dir }}"
-        version: "feature/ansible"
+        version: "main"
         force: true
       become: true
       become_user: labs
@@ -139,6 +139,8 @@
       ansible.builtin.file:
         path: "{{ app_dir }}/data"
         state: directory
+        owner: labs
+        group: labs
         mode: "0755"
 
     - name: Download models archive
@@ -152,6 +154,8 @@
         src: "{{ tmp_dir }}/models.tar.gz"
         dest: "{{ app_dir }}/data/"
         remote_src: true
+        owner: labs
+        group: labs
 
     - name: Clean up tarball
       ansible.builtin.file:
