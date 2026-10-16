@@ -10,7 +10,7 @@ from backend.utils.parser import Parser
 from backend.utils.task import Task
 from backend.utils.color import get_color_from_label
 
-from tibava_data import DataManager  # type: ignore
+from tibava_data import DataManager, Shot, ShotsData
 from backend.models import (
     Annotation,
     PluginRun,
@@ -29,7 +29,9 @@ class AudioClassificationParser(Parser):
     def __init__(self):
         self.valid_parameter = {
             "timeline": {"parser": str, "default": "Audio Classification"},
-            "segment_type": {"parser": str},  # Speaker or Shot
+            "shot_timeline_id": {"default": None},
+            "top_k": {"parser": int, "default": 3},
+            "threshold": {"parser": float, "default": 0.5},
         }
 
 
@@ -74,41 +76,32 @@ class AudioClassification(Task):
         if audio_result is None:
             raise Exception
 
-        if parameters.get("segment_type") == "Speaker":
-            segmentation_result = self.run_analyser(
-                client,
-                "whisper_x",
-                parameters={"language_code": None},
-                inputs={**audio_result[0]},
-                outputs=["annotations"],
+        shots_id = None
+        if parameters.get("shot_timeline_id"):
+            shot_timeline_db = Timeline.objects.get(
+                id=parameters.get("shot_timeline_id")
             )
-        elif parameters.get("segment_type") == "Shot":
-            segmentation_result = self.run_analyser(
-                client,
-                "transnet_shotdetection",
-                parameters={"fps": 2.0},  # default value
-                inputs={"video": video_id},
-                outputs=["shots"],
+            shot_timeline_segments = TimelineSegment.objects.filter(
+                timeline=shot_timeline_db
             )
-            logging.info(segmentation_result)
-            segmentation_result[0]["annotations"] = segmentation_result[0]["shots"]
-        else:
-            raise NotImplementedError(
-                f"Unknown segment type: {parameters.get('segment_type')}"
-            )
-        if segmentation_result is None:
-            raise Exception
 
-        logging.info(f"{segmentation_result=}")
+            shots = manager.create_data("ShotsData")
+            with shots:
+                for x in shot_timeline_segments:
+                    shots.shots.append(Shot(start=x.start, end=x.end))
+            shots_id = client.upload_data(shots)
 
         result = self.run_analyser(
             client,
             "audio_classification",
             inputs={
                 "audio": audio_result[0]["audio"],
-                "annotations": segmentation_result[0]["annotations"],
+                "shots": shots_id,
             },
-            parameters={"segment_type": parameters.get("segment_type")},
+            parameters={
+                "top_k": parameters.get("top_k"),
+                "threshold": parameters.get("threshold"),
+            },
             downloads=["annotations"],
         )
 
@@ -116,69 +109,45 @@ class AudioClassification(Task):
         if result is None:
             raise Exception
 
-        def create_timelines(
-            data,
-            timelines_name: str,
-            annotation_key: str,
-        ):
-            data.extract_all(manager)
-
-            parent_timeline = Timeline.objects.create(
-                video=video,
-                name=timelines_name,
-                type=Timeline.TYPE_ANNOTATION,
-            )
-
-            result_timelines = {}
-            for _, sub_data in data:
-                with sub_data as sub_data:
-                    timeline = Timeline.objects.create(
-                        video=video,
-                        name=sub_data.name,
-                        type=Timeline.TYPE_ANNOTATION,
-                        parent=parent_timeline,
-                    )
-                    result_timelines[f"{timelines_name}_{sub_data.name}"] = (
-                        timeline.id.hex
-                    )
-                    for annotation in sub_data.annotations:
-                        timeline_segment_db = TimelineSegment.objects.create(
-                            timeline=timeline,
-                            start=annotation.start,
-                            end=annotation.end,
-                        )
-                        for label_object in annotation.labels:
-                            label = str(label_object[annotation_key])
-                            if len(label) > settings.ANNOTATION_MAX_LENGTH:
-                                label = (
-                                    label[: max(0, settings.ANNOTATION_MAX_LENGTH - 4)]
-                                    + " ..."
-                                )
-                            annotation_db, _ = Annotation.objects.get_or_create(
-                                name=label,
-                                video=video,
-                                owner=user,
-                                color=get_color_from_label(label),
-                            )
-
-                            TimelineSegmentAnnotation.objects.create(
-                                annotation=annotation_db,
-                                timeline_segment=timeline_segment_db,
-                            )
-            return result_timelines
-
         with transaction.atomic():
             result_timelines = {}
             with result[1]["annotations"] as data:
                 logging.info(data)
-                result_timelines.update(
-                    create_timelines(data, parameters["timeline"], "label_pred")
+
+                timeline = Timeline.objects.create(
+                    video=video,
+                    name=parameters.get("timeline"),
+                    type=Timeline.TYPE_ANNOTATION,
                 )
+                # result_timelines[f"{timelines_name}_{sub_data.name}"] = timeline.id.hex
+                for annotation in data.annotations:
+                    timeline_segment_db = TimelineSegment.objects.create(
+                        timeline=timeline,
+                        start=annotation.start,
+                        end=annotation.end,
+                    )
+                    for label in annotation.labels:
+                        if len(label) > settings.ANNOTATION_MAX_LENGTH:
+                            label = (
+                                label[: max(0, settings.ANNOTATION_MAX_LENGTH - 4)]
+                                + " ..."
+                            )
+                        annotation_db, _ = Annotation.objects.get_or_create(
+                            name=label,
+                            video=video,
+                            owner=user,
+                            color=get_color_from_label(label),
+                        )
+
+                        TimelineSegmentAnnotation.objects.create(
+                            annotation=annotation_db,
+                            timeline_segment=timeline_segment_db,
+                        )
 
             return {
                 "plugin_run": plugin_run.id.hex,
                 "plugin_run_results": [],
-                "timelines": result_timelines,
+                "timelines": timeline,
                 "data": {
                     "annotations": result[1]["annotations"].id,
                 },

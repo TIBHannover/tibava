@@ -1,10 +1,5 @@
 <template>
-  <v-dialog
-    v-model="dialog"
-    max-width="90%"
-    min-width="600px"
-    :fullscreen="$vuetify.breakpoint.xsOnly"
-  >
+  <v-dialog v-model="dialog" max-width="90%" min-width="600px" :fullscreen="$vuetify.breakpoint.xsOnly">
     <template v-slot:activator="{ on, attrs }">
       <slot name="activator" :on="on" :attrs="attrs">
         <v-btn tile text v-bind="attrs" v-on="on">
@@ -37,98 +32,48 @@
             <h1 class="mt-2">{{ $t("terms.title") }}</h1>
             <p v-html="$t('terms.content')"></p>
             <v-form class="terms-input">
-              <v-checkbox
-                v-model="checkbox"
-                label="Do you agree with the terms of services?"
-                required
-              >
+              <v-checkbox v-model="checkbox" label="Do you agree with the terms of services?" required>
               </v-checkbox>
             </v-form>
           </v-tab-item>
           <v-tab-item style="height: 100%">
             <v-row style="height: 100%">
-              <v-col
-                cols="3"
-                style="height: 100%; display: flex; flex-direction: column"
-              >
-                <v-sheet
-                  class="pa-1"
-                  style="background-color: rgb(174, 19, 19) !important"
-                >
-                  <v-text-field
-                    v-model="search"
-                    label="Search Plugin"
-                    class="searchField"
-                    dark
-                    flat
-                    solo-inverted
-                    hide-details
-                    clearable
-                    clear-icon="mdi-close-circle-outline"
-                  >
+              <v-col cols="3" style="height: 100%; display: flex; flex-direction: column">
+                <v-sheet class="pa-1" style="background-color: rgb(174, 19, 19) !important">
+                  <v-text-field v-model="search" label="Search Plugin" class="searchField" dark flat solo-inverted
+                    hide-details clearable clear-icon="mdi-close-circle-outline">
                   </v-text-field>
                 </v-sheet>
-                <v-treeview
-                  :items="plugins_sorted"
-                  :search="search"
-                  :open.sync="open"
-                  activatable
-                  open-all
-                  style="cursor: pointer; overflow-y: scroll"
-                  :active.sync="active"
-                >
+                <v-treeview :items="plugins_sorted" :search="search" :open.sync="open" activatable open-all
+                  style="cursor: pointer; overflow-y: scroll" :active.sync="active">
                   <template v-slot:prepend="{ item }">
                     <v-icon>{{ item.icon }}</v-icon>
                   </template>
                 </v-treeview>
               </v-col>
-              <v-col
-                cols="9"
-                style="height: 100%; display: flex; flex-direction: column"
-              >
-                <div
-                  v-if="!selected"
-                  class="text-h6 grey--text font-weight-light"
-                  style="text-align: center"
-                >
+              <v-col cols="9" style="height: 100%; display: flex; flex-direction: column">
+                <div v-if="!selected" class="text-h6 grey--text font-weight-light" style="text-align: center">
                   {{ $t("modal.plugin.search.select") }}
                 </div>
-                <v-card
-                  v-else
-                  :key="selected.id"
-                  class="mx-auto overflow-y-auto"
-                  style="height: 100%"
-                  flat
-                >
+                <v-card v-else :key="selected.id" class="mx-auto overflow-y-auto" style="height: 100%" flat>
                   <v-card-title class="mb-0">
                     {{ selected.name }}
                   </v-card-title>
                   <v-card-text>
-                    <div
-                      style="padding-bottom: 2em"
-                      v-html="selected.description"
-                    ></div>
-                    <Parameters
-                      :parameters="selected.parameters"
-                      :videoIds="videoIds"
-                    >
+                    <div style="padding-bottom: 2em" v-html="selected.description"></div>
+                    <Parameters :parameters="selected.parameters" :videoIds="videoIds">
                     </Parameters>
-                    <v-expansion-panels
-                      v-if="
-                        selected.optional_parameters &&
-                        selected.optional_parameters.length > 0
-                      "
-                    >
+                    <v-expansion-panels v-if="
+                      selected.optional_parameters &&
+                      selected.optional_parameters.length > 0
+                    ">
                       <v-expansion-panel>
                         <v-expansion-panel-header expand-icon="mdi-menu-down">
                           Advanced Options
                         </v-expansion-panel-header>
 
                         <v-expansion-panel-content>
-                          <Parameters
-                            :parameters="selected.optional_parameters"
-                            :videoIds="videoIds"
-                          >
+                          <Parameters :parameters="selected.optional_parameters" :videoIds="videoIds">
                           </Parameters>
                         </v-expansion-panel-content>
                       </v-expansion-panel>
@@ -144,26 +89,16 @@
 
       <v-spacer></v-spacer>
       <v-card-actions class="pt-0">
-        <v-btn
-          v-if="tab == 0"
-          class="mr-4"
-          :disabled="!checkbox"
-          @click="tab++"
-        >
+        <v-btn v-if="tab == 0" class="mr-4" :disabled="!checkbox" @click="tab++">
           {{ $t("modal.plugin.continue") }}
         </v-btn>
-        <v-btn
-          v-if="tab == 1"
-          :disabled="!selected"
-          @click="
-            runPlugin(
-              selected.plugin,
-              selected.parameters,
-              selected.optional_parameters
-            )
-          "
-          >{{ $t("modal.plugin.run") }}</v-btn
-        >
+        <v-btn v-if="tab == 1" :disabled="!selected" @click="
+          runPlugin(
+            selected.plugin,
+            selected.parameters,
+            selected.optional_parameters
+          )
+          ">{{ $t("modal.plugin.run") }}</v-btn>
         <v-btn @click="dialog = false">{{ $t("modal.plugin.close") }}</v-btn>
       </v-card-actions>
     </v-card>
@@ -367,15 +302,36 @@ export default {
                   value: this.$t("modal.plugin.audio_classification.timeline_name"),
                   text: this.$t("modal.plugin.timeline_name"),
                 },
+
                 {
-                  field: "select_options",
-                  text: this.$t("modal.plugin.audio_classification.segmentation_selector_description"),
-                  items: ["Shot", "Speaker"],
-                  value: "Shot",
-                  name: "segment_type",
+                  field: "select_timeline",
+                  name: "shot_timeline_id",
+                  // value: this.shot_timelines_names[0],
+                  // items: this.shot_timelines_names,
+                  text: this.$t("modal.plugin.shot_timeline_name"),
+                  hint: this.$t("modal.plugin.shot_timeline_hint"),
                 },
               ],
-              optional_parameters: [],
+              optional_parameters: [
+                {
+                  field: "slider",
+                  min: 1,
+                  max: 5,
+                  value: 3,
+                  step: 1,
+                  name: "top_k",
+                  text: this.$t("modal.plugin.audio_classification.top_k"),
+                },
+                {
+                  field: "slider",
+                  min: 0.0,
+                  max: 1.0,
+                  value: 0.5,
+                  step: 0.05,
+                  name: "threshold",
+                  text: this.$t("modal.plugin.audio_classification.threshold"),
+                },
+              ],
             },
           ],
         },

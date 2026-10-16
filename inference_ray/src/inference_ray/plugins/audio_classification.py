@@ -3,10 +3,9 @@ from typing import List, Tuple, Callable, Dict, BinaryIO
 from pathlib import Path
 import sys
 
-from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager  # type: ignore
-from tibava_data import AudioData, ListData, Annotation  # type: ignore
-
-from tibava_data import DataManager, Data  # type: ignore
+from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
+from tibava_data import AudioData, ListData, Annotation, ShotsData, AnnotationData
+from tibava_data import DataManager, Data
 
 import logging
 
@@ -14,17 +13,19 @@ default_config = {
     "data_dir": "/data/",
     "host": "localhost",
     "port": 6379,
-    "save_dir": Path("/models/audio_classification"),
 }
 
-default_parameters = {}
+default_parameters = {
+    "top_k": 3,
+    "threshold": 0.5,
+}
 
 requires = {
+    "shots": ShotsData,
     "audio": AudioData,
-    "annotations": ListData,
 }
 
-provides = {"annotations": ListData}
+provides = {"annotations": AnnotationData}
 
 """
 Additional files needed in data/models/audio_classification/
@@ -583,6 +584,7 @@ class AudioClassification(
         # self.model_name = self.config.get("model", "audio_classification_model")
 
     def split_audio_fd_with_librosa(
+        self,
         audio_fd: BinaryIO,
         segments: List[Tuple[float, float]],
         target_sr: int = None,
@@ -656,7 +658,7 @@ class AudioClassification(
         from typing import BinaryIO, List, Tuple
         import librosa
 
-        device = "cuda:0" if torch.cuda.is_available() else "cpu"
+        self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
         def aggregate_probs(
             top3_label_probs: List[Tuple[List[str], List[float]]],
@@ -681,14 +683,17 @@ class AudioClassification(
             )[:3]
             return top3_label_probs
 
-        def classify_segments(audio_file: str) -> List[Annotation]:
-
+        def classify_segments(audio_file: str) -> List[Tuple[str, float]]:
+            results = []
             target_length = 1024
             norm_mean = -4.268
             norm_std = 4.569
             # Load and resample audio
             wav, sr = sf.read(audio_file)
-            waveform = torch.tensor(wav).float().cuda()
+            waveform = torch.tensor(wav).float()
+
+            if self.device == "cuda":
+                waveform = waveform.cuda()
             if sr != 16000:
                 waveform = torchaudio.functional.resample(waveform, sr, 16000)
 
@@ -714,60 +719,67 @@ class AudioClassification(
 
             # Normalize
             mel = (mel - norm_mean) / (norm_std * 2)
-            mel = mel.unsqueeze(0).cuda()  # shape: [1, 1, T, F]
+            mel = mel.unsqueeze(0)
+            if self.device == "cuda":
+                mel = mel.cuda()  # shape: [1, 1, T, F]
 
             with torch.no_grad():
                 logits = self.model(mel)
                 probs = torch.sigmoid(logits)
-                values, indices = torch.topk(probs, 3)
+                values, indices = torch.topk(probs, parameters.get("top_k", 3), dim=1)
                 print(values, indices)
 
                 print("\n************ Acoustic Event Inference ************")
                 print("LABEL".ljust(30) + "PREDICTION")
                 for i, v in zip(indices[0], values[0]):
                     print(f"{AUDIO_CLASSIFICATION_VOCAB[i.item()]:<30} {v.item():.3f}")
+                    if v.item() > parameters.get("threshold", 0.5):
+                        results.append(
+                            (
+                                AUDIO_CLASSIFICATION_VOCAB[i.item()],
+                                v.item(),
+                            )
+                        )
                 print("**************************************************\n")
+            return results
 
         if self.model is None:
             model_id = "worstchan/EAT-base_epoch30_finetune_AS2M"
-            self.model = (
-                AutoModel.from_pretrained(model_id, trust_remote_code=True)
-                .eval()
-                .cuda()
-            )
+            self.model = AutoModel.from_pretrained(
+                model_id, trust_remote_code=True
+            ).eval()
+
+            if self.device == "cuda":
+                self.model = self.model.cuda()
 
         with (
             inputs["audio"] as input_audio,
-            inputs["annotations"] as input_annotations,
-            data_manager.create_data("ListData") as output_data,
+            inputs["shots"] as input_shots,
+            data_manager.create_data("AnnotationData") as output_data,
         ):
+            segments = [(shot.start, shot.end) for shot in input_shots.shots]
             with input_audio.open_audio("r") as audio_file:
-                sampling_rate = 16000
-                audio_array, _ = librosa.load(audio_file, sr=sampling_rate)
-                if parameters.get("segment_type") == "Shot":
-                    predictions = classify_segments(
-                        audio_array, input_annotations, sampling_rate
+                audio_splits = self.split_audio_fd_with_librosa(
+                    segments=segments, audio_fd=audio_file
+                )
+
+                for i, audio_split in enumerate(audio_splits):
+                    results = classify_segments(audio_split)
+                    output_data.annotations.append(
+                        Annotation(
+                            start=segments[i][0],
+                            end=segments[i][1],
+                            labels=[x[0] for x in results],
+                        )
                     )
-
-                    with output_data.create_data("AnnotationData") as ann_data:
-                        ann_data.annotations.extend(predictions)
-                        ann_data.name = "Shot"
-
-                elif parameters.get("segment_type") == "Speaker":
-                    for _, speaker_data in input_annotations:
-                        with speaker_data as speaker_data:
-                            predictions = classify_segments(
-                                audio_array, speaker_data.annotations, sampling_rate
-                            )
-
-                            with output_data.create_data("AnnotationData") as ann_data:
-                                ann_data.annotations.extend(predictions)
-                                ann_data.name = speaker_data.name
-                else:
-                    raise NotImplementedError(
-                        f"Unknown segment type: {parameters.get('segment_type')}"
-                    )
-
+                    # for x in results:
+                    #     output_data.annotations.append(
+                    #         Annotation(
+                    #             start=segments[i][0],
+                    #             end=segments[i][1],
+                    #             labels=x[0],
+                    #         )
+                    #     )
                 self.update_callbacks(callbacks, progress=1.0)
                 # TODO maybe separate shot and speaker annotations in two entries
                 return {

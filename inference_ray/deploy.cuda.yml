@@ -999,8 +999,12 @@ applications:
             pip:
               - librosa==0.10.1
               - setuptools<82
-              - torch>=2.6.0
-              - torchaudio # TODO specify version
+              - transformers<=5.0.0
+              - soundfile
+              - --find-links https://download.pytorch.org/whl/cu124
+              - torch==2.6.0
+              - torchaudio==2.6.0
+              - timm==0.9.2
   - name: text_ner
     route_prefix: /text_ner
     import_path: inference_ray.main:app_builder
