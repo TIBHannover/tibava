@@ -1,30 +1,19 @@
-version: "3.4"
-
 services:
   inference_ray:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        WORKSPACE_MEMBER: inference_ray
+
     environment:
       - HF_HOME=/models
+      - HF_TOKEN=${HF_TOKEN}
       - NUMBA_CACHE_DIR=/tmp
-
-    build:
-      context: ./analyser/inference_ray
-      dockerfile: ./Dockerfile.cuda
 
     volumes:
       - type: bind
-        source: ./analyser/data_python/src/
-        target: /app/analyser/data
-      - type: bind
-        source: ./analyser/inference_ray/src
-        target: /app/analyser/inference
-      - type: bind
-        source: ./analyser/utils_python/src
-        target: /app/analyser/utils
-      - type: bind
-        source: ./analyser/analyser_interface_python/src
-        target: /app/analyser/proto
-      - type: bind
-        source: ./data/data/
+        source: ./data/analyser
         target: /data/
       - type: bind
         source: ./data/media/
@@ -32,6 +21,16 @@ services:
       - type: bind
         source: ./data/models/
         target: /models/
+      - type: bind
+        source: ./packages
+        target: /app/packages
+      - type: bind
+        source: ./backend
+        target: /app/backend
+
+    working_dir: /app/
+
+    command: serve run inference_ray/deploy.yml
 
     deploy:
       resources:
@@ -39,31 +38,17 @@ services:
           devices:
             - driver: nvidia
               count: 1
-              capabilities: [ gpu ]
-
+              capabilities: [gpu]
   analyser:
     build:
-      context: ./analyser/analyser_python
-      dockerfile: ./Dockerfile
+      context: .
+      dockerfile: Dockerfile
+      args:
+        WORKSPACE_MEMBER: analyser
 
     volumes:
       - type: bind
-        source: ./analyser/analyser_python/src/
-        target: /app/analyser/analyser
-      - type: bind
-        source: ./analyser/data_python/src/
-        target: /app/analyser/data
-      - type: bind
-        source: ./analyser/inference_ray/src
-        target: /app/analyser/inference
-      - type: bind
-        source: ./analyser/utils_python/src
-        target: /app/analyser/utils
-      - type: bind
-        source: ./analyser/analyser_interface_python/src
-        target: /app/analyser/proto
-      - type: bind
-        source: ./data/data/
+        source: ./data/analyser
         target: /data/
       - type: bind
         source: ./data/media/
@@ -72,8 +57,12 @@ services:
         source: ./data/cache/
         target: /cache/
 
+    working_dir: /app/
+
+    command: python analyser/src/analyser/server.py -v -c analyser/config.yml
+
   postgres:
-    image: postgres:13.2
+    image: postgres:14.17
     volumes:
       - ./data/db/:/var/lib/postgresql/data
     environment:
@@ -85,32 +74,20 @@ services:
     image: memcached:1.6.10-buster
     command: -I 32m
 
-  backend_redis:
-    image: redis:6.2.1
-    command: /usr/local/bin/redis-server --port 6380 --bind 0.0.0.0
+  valkey:
+    image: valkey/valkey:8.1.1-alpine
+    command: /usr/local/bin/valkey-server --port 6380 --bind 0.0.0.0
     ports:
       - "127.0.0.1:6380:6380"
 
-  backend_celery:
-    image: backend_celery
+  celery:
     build:
-      context: ./backend
+      context: .
+      dockerfile: Dockerfile
+      args:
+        WORKSPACE_MEMBER: backend
+
     volumes:
-      - type: bind
-        source: ./analyser/analyser_interface_python/src
-        target: /app/analyser/proto
-      - type: bind
-        source: ./analyser/utils_python/src
-        target: /app/analyser/utils
-      - type: bind
-        source: ./analyser/data_python/src/
-        target: /app/analyser/data
-      - type: bind
-        source: ./analyser/analyser_python/src/
-        target: /app/analyser/analyser
-      - type: bind
-        source: ./backend/
-        target: /app/backend
       - type: bind
         source: ./data/media/
         target: /media
@@ -124,40 +101,26 @@ services:
         source: ./data/tmp
         target: /tmp
 
-    working_dir: /app/backend/
+    depends_on:
+      - postgres
+
+    working_dir: /app/backend/src/backend/
     environment:
-      - PYTHONPATH=/app:/app/backend/
       - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
-      - GRPC_ENABLE_FORK_SUPPORT=1
-      - GRPC_POLL_STRATEGY=poll
-      # - GRPC_VERBOSITY=debug
-      # - GRPC_TRACE=all
-    command: celery -A tibava worker -l INFO
+    command: celery -A tibava worker -l INFO  --concurrency=20 --pool=threads
 
   backend:
-    image: backend
     build:
-      context: ./backend
+      context: .
+      dockerfile: Dockerfile
+      args:
+        WORKSPACE_MEMBER: backend
+
     ports:
       - 8000:8000
 
     volumes:
       - type: bind
-        source: ./analyser/analyser_interface_python/src
-        target: /app/analyser/proto
-      - type: bind
-        source: ./analyser/utils_python/src
-        target: /app/analyser/utils
-      - type: bind
-        source: ./analyser/data_python/src/
-        target: /app/analyser/data
-      - type: bind
-        source: ./analyser/analyser_python/src/
-        target: /app/analyser/analyser
-      - type: bind
-        source: ./backend/
-        target: /app/backend
-      - type: bind
         source: ./data/media/
         target: /media
       - type: bind
@@ -170,15 +133,15 @@ services:
         source: ./data/tmp
         target: /tmp
 
-    working_dir: /app/backend/
+    working_dir: /app/
     environment:
-      - PYTHONPATH=/app/backend/:/app
-      - TIBAVA_BACKEND_CONFIG=/app/backend/config.json
-    command: python3 manage.py runserver  0.0.0.0:8000
+      - PYTHONPATH=/app/backend/:/app:/app/analyser:/app/backend/src/backend/
+    command: python3 backend/src/backend/manage.py runserver 0.0.0.0:8000
 
     depends_on:
       - postgres
       - memcached
+      - celery
 
   frontend:
     image: frontend
@@ -190,11 +153,11 @@ services:
     volumes:
       - type: bind
         source: ./frontend/
-        target: /frontend
+        target: /app/frontend
       - type: bind
         source: ./data/predictions/
         target: /thumbnails
       - type: bind
         source: ./data/media/
         target: /media
-    working_dir: /frontend
+    working_dir: /app/frontend
