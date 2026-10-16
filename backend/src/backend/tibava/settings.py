@@ -240,3 +240,5 @@ USER_LIMITS_MAX_PLUGIN_RUNS = int(
 
 PLUGIN_WHITELIST = get_value(config, "PLUGIN_WHITELIST", "plugin.whitelist", None)
 PLUGIN_BLACKLIST = get_value(config, "PLUGIN_BLACKLIST", "plugin.blacklist", None)
+
+print(PLUGIN_BLACKLIST, flush=True)

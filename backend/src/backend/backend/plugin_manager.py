@@ -47,18 +47,24 @@ class PluginManager:
 
     def plugins(self):
         plugins = self._plugins
-        print("#### 1", plugins, settings.PLUGIN_WHITELIST, settings.PLUGIN_BLACKLIST)
+        print(
+            "#### 1",
+            plugins,
+            settings.PLUGIN_WHITELIST,
+            settings.PLUGIN_BLACKLIST,
+            flush=True,
+        )
         if settings.PLUGIN_WHITELIST is not None:
             plugins = {
                 x: y for x, y in plugins.items() if x in settings.PLUGIN_WHITELIST
             }
 
-        print("#### 2", plugins)
+        print("#### 2", plugins, flush=True)
         if settings.PLUGIN_BLACKLIST is not None:
             plugins = {
                 x: y for x, y in plugins.items() if x not in settings.PLUGIN_BLACKLIST
             }
-        print("#### 3", plugins)
+        print("#### 3", plugins, flush=True)
         return plugins
 
     def __call__(
