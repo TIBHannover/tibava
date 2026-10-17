@@ -133,11 +133,11 @@ class ShotScaleAndMovement(
 
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
+        logging.error(f"Using device VideoMAE: {device}")
+
         path = "gullalc/videomae-base-finetuned-kinetics-movieshots-multitask"
-        model = CustomModel.from_pretrained(path)
+        model = CustomModel.from_pretrained(path).eval().to(device)
         processor = VideoMAEImageProcessor.from_pretrained(path)
-        model.eval()
-        model.to(device)
 
         transform = v2.Compose(
             [
