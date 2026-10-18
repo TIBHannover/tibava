@@ -983,6 +983,37 @@ export default {
                 },
               ],
             },
+
+            {
+              name: this.$t("modal.plugin.vllm.plugin_name"),
+              description: this.$t("modal.plugin.vllm.plugin_description"),
+              icon: "mdi-eye",
+              plugin: "vllm_ollama",
+              id: 409,
+              parameters: [
+                {
+                  field: "text_field",
+                  name: "timeline",
+                  value: this.$t("modal.plugin.vllm.timeline_name"),
+                  text: this.$t("modal.plugin.timeline_name"),
+                },
+                {
+                  field: "select_timeline",
+                  name: "shot_timeline_id",
+                  // value: this.shot_timelines_names[0],
+                  // items: this.shot_timelines_names,
+                  text: this.$t("modal.plugin.shot_timeline_name"),
+                  hint: this.$t("modal.plugin.shot_timeline_hint"),
+                },
+                {
+                  field: "text_field",
+                  name: "query_term",
+                  value: "",
+                  text: this.$t("modal.plugin.vllm.search_term"),
+                },
+              ],
+              optional_parameters: [],
+            },
           ],
         },
         {

@@ -1,4 +1,7 @@
 services:
+  ollama:
+    image: ollama/ollama:0.40.7-rc0
+
   inference_ray:
     build:
       context: .
