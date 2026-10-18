@@ -1,5 +1,5 @@
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from tibava_data import VideoData, ImagesData, AnnotationData, Annotation
+from tibava_data import VideoData, ImagesData, AnnotationData, Annotation, ShotsData
 from tibava_data import DataManager, Data
 
 from typing import Callable, Optional, Dict, Union
@@ -19,6 +19,7 @@ parameters = {"query_term": ""}
 
 requires = {
     "input": Union[VideoData, ImagesData],
+    "shots": ShotsData,
 }
 
 provides = {
@@ -65,6 +66,7 @@ class VLLMOllama(
         query_term = parameters["query_term"]
         with (
             inputs["input"] as input_data,
+            inputs["shots"] as shots_data,
             data_manager.create_data("AnnotationData") as output_data,
         ):
             with input_data() as input_iterator:
@@ -89,13 +91,15 @@ class VLLMOllama(
                         messages=[message],
                     )
                     content = result["message"]["content"]
-                    output_data.annotations.append(
-                        Annotation(
-                            start=frame.get("time"),
-                            end=frame.get("time") + frame.get("delta_time"),
-                            labels=[content],
-                        )
-                    )
+                    for x in shots_data:
+                        if x.start <= frame.get("time") <= x.end:
+                            output_data.annotations.append(
+                                Annotation(
+                                    start=x.start,
+                                    end=x.end,
+                                    labels=[content],
+                                )
+                            )
 
                 self.update_callbacks(callbacks, progress=1.0)
         return {"annotations": output_data}

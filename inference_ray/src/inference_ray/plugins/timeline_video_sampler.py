@@ -132,7 +132,7 @@ class TimelineVideoSampler(
                     image.get("frame"),
                     ext="jpg",
                     time=image.get("time"),
-                    delta_time=1 / image.get("delta_time"),
+                    delta_time=image.get("delta_time"),
                 )
 
             return {"output": output_data}

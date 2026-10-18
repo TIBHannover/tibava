@@ -91,7 +91,7 @@ class VLLMOllama(Task):
             client,
             "vllm_ollama",
             parameters={"query_term": parameters.get("query_term")},
-            inputs={"input": result[0]["output"]},
+            inputs={"input": result[0]["output"], "shots": shots_id},
             downloads=["annotations"],
         )
 
