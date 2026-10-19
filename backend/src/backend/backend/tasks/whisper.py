@@ -88,6 +88,7 @@ class Whisper(Task):
             logging.warning("dry_run or plugin_run is None")
             return {}
 
+        color_list = ["#DDDDDD", "#EEEEEE"]  # white/gray
         with transaction.atomic():
             with result[1]["annotations"] as data:
                 """
@@ -103,7 +104,7 @@ class Whisper(Task):
                     name="Transcript", video=video, owner=user
                 )
 
-                for annotation in data.annotations:
+                for anno_id, annotation in enumerate(data.annotations):
                     timeline_segment_db = TimelineSegment.objects.create(
                         timeline=annotation_timeline_db,
                         start=annotation.start,
@@ -121,7 +122,7 @@ class Whisper(Task):
                             video=video,
                             category=category_db,
                             owner=user,
-                            # color=color,
+                            color=color_list[anno_id % 2],  # white/gray
                         )
 
                         TimelineSegmentAnnotation.objects.create(

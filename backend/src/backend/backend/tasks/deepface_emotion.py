@@ -43,7 +43,7 @@ class DeepfaceEmotionParser(Parser):
             "timeline": {"parser": str, "default": "Face Emotion"},
             "shot_timeline_id": {"default": None},
             "fps": {"parser": float, "default": 2},
-            "min_facesize": {"parser": int, "default": 48},
+            "min_face_height": {"parser": float, "default": 0.25},
         }
 
 
@@ -99,10 +99,9 @@ class DeepfaceEmotion(Task):
             "insightface_video_detector_torch",
             parameters={
                 "fps": parameters.get("fps"),
-                "min_facesize": parameters.get("min_facesize"),
             },
             inputs={"video": video_id},
-            outputs=["images", "faces"],
+            outputs=["images", "kpss", "faces", "bboxes"],
         )
 
         if plugin_run is not None:
@@ -112,10 +111,28 @@ class DeepfaceEmotion(Task):
         if result is None:
             raise Exception
 
+        face_size_filter_result = self.run_analyser(
+            client,
+            "face_size_filter",
+            parameters={
+                "min_face_height": parameters.get("min_face_height"),
+            },
+            inputs=result[0],
+            outputs=["images", "kpss", "faces", "bboxes"],
+            downloads=["images", "kpss", "faces", "bboxes"],
+        )
+
+        if plugin_run is not None:
+            plugin_run.progress = 0.5
+            plugin_run.save()
+
+        if face_size_filter_result is None:
+            raise Exception
+
         emotion_result = self.run_analyser(
             client,
             "deepface_emotion",
-            inputs={**result[0]},
+            inputs={**face_size_filter_result[0]},
             outputs=["probs"],
             downloads=["probs"],
         )

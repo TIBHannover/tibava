@@ -19,7 +19,8 @@ requires = {
 }
 
 provides = {
-    "annotations": ListData,
+    "transcript": AnnotationData,
+    "speaker": AnnotationData,
 }
 
 
@@ -66,7 +67,8 @@ class WhisperX(
 
         with (
             inputs["audio"] as input_data,
-            data_manager.create_data("ListData") as output_data,
+            data_manager.create_data("AnnotationData") as transcript_data,
+            data_manager.create_data("AnnotationData") as speaker_data,
         ):
             with input_data.open_audio("r") as f_audio:
                 y, sr = librosa.load(f_audio, sr=16000)
@@ -114,13 +116,11 @@ class WhisperX(
                         )
                     )
 
-                with output_data.create_data("AnnotationData") as ann_data:
-                    ann_data.annotations.extend(transcript)
-                    ann_data.name = "Speech Transcript"
+                transcript_data.annotations.extend(transcript)
+                transcript_data.name = "Speech Transcript"
 
-                with output_data.create_data("AnnotationData") as ann_data:
-                    ann_data.annotations.extend(speakers)
-                    ann_data.name = "Speaker"
+                speaker_data.annotations.extend(speakers)
+                speaker_data.name = "Speaker"
 
                 self.update_callbacks(callbacks, progress=1.0)
-                return {"annotations": output_data}
+                return {"transcript": transcript_data, "speaker": speaker_data}

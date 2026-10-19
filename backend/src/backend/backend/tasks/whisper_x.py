@@ -85,7 +85,7 @@ class WhisperX(Task):
             "whisper_x",
             parameters={"language_code": parameters.get("language_code")},
             inputs={**result[0]},
-            downloads=["annotations"],
+            downloads=["transcript", "speaker"],
         )
         if result is None:
             raise Exception
@@ -95,11 +95,13 @@ class WhisperX(Task):
             return {}
 
         with transaction.atomic():
-            with result[1]["annotations"] as data:
+            with (
+                result[1]["transcript"] as transcript_data,
+                result[1]["speaker"] as speaker_data,
+            ):
                 """
                 Create a timeline labeled
                 """
-                data.extract_all(manager)
 
                 parent_timeline = Timeline.objects.create(
                     video=video,
@@ -111,46 +113,75 @@ class WhisperX(Task):
                     name="Transcript", video=video, owner=user
                 )
                 result_timelines = {}
-                for sub_index, sub_data in data:
-                    with sub_data as sub_data:
-                        timeline = Timeline.objects.create(
-                            video=video,
-                            name=sub_data.name,
-                            type=Timeline.TYPE_TRANSCRIPT,
-                            parent=parent_timeline,
-                        )
-                        result_timelines[sub_data.name] = timeline.id.hex
-                        for annotation in sub_data.annotations:
-                            timeline_segment_db = TimelineSegment.objects.create(
-                                timeline=timeline,
-                                start=annotation.start,
-                                end=annotation.end,
-                            )
-                            for label in annotation.labels:
-                                label = str(label)
-                                if len(label) > settings.ANNOTATION_MAX_LENGTH:
-                                    label = (
-                                        label[
-                                            : max(0, settings.ANNOTATION_MAX_LENGTH - 4)
-                                        ]
-                                        + " ..."
-                                    )
-                                annotation_db, _ = Annotation.objects.get_or_create(
-                                    name=label,
-                                    video=video,
-                                    category=category_db,
-                                    owner=user,
-                                    color="#EEEEEE",  # white/gray
-                                )
 
-                                TimelineSegmentAnnotation.objects.create(
-                                    annotation=annotation_db,
-                                    timeline_segment=timeline_segment_db,
-                                )
+                timeline = Timeline.objects.create(
+                    video=video,
+                    name=transcript_data.name,
+                    type=Timeline.TYPE_TRANSCRIPT,
+                    parent=parent_timeline,
+                )
+                result_timelines[transcript_data.name] = timeline.id.hex
+                color_list = ["#DDDDDD", "#EEEEEE"]  # white/gray
+                for anno_id, annotation in enumerate(transcript_data.annotations):
+                    timeline_segment_db = TimelineSegment.objects.create(
+                        timeline=timeline,
+                        start=annotation.start,
+                        end=annotation.end,
+                    )
+                    for label in annotation.labels:
+                        label = str(label)
+                        if len(label) > settings.ANNOTATION_MAX_LENGTH:
+                            label = (
+                                label[: max(0, settings.ANNOTATION_MAX_LENGTH - 4)]
+                                + " ..."
+                            )
+                        annotation_db, _ = Annotation.objects.get_or_create(
+                            name=label,
+                            video=video,
+                            category=category_db,
+                            owner=user,
+                            color=color_list[anno_id % 2],  # white/gray
+                        )
+
+                        TimelineSegmentAnnotation.objects.create(
+                            annotation=annotation_db,
+                            timeline_segment=timeline_segment_db,
+                        )
+
+                timeline = Timeline.objects.create(
+                    video=video,
+                    name=speaker_data.name,
+                    type=Timeline.TYPE_ANNOTATION,
+                    parent=parent_timeline,
+                )
+                result_timelines[speaker_data.name] = timeline.id.hex
+                for annotation in speaker_data.annotations:
+                    timeline_segment_db = TimelineSegment.objects.create(
+                        timeline=timeline,
+                        start=annotation.start,
+                        end=annotation.end,
+                    )
+                    for label in annotation.labels:
+                        label = str(label)
+                        if len(label) > settings.ANNOTATION_MAX_LENGTH:
+                            label = (
+                                label[: max(0, settings.ANNOTATION_MAX_LENGTH - 4)]
+                                + " ..."
+                            )
+                        annotation_db, _ = Annotation.objects.get_or_create(
+                            name=label,
+                            video=video,
+                            owner=user,
+                        )
+
+                        TimelineSegmentAnnotation.objects.create(
+                            annotation=annotation_db,
+                            timeline_segment=timeline_segment_db,
+                        )
 
                 return {
                     "plugin_run": plugin_run.id.hex,
                     "plugin_run_results": [],
                     "timelines": result_timelines,
-                    "data": {"annotations": result[1]["annotations"].id},
+                    # "data": {"annotations": result[1]["annotations"].id},  # TODO
                 }

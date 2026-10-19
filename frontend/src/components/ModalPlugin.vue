@@ -493,6 +493,16 @@ export default {
                   text: this.$t("modal.plugin.shot_timeline_name"),
                   hint: this.$t("modal.plugin.shot_timeline_hint"),
                 },
+                {
+                  field: "slider",
+                  min: 0,
+                  max: 1.0,
+                  value: 0.25,
+                  step: 0.05,
+                  name: "min_face_height",
+                  hint_right: this.$t("modal.plugin.face_clustering.min_face_height.hint_right"),
+                  hint_left: this.$t("modal.plugin.face_clustering.min_face_height.hint_left"),
+                },
               ],
               optional_parameters: [
                 {
@@ -503,16 +513,6 @@ export default {
                   step: 1,
                   name: "fps",
                   text: this.$t("modal.plugin.fps"),
-                },
-                {
-                  field: "slider",
-                  min: 24,
-                  max: 256,
-                  value: 48,
-                  step: 8,
-                  name: "min_facesize",
-                  text: this.$t("modal.plugin.faceemotion.min_facesize"),
-                  disabled: true,
                 },
               ],
             },
