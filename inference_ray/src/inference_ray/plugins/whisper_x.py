@@ -29,7 +29,7 @@ class WhisperX(
     AnalyserPlugin,
     config=default_config,
     parameters=default_parameters,
-    version="0.1",
+    version="0.2",
     requires=requires,
     provides=provides,
 ):
@@ -55,11 +55,16 @@ class WhisperX(
         import whisperx
 
         device = "cuda:0" if torch.cuda.is_available() else "cpu"
+
         if self.model is None:
+            if device == "cuda:0":
+                compute_type = "float16"
+            else:
+                compute_type = "int8"
             self.model = whisperx.load_model(
                 "large-v3",
                 device=device,
-                compute_type="int8",
+                compute_type=compute_type,
                 language=parameters.get("language_code"),
             )  # TODO originally compute_type="float16" but not supported by m1. probably change back for production
             self.diarize_model = whisperx.diarize.DiarizationPipeline(device=device)
