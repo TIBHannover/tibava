@@ -230,7 +230,7 @@ export default {
 .sticky-video {
   position: fixed;
   height: auto !important;
-  width: 15vw !important;
+  width: 35vw !important;
   z-index: 3;
   min-height: unset !important;
   top: 80px;
