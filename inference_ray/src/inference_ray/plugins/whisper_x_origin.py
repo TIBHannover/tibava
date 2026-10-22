@@ -17,7 +17,7 @@ default_config = {
     "port": 6379,
 }
 
-default_parameters = {"language_code": None}
+default_parameters = {"language_code": None, "threshold": 0.6, "Fb": 0.8, "Fa": 0.07}
 
 requires = {
     "audio": AudioData,
@@ -109,6 +109,22 @@ class WhisperXOrigin(
                     device,
                     return_char_alignments=False,
                 )
+
+                p = self.diarize_model.model  # pyannote Pipeline inside WhisperX
+                params = p.parameters(instantiated=True)
+                print(params)  # confirm Fa/Fb exist in your version
+
+                # {'segmentation': {'min_duration_off': 0.0}, 'clustering': {'threshold': 0.6, 'Fa': 0.07, 'Fb': 0.8}}
+                params["clustering"]["threshold"] = parameters.get(
+                    "threshold", 0.6
+                )  # AHC warm start: lower = more initial clusters
+                params["clustering"]["Fb"] = parameters.get(
+                    "Fb", 0.8
+                )  # lower = less speaker regularization
+                params["clustering"]["Fa"] = parameters.get(
+                    "Fa", 0.07
+                )  # leave at first
+                p.instantiate(params)
 
                 diarize_segments = self.diarize_model(y)
                 logging.error(diarize_segments)

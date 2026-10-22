@@ -28,6 +28,9 @@ class WhisperXOriginParser(Parser):
         self.valid_parameter = {
             "timeline": {"parser": str, "default": "WhisperXOrigin Transcript"},
             "language_code": {"parser": str, "default": None},
+            "threshold": {"parser": float, "default": 0.6},
+            "Fb": {"parser": float, "default": 0.8},
+            "Fa": {"parser": float, "default": 0.07},
         }
 
     def __call__(self, parameters: Dict = None, **kwargs) -> Dict:
@@ -82,7 +85,12 @@ class WhisperXOrigin(Task):
         result = self.run_analyser(
             client,
             "whisper_x_origin",
-            parameters={"language_code": parameters.get("language_code")},
+            parameters={
+                "language_code": parameters.get("language_code"),
+                "threshold": parameters.get("threshold"),
+                "Fb": parameters.get("Fb"),
+                "Fa": parameters.get("Fa"),
+            },
             inputs={**result[0]},
             downloads=["transcript", "speaker"],
         )
