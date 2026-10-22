@@ -258,6 +258,29 @@ export default {
               ],
             },
             {
+              name: this.$t("modal.plugin.whisper_x_origin.plugin_name"),
+              description: this.$t("modal.plugin.whisper_x_origin.plugin_description"),
+              icon: "mdi-waveform",
+              plugin: "whisper_x_origin",
+              id: 109,
+              parameters: [
+                {
+                  field: "text_field",
+                  name: "timeline",
+                  value: this.$t("modal.plugin.whisper_x_origin.timeline_name"),
+                  text: this.$t("modal.plugin.timeline_name"),
+                },
+              ],
+              optional_parameters: [
+                {
+                  field: "text_field",
+                  name: "language_code",
+                  value: "none", // TODO should be no value (currently then no task is started)
+                  text: this.$t("modal.plugin.whisper_x_origin.language_code_name") + ` (${this.$t("modal.plugin.whisper_x.language_code_hint")})`,
+                },
+              ],
+            },
+            {
               name: this.$t("modal.plugin.audio_emotion.plugin_name"),
               description: this.$t("modal.plugin.audio_emotion.plugin_description"),
               icon: "mdi-waveform",

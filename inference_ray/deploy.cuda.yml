@@ -910,10 +910,32 @@ applications:
         autoscaling_config:
           min_replicas: 0
         ray_actor_options:
-          num_cpus: 2
+          num_gpus: 0.2
           runtime_env:
             pip:
               - git+https://github.com/m-bain/whisperx.git
+              - librosa==0.10.1
+              - setuptools<82
+              - torch>=2.6.0
+              - scikit-learn>=1.6.1
+              - transformers>=4.48.3
+
+  - name: whisper_x_origin
+    route_prefix: /whisper_x_origin
+    import_path: inference_ray.main:app_builder
+    args:
+      model: whisper_x_origin
+      data_path: /data
+      params: {}
+    deployments:
+      - name: Deployment
+        autoscaling_config:
+          min_replicas: 0
+        ray_actor_options:
+          num_gpus: 0.2
+          runtime_env:
+            uv:
+              - whisperx==3.8.6
               - librosa==0.10.1
               - setuptools<82
               - torch>=2.6.0

@@ -2,7 +2,7 @@
 FROM python:3.12-slim-bookworm AS builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libmagickwand-dev imagemagick git
+    libmagickwand-dev imagemagick git ffmpeg
 
 # Install uv using the official standalone installer
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
@@ -37,7 +37,7 @@ FROM python:3.12-slim-bookworm
 
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libmagickwand-dev imagemagick git
+    libmagickwand-dev imagemagick git ffmpeg
 
 WORKDIR /app
 

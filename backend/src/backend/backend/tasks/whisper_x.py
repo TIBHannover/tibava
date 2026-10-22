@@ -1,27 +1,25 @@
-from typing import Dict
 import logging
+from typing import Dict
 
-from ..utils.analyser_client import TaskAnalyserClient
-
-from backend.models import PluginRun, Video, Timeline
-from backend.plugin_manager import PluginManager
-
-from backend.utils.parser import Parser
-from backend.utils.task import Task
-
+from django.conf import settings
+from django.db import transaction
 from tibava_data import DataManager  # type: ignore
+
 from backend.models import (
     Annotation,
     AnnotationCategory,
     PluginRun,
-    TimelineSegmentAnnotation,
-    Video,
     TibavaUser,
     Timeline,
     TimelineSegment,
+    TimelineSegmentAnnotation,
+    Video,
 )
-from django.db import transaction
-from django.conf import settings
+from backend.plugin_manager import PluginManager
+from backend.utils.parser import Parser
+from backend.utils.task import Task
+
+from ..utils.analyser_client import TaskAnalyserClient
 
 
 @PluginManager.export_parser("whisper_x")
@@ -69,6 +67,7 @@ class WhisperX(Task):
         result = self.run_analyser(
             client,
             "video_to_audio",
+            parameters={"sample_rate": 16000},
             inputs={"video": video_id},
             outputs=["audio"],
         )

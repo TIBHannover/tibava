@@ -1,8 +1,7 @@
+from typing import Callable, Dict, Optional
+
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from tibava_data import AudioData, VideoData, DataManager, Data
-
-
-from typing import Callable, Optional, Dict
+from tibava_data import AudioData, Data, DataManager, VideoData
 
 default_config = {"data_dir": "/data/"}
 

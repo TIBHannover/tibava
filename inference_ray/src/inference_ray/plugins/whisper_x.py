@@ -1,10 +1,15 @@
-from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager  # type: ignore
-from tibava_data import AudioData, AnnotationData, ListData, Annotation  # type: ignore
-
-from tibava_data import DataManager, Data  # type: ignore
-
-from typing import Callable, Dict
 import logging
+from typing import Callable, Dict
+
+from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager  # type: ignore
+from tibava_data import (  # type: ignore  # type: ignore
+    Annotation,
+    AnnotationData,
+    AudioData,
+    Data,
+    DataManager,
+    ListData,
+)
 
 default_config = {
     "data_dir": "/data/",
@@ -29,7 +34,7 @@ class WhisperX(
     AnalyserPlugin,
     config=default_config,
     parameters=default_parameters,
-    version="0.2",
+    version="0.4",
     requires=requires,
     provides=provides,
 ):
@@ -81,6 +86,10 @@ class WhisperX(
                     audio=y, batch_size=8, language=parameters.get("language_code")
                 )
 
+                logging.error("####################")
+                logging.error(transcription)
+                logging.error("####################")
+
                 # always instantiate new alignment model to match current language
                 self.alignment_model, self.metadata = whisperx.load_align_model(
                     language_code=transcription["language"], device=device
@@ -96,12 +105,16 @@ class WhisperX(
                 )
 
                 diarize_segments = self.diarize_model(y)
+                logging.error(diarize_segments)
+                logging.error("####################")
                 speaker_transcription = whisperx.assign_word_speakers(
                     diarize_segments, aligned_transcription
                 )
 
                 transcript = []
                 speakers = []
+                logging.error(speaker_transcription["segments"])
+                logging.error("####################")
                 for segment in sorted(
                     speaker_transcription["segments"], key=lambda x: x["start"]
                 ):
