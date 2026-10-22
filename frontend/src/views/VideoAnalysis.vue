@@ -105,6 +105,15 @@
               </v-tab-item>
 
               <v-tab-item style="height: 100%">
+                <div :class="['d-flex', 'flex-column', 'px-2', 'mx-4', 'my-2']">
+                  <v-select
+                    solo
+                    hide-details
+                    dense
+                    :items="transcriptList"
+                    v-model="selectedTranscript"
+                  />
+                </div>
                 <TranscriptOverview />
               </v-tab-item>
 
@@ -172,6 +181,7 @@ import { useAnnotationShortcutStore } from "../store/annotation_shortcut.js";
 import { usePluginRunStore } from "../store/plugin_run.js";
 import { useClusterTimelineItemStore } from "../store/cluster_timeline_item";
 import { useShotStore } from "@/store/shot";
+import { useTranscriptStore } from "@/store/transcript";
 import ClusterTimelineItemOverview from "../components/ClusterTimelineItemOverview.vue";
 
 export default {
@@ -183,6 +193,7 @@ export default {
       selectedShotsProxy: null,
       selectedFaceClusteringProxy: null,
       selectedPlaceClusteringProxy: null,
+      selectedTranscriptProxy: null,
 
       selectedTimelineProxy: null,
       tab: null,
@@ -411,6 +422,26 @@ export default {
         return { text: e.name, value: e.index };
       });
     },
+    selectedTranscript: {
+      get() {
+        const selectedTranscript = this.transcriptStore.selectedTranscript;
+        return this.selectedTranscriptProxy === null
+          ? selectedTranscript
+          : this.selectedTranscriptProxy;
+      },
+      set(val) {
+        this.selectedTranscriptProxy = val;
+
+        this.transcriptStore.setSelectedTranscript({
+          transcriptTimeline: val,
+        });
+      },
+    },
+    transcriptList() {
+      return this.transcriptStore.transcriptList.map((e) => {
+        return { text: e.name, value: e.index };
+      });
+    },
     selectedFaceClustering: {
       get() {
         const selectedFaceClustering =
@@ -470,6 +501,7 @@ export default {
       usePlayerStore,
       useTimelineStore,
       useShotStore,
+      useTranscriptStore,
       useTimelineSegmentStore,
       useTimelineSegmentAnnotationStore,
       useShortcutStore,
