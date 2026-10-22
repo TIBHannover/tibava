@@ -61,10 +61,10 @@ class WhisperXOrigin(
         import torch
         import whisperx
 
-        device = "cuda:0" if torch.cuda.is_available() else "cpu"
+        device = "cuda" if torch.cuda.is_available() else "cpu"
 
         if self.model is None:
-            if device == "cuda:0":
+            if device == "cuda":
                 compute_type = "float16"
             else:
                 compute_type = "int8"
