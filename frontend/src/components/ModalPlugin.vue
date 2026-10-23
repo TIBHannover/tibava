@@ -371,7 +371,7 @@ export default {
                   value: 0.8,
                   step: 0.05,
                   name: "Fb",
-                  text: this.$t("modal.plugin.whisper_x_origin.threshold"),
+                  text: this.$t("modal.plugin.whisper_x_origin.fb"),
                 },
                 {
                   field: "slider",
@@ -380,7 +380,7 @@ export default {
                   value: 0.07,
                   step: 0.01,
                   name: "Fa",
-                  text: this.$t("modal.plugin.whisper_x_origin.threshold"),
+                  text: this.$t("modal.plugin.whisper_x_origin.fa"),
                 },
               ],
             },
@@ -2051,8 +2051,6 @@ export default {
         this.pluginStore.fetchAll();
       }
       this.$emit("input", value);
-      console.log(JSON.stringify(this.videoIds));
-      console.log(JSON.stringify(this.plugins));
     },
     value(value) {
       if (value) {

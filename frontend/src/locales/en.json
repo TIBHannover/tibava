@@ -202,6 +202,21 @@
         "language_code_hint": "If not provided, the spoken language is detected automatically",
         "timeline_name": "WhisperX Transcript"
       },
+      "whisper_x_origin": {
+        "plugin_name": "WhisperX Original",
+        "plugin_description": "Speech recognition and forced phoneme alignment using WhisperX.",
+        "timeline_name": "Transcription",
+        "language_code_name": "Language Code",
+        "threshold": "VAD Threshold",
+        "fb": "Filter Bank (Fb)",
+        "fa": "False Alarm Rate (Fa)"
+      },
+      "vllm": {
+        "plugin_name": "Vision Language Model (VLLM)",
+        "plugin_description": "Analyze video frames and scenes using vision-language models via Ollama (gemma4).",
+        "timeline_name": "Vision Analysis",
+        "search_term": "Query / Prompt"
+      },
       "audio_emotion": {
         "plugin_name": "Audio Emotion Classification",
         "timeline_name": "Audio Emotion Classification",
