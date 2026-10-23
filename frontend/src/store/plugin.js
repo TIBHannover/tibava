@@ -31,7 +31,7 @@ export const usePluginStore = defineStore("plugin", {
       }
       this.isLoading = true;
 
-      let params = { };
+      let params = {};
       return axios
         .get(`${config.API_LOCATION}/plugin/list`, { params })
         .then((res) => {
@@ -48,10 +48,12 @@ export const usePluginStore = defineStore("plugin", {
       this.pluginList = [];
     },
     updateAll(plugins) {
+      this.plugins = {};
+      this.pluginList = [];
       plugins.forEach((e) => {
         this.plugins[e.name] = e;
         this.pluginList.push(e.name);
       });
-    }
+    },
   },
 });

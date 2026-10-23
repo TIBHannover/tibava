@@ -108,6 +108,7 @@ import { mapStores } from "pinia";
 import { useVideoStore } from "@/store/video.js";
 import { useUserStore } from "@/store/user.js";
 import { usePluginRunStore } from "@/store/plugin_run.js";
+import { usePluginStore } from "@/store/plugin.js";
 import { useTimelineStore } from "@/store/timeline";
 import { usePluginRunResultStore } from "../store/plugin_run_result";
 
@@ -140,6 +141,7 @@ export default {
     async fetchData(fetchTimelines = false) {
       await this.videoStore.fetchAll();
       await this.pluginRunStore.fetchAll({ addResults: false });
+      await this.pluginStore.fetchAll();
       if (fetchTimelines) {
         await this.timelineStore.fetchAll({ addResultsType: true });
       }
@@ -175,6 +177,7 @@ export default {
     ...mapStores(
       useVideoStore,
       usePluginRunStore,
+      usePluginStore,
       useUserStore,
       useTimelineStore,
       usePluginRunResultStore

@@ -2042,9 +2042,17 @@ export default {
       }
     },
   },
+  mounted() {
+    this.pluginStore.fetchAll();
+  },
   watch: {
     dialog(value) {
+      if (value) {
+        this.pluginStore.fetchAll();
+      }
       this.$emit("input", value);
+      console.log(JSON.stringify(this.videoIds));
+      console.log(JSON.stringify(this.plugins));
     },
     value(value) {
       if (value) {
