@@ -129,21 +129,31 @@ class WhisperXOrigin(Task):
                 )
                 result_timelines[transcript_data.name] = timeline.id.hex
                 color_list = ["#DDDDDD", "#EEEEEE"]  # white/gray
-                for anno_id, annotation in enumerate(transcript_data.annotations):
+                for anno_id, (speaker, annotation) in enumerate(
+                    zip(speaker_data.annotations, transcript_data.annotations)
+                ):
                     timeline_segment_db = TimelineSegment.objects.create(
                         timeline=timeline,
                         start=annotation.start,
                         end=annotation.end,
                     )
-                    for label in annotation.labels:
+                    for speaker_label, label in zip(speaker.labels, annotation.labels):
                         label = str(label)
+                        speaker_label = str(speaker_label)
                         if len(label) > settings.ANNOTATION_MAX_LENGTH:
                             label = (
                                 label[: max(0, settings.ANNOTATION_MAX_LENGTH - 4)]
                                 + " ..."
                             )
+                        if len(speaker_label) > settings.ANNOTATION_MAX_LENGTH:
+                            speaker_label = (
+                                speaker_label[
+                                    : max(0, settings.ANNOTATION_MAX_LENGTH - 4)
+                                ]
+                                + " ..."
+                            )
                         annotation_db, _ = Annotation.objects.get_or_create(
-                            name=label,
+                            name="[" + speaker_label + "]: " + label,
                             video=video,
                             category=category_db,
                             owner=user,
