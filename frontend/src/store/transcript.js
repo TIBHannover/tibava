@@ -67,7 +67,7 @@ export const useTranscriptStore = defineStore("transcript", {
 
       results = timelineSegmentStore
         .forTimeline(selectedTranscript)
-        .map((e) => {
+        .map((e, i) => {
           console.log(JSON.stringify(e));
           const name = (e.annotations || [])
             .map((item) => item.annotation?.name)
@@ -85,6 +85,7 @@ export const useTranscriptStore = defineStore("transcript", {
           //   name = annotation.name;
           // }
           return {
+            id: i + 1,
             name: name,
             start: e.start,
             end: e.end,

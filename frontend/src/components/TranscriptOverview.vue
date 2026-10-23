@@ -52,9 +52,16 @@ export default {
   methods: {
     scrollToHighlightedChild(childID) {
       const parentContainer = this.$refs.parentContainer;
-      const childContainer = this.$refs[`childContainer-${childID}`];
-
-      if (parentContainer && childContainer) {
+      let childContainer = this.$refs[`childContainer-${childID}`];
+      if (Array.isArray(childContainer)) {
+        childContainer = childContainer[0];
+      }
+      if (
+        parentContainer &&
+        childContainer &&
+        parentContainer.$el &&
+        childContainer.$el
+      ) {
         const offset =
           (parentContainer.$el.offsetHeight - childContainer.$el.offsetHeight) /
           2;
@@ -75,8 +82,6 @@ export default {
       );
     },
     transcripts() {
-      console.log("++++++++++++");
-      console.log(JSON.stringify(this.transcriptStore.transcript));
       return this.transcriptStore.transcript.filter(
         (t) =>
           this.search == "" ||
