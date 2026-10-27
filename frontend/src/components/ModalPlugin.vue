@@ -1074,6 +1074,7 @@ export default {
             },
             {
               name: this.$t("modal.plugin.ocr.plugin_name"),
+              description: this.$t("modal.plugin.ocr.plugin_description"),
               icon: "mdi-text-shadow",
               plugin: "ocr_video_detector_onnx",
               id: 407,
@@ -1105,6 +1106,7 @@ export default {
             },
             {
               name: this.$t("modal.plugin.nano_ocr.plugin_name"),
+              description: this.$t("modal.plugin.nano_ocr.plugin_description"),
               icon: "mdi-text-shadow",
               plugin: "nano_ocr_video",
               id: 408,

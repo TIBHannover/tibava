@@ -368,8 +368,13 @@
       },
       "ocr": {
         "plugin_name": "OCR",
+        "plugin_description": "This plugin detects and reads text that appears in the video, such as captions, inserts, signs, or credits. Text regions are first located with a <a href=\"https://github.com/WongKinYiu/yolov7\">YOLOv7</a>-based text detector and then read with <a href=\"https://github.com/baudm/parseq\">PARSeq</a>; words on the same line are merged. Recognition is limited to Latin letters, digits, and common punctuation, so accented characters and umlauts may be misread. <br><br>The result is a new annotation timeline in which each segment is labeled with the text found in the frame. The frames per second slider sets how often the video is sampled; higher values catch short-lived text but take longer.",
         "timeline_name": "OCR",
         "search_term": "Search Term"
+      },
+      "nano_ocr": {
+        "plugin_name": "OCR (Nanonets)",
+        "plugin_description": "This plugin reads all text in a frame with <a href=\"https://huggingface.co/nanonets/Nanonets-OCR-s\">Nanonets-OCR-s</a>, a vision-language model that reads the whole image at once instead of individual text boxes. Compared to the standard OCR plugin, it handles longer passages, non-Latin characters, and complex layouts such as tables better, but it is considerably slower and therefore analyzes one frame per second. <br><br>The result is a new annotation timeline with one segment per analyzed frame, labeled with the full text read from that frame."
       },
       "facesize": {
         "plugin_name": "Face Size Analysis",
