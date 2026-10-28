@@ -220,22 +220,24 @@
       "audio_emotion": {
         "plugin_name": "Audio Emotion Classification",
         "timeline_name": "Audio Emotion Classification",
-        "plugin_description": "This plugin detects emotions from audio segments (retrieved with WhisperX)."
+        "plugin_description": "This plugin recognizes the emotion in spoken language. The speech is first split into speaker segments with WhisperX, and each segment is then classified with a <a href=\"https://huggingface.co/speechbrain/emotion-recognition-wav2vec2-IEMOCAP\">wav2vec 2.0 model trained on the IEMOCAP dataset</a>. It differentiates between four emotions: Neutral, Angry, Happy, and Sad. <br><br>The result is a timeline in which each speech segment is labeled with its most likely emotion, plus one sub-timeline per emotion that shows its probability for each segment. The prediction is based only on the voice (how something is said), not on the words, and works best for clearly spoken English."
       },
       "audio_gender": {
         "plugin_name": "Audio Gender Classification",
         "timeline_name": "Audio Gender Classification",
-        "plugin_description": "This plugin detects the gender from audio/speech segments (retrieved with WhisperX)."
+        "plugin_description": "This plugin estimates the gender of speakers from their voice. The speech is first split into speaker segments with WhisperX, and each segment is then classified with a <a href=\"https://huggingface.co/alefiury/wav2vec2-large-xlsr-53-gender-recognition-librispeech\">wav2vec 2.0 model trained on the LibriSpeech dataset</a>. It differentiates between two classes: Female and Male. <br><br>The result is a timeline in which each speech segment is labeled with the predicted class, plus one sub-timeline per class that shows its probability for each segment. Note that the prediction is based only on acoustic voice characteristics and does not reflect a person's gender identity."
       },
       "active_speaker_detection": {
         "plugin_name": "Active Speaker Detection",
-        "plugin_description": "This plugin does active speaker detection based on audio and tracked face data.",
+        "plugin_description": "This plugin determines which visible person is speaking at a given moment. Faces are detected and tracked within each shot, and each face track is then compared with the audio using <a href=\"https://github.com/Junhua-Liao/Light-ASD\">Light-ASD</a>, which checks whether the facial movements match the speech. <br><br>Select a timeline that contains shots, e.g., the timeline created by the \"Shot Boundary Detection\" plugin, so that faces are only tracked within a shot. The frames per second slider sets how often faces are detected; higher values give more precise results but take longer.",
         "timeline_name": "Active Speaker Detection"
       },
       "audio_classification": {
         "plugin_name": "Audio Classification",
-        "plugin_description": "This plugin classifies sounds from video segments.",
+        "plugin_description": "This plugin recognizes sounds and audio events in the video, such as speech, music, instruments, animals, vehicles, or applause. It uses the <a href=\"https://huggingface.co/worstchan/EAT-base_epoch30_finetune_AS2M\">EAT audio model</a> trained on <a href=\"https://research.google.com/audioset/\">AudioSet</a>, which covers 527 sound classes. <br><br>Select a timeline that contains shots, e.g., the timeline created by the \"Shot Boundary Detection\" plugin. The audio of each shot is classified separately; only the first ten seconds of each shot are analyzed. The result is a timeline in which each shot is labeled with its most likely sounds: at most as many as set by the first slider, and only those whose confidence is above the threshold set by the second slider.",
         "timeline_name": "Audio Classification",
+        "top_k": "Maximum Number of Labels per Shot",
+        "threshold": "Confidence Threshold",
         "segmentation_selector_description": "Select the type of segments you want to use to classify the audio fragments:"
       },
       "audio_frequency": {
@@ -447,7 +449,7 @@
       },
       "invert": {
         "plugin_name": "Invert Timeline",
-        "plugin_description": "Inverts a timeline by calculating 1-y. If the original timeline was greater than 1 or less than 0, the values are normalized to [0,1] beforehand.",
+        "plugin_description": "This plugin inverts a scalar timeline, so that high values become low and low values become high (new value = 1 − old value). For example, it turns a brightness timeline into a darkness timeline, or an audio volume timeline into one that highlights quiet passages. If the values are outside the range from 0 to 1, they are first rescaled to that range. <br><br>The result is a new scalar timeline that can be combined with other timelines, e.g., with the \"Aggregate Timelines\" plugin.",
         "timeline_name": "Inverted Timeline"
       }
     },
