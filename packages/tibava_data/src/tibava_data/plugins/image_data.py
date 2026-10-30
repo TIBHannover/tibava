@@ -1,17 +1,16 @@
 import logging
-import yaml
-from typing import List, Union
-from collections.abc import Iterator, Iterable
-
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass, field, fields
+from typing import List, Union
+
 import imageio.v3 as iio
-
-import numpy.typing as npt
 import numpy as np
-
-from ..manager import DataManager
-from ..data import Data
+import numpy.typing as npt
+import yaml
 from tibava_interface import analyser_pb2
+
+from ..data import Data
+from ..manager import DataManager
 
 
 @dataclass(kw_only=True)
@@ -67,16 +66,32 @@ class ImagesData(Data):
     def __call__(self, **kwargs) -> "ImagesIterator":
         return ImagesIterator(self)
 
-    def save_image(self, image: npt.ArrayLike, **kwargs) -> None:
+    def save_image(
+        self, image: npt.ArrayLike, ext: str | None = None, **kwargs
+    ) -> None:
         assert self.check_fs(), "No filesystem handler installed"
         assert self.fs.mode == "w", "Data packet is open read only"
+
+        extension = ext or "jpg"
+        # Normalize extension format (e.g. "jpg" -> ".jpg")
+        extension = extension if extension.startswith(".") else f".{extension}"
+        ext_clean = extension.lstrip(".").lower()
+
         image_data = ImageData(**kwargs)
+
         try:
-            encoded = iio.imwrite("<bytes>", image, extension=".jpg")
-            with self.fs.open_file(f"{image_data.id}.jpg", "w") as f:
+            arr = np.asarray(image)
+
+            if ext_clean in ("jpg", "jpeg") and arr.ndim == 3 and arr.shape[2] == 4:
+                arr = arr[:, :, :3]
+
+            encoded: bytes = iio.imwrite("<bytes>", arr, extension=extension)
+
+            with self.fs.open_file(f"{image_data.id}{extension}", "w") as f:
                 f.write(encoded)
-        except:
-            logging.error("[ImagesData] Could not add a new image")
+
+        except Exception as e:
+            logging.error(f"[ImagesData] Could not add a new image (Exception: {e})")
             return None
 
         self.images.append(image_data)
