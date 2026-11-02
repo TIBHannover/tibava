@@ -1,33 +1,26 @@
-from pprint import pprint
-
-from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from tibava_utils import VideoDecoder
-
-from tibava_data import (
-    BboxData,
-    BboxesData,
-    StringData,
-    StringsData,
-    ImagesData,
-    VideoData,
-    AnnotationData,
-    Annotation,
-)
-from tibava_data import DataManager, Data
-
-from typing import Callable, Optional, Dict
-
+import logging
+from typing import Callable, Dict, Optional
 
 import numpy as np
-import time
-import logging
-
+from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
+from tibava_data import (
+    Annotation,
+    AnnotationData,
+    BboxData,
+    BboxesData,
+    Data,
+    DataManager,
+    ImagesData,
+    StringData,
+    StringsData,
+    VideoData,
+)
+from tibava_utils import VideoDecoder
 
 default_config = {
     "data_dir": "/data/",
     "host": "localhost",
     "port": 6379,
-    "model_name": "ocr_onnx",
 }
 
 default_parameters = {
@@ -62,32 +55,53 @@ class NanoOCRVideo(
 
     def init_model(self):
         if self.model is None:
-            from transformers import (
-                AutoTokenizer,
-                AutoProcessor,
-                AutoModelForImageTextToText,
-                HqqConfig,
+            import os
+            import warnings
+
+            warnings.filterwarnings(
+                "ignore", category=SyntaxWarning, module="torchao.*"
             )
+            warnings.filterwarnings("ignore", message=".*is an Enum subclass.*")
+
             import torch
-            from hqq.utils.patching import prepare_for_inference
-            from hqq.core.quantize import HQQLinear, HQQBackend
+            from torchao.quantization import (
+                Int8DynamicActivationInt8WeightConfig,
+                Int8WeightOnlyConfig,
+            )
+            from transformers import (
+                AutoModelForImageTextToText,
+                AutoProcessor,
+                AutoTokenizer,
+                TorchAoConfig,
+            )
 
-            # HQQLinear.set_backend(HQQBackend.PYTORCH_COMPILE)  # Compiled Pytorch
+            self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
-            quant_config = HqqConfig(nbits=4, group_size=64)
+            if self.device == "cpu":
+                num_cores = os.cpu_count() or 4
+                torch.set_num_threads(num_cores)
+                # Full dynamic int8 (activations + weights) for faster CPU compute
+                quant_type = Int8DynamicActivationInt8WeightConfig()
+            else:
+                # Weight-only int8 on GPU
+                quant_type = Int8WeightOnlyConfig()
 
             nano_model_path = "nanonets/Nanonets-OCR-s"
 
-            self.model = AutoModelForImageTextToText.from_pretrained(
-                nano_model_path,
-                # torch_dtype="auto",
-                torch_dtype=torch.bfloat16,
-                device_map="cpu",
-                quantization_config=quant_config,
-                # attn_implementation="flash_attention_2",
+            # Keep the visual encoder in bfloat16 so vision patch embeddings do not lose precision
+            quant_config = TorchAoConfig(
+                quant_type=quant_type,
+                modules_to_not_convert=["visual"],
             )
 
-            prepare_for_inference(self.model, backend="torchao_int4")
+            self.model = AutoModelForImageTextToText.from_pretrained(
+                nano_model_path,
+                dtype=torch.bfloat16,
+                device_map=self.device,
+                quantization_config=quant_config,
+                attn_implementation="sdpa",
+                low_cpu_mem_usage=True,
+            )
             self.model.eval()
 
             self.tokenizer = AutoTokenizer.from_pretrained(nano_model_path)
