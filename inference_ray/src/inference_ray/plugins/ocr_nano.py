@@ -1,4 +1,5 @@
 import logging
+import re
 from typing import Callable, Dict, Optional
 
 import numpy as np
@@ -45,13 +46,31 @@ class NanoOCRVideo(
     AnalyserPlugin,
     config=default_config,
     parameters=default_parameters,
-    version="0.1",
+    version="0.2",
     requires=requires,
     provides=provides,
 ):
     def __init__(self, config=None, **kwargs):
         super().__init__(config, **kwargs)
         self.model = None
+
+    def clean_ocr_regex(self, raw_text: str) -> str:
+        # Remove noisy metadata tags and their inner content completely
+        text = re.sub(
+            r"<(watermark|page_number|img)>.*?</\1>", "", raw_text, flags=re.DOTALL
+        )
+
+        # Strip all other HTML tags (keeps table cell text intact)
+        text = re.sub(r"<[^>]+>", " ", text)
+
+        # Normalize horizontal whitespace and filter out empty lines
+        return "".join(
+            [
+                re.sub(r"\s+", " ", line).strip()
+                for line in text.splitlines()
+                if line.strip()
+            ]
+        )
 
     def init_model(self):
         if self.model is None:
@@ -189,13 +208,15 @@ class NanoOCRVideo(
                         strings_data.strings.append(text)
 
                         end_time = frame.get("time") + 1 / parameters.get("fps")
-                        annotations_data.annotations.append(
-                            Annotation(
-                                start=frame.get("time"),
-                                end=end_time,
-                                labels=[result],
+                        clean_text = self.clean_ocr_regex(result)
+                        if clean_text != "":
+                            annotations_data.annotations.append(
+                                Annotation(
+                                    start=frame.get("time"),
+                                    end=end_time,
+                                    labels=[clean_text],
+                                )
                             )
-                        )
 
                     num_frames = video_decoder.duration() * video_decoder.fps()
 
