@@ -1,27 +1,28 @@
-from typing import Dict, List
-import logging
 import csv
+import logging
+from typing import Dict, List
 
-from ..utils.analyser_client import TaskAnalyserClient
+from django.conf import settings
+from django.db import transaction
+from tibava_data import DataManager, Shot
 
 from backend.models import (
+    Annotation,
+    AnnotationCategory,
     PluginRun,
     PluginRunResult,
-    Video,
+    TibavaUser,
     Timeline,
     TimelineSegment,
-    AnnotationCategory,
-    Annotation,
     TimelineSegmentAnnotation,
-    TibavaUser,
+    Video,
 )
 from backend.plugin_manager import PluginManager
 from backend.utils import media_path_to_video
 from backend.utils.parser import Parser
 from backend.utils.task import Task
-from tibava_data import Shot, DataManager
-from django.db import transaction
-from django.conf import settings
+
+from ..utils.analyser_client import TaskAnalyserClient
 
 
 @PluginManager.export_parser("clip_ontology")
@@ -202,7 +203,7 @@ class CLIPOntology(Task):
                         parent=annotation_timeline_db,
                     )
                     timeline_dict.update({index: timeline_db.id.hex})
-                    data_list.update({index: sub_data.id})
+                    data_list.update({index: sub_data})
 
                 return {
                     "plugin_run": plugin_run.id.hex,
@@ -212,7 +213,7 @@ class CLIPOntology(Task):
                         **timeline_dict,
                     },
                     "data": {
-                        "annotations": result[1]["aggregated_scalars"].id,
+                        "annotations": aggregate_result[1]["aggregated_scalars"].id,
                         **data_list,
                     },
                 }

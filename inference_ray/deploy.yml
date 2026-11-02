@@ -99,7 +99,7 @@ applications:
         autoscaling_config:
           min_replicas: 0
           max_replicas: 20
-
+        ray_actor_options:
           runtime_env:
             uv:
               - "open-clip-torch==2.24.0"
@@ -121,7 +121,7 @@ applications:
         autoscaling_config:
           min_replicas: 0
           max_replicas: 20
-
+        ray_actor_options:
           runtime_env:
             uv:
               - "open-clip-torch==2.24.0"
@@ -144,6 +144,7 @@ applications:
           min_replicas: 0
           max_replicas: 20
 
+        ray_actor_options:
           runtime_env:
             uv:
               - "open-clip-torch==2.24.0"
@@ -166,6 +167,7 @@ applications:
           min_replicas: 0
           max_replicas: 20
 
+        ray_actor_options:
           runtime_env:
             uv:
               - "open-clip-torch==2.24.0"
@@ -220,6 +222,7 @@ applications:
           min_replicas: 0
           max_replicas: 20
 
+        ray_actor_options:
           runtime_env:
             uv:
               - scikit-learn>=1.6.1
@@ -239,7 +242,7 @@ applications:
         autoscaling_config:
           min_replicas: 0
           max_replicas: 20
-
+        ray_actor_options:
           runtime_env:
             uv:
               - scikit-learn==1.4.0
@@ -259,6 +262,7 @@ applications:
           min_replicas: 0
           max_replicas: 20
 
+        ray_actor_options:
           runtime_env:
             uv:
               - scikit-learn==1.4.0
@@ -295,6 +299,7 @@ applications:
           min_replicas: 0
           max_replicas: 20
 
+        ray_actor_options:
           runtime_env:
             uv:
               - scikit-learn==1.4.0
@@ -315,6 +320,7 @@ applications:
           min_replicas: 0
           max_replicas: 20
 
+        ray_actor_options:
           runtime_env:
             uv:
               - scikit-learn==1.4.0
@@ -349,6 +355,7 @@ applications:
           min_replicas: 0
           max_replicas: 20
 
+        ray_actor_options:
           runtime_env:
             uv:
               - scikit-learn==1.4.0
@@ -422,6 +429,7 @@ applications:
           min_replicas: 0
           max_replicas: 20
 
+        ray_actor_options:
           runtime_env:
             uv:
               - torch==2.2.0
@@ -452,6 +460,7 @@ applications:
           min_replicas: 0
           max_replicas: 20
 
+        ray_actor_options:
           runtime_env:
             uv:
               - torch==2.2.0
@@ -538,6 +547,7 @@ applications:
           min_replicas: 0
           max_replicas: 20
 
+        ray_actor_options:
           runtime_env:
             uv:
               - librosa==0.10.1
@@ -560,6 +570,7 @@ applications:
           min_replicas: 0
           max_replicas: 20
 
+        ray_actor_options:
           runtime_env:
             uv:
               - scikit-learn==1.4.0
@@ -583,6 +594,7 @@ applications:
           min_replicas: 0
           max_replicas: 20
 
+        ray_actor_options:
           runtime_env:
             uv:
               - scikit-learn==1.4.0
@@ -607,6 +619,7 @@ applications:
           min_replicas: 0
           max_replicas: 20
 
+        ray_actor_options:
           runtime_env:
             uv:
               - scikit-learn==1.4.0
@@ -628,6 +641,7 @@ applications:
           min_replicas: 0
           max_replicas: 20
 
+        ray_actor_options:
           runtime_env:
             uv:
               - scipy==1.12.0
@@ -643,6 +657,7 @@ applications:
           min_replicas: 0
           max_replicas: 20
 
+        ray_actor_options:
           runtime_env:
             uv:
               - scipy==1.12.0
@@ -1082,13 +1097,6 @@ applications:
   - name: nano_ocr_video
     route_prefix: /nano_ocr_video
     import_path: inference_ray.main:app_builder
-    runtime_env:
-      uv:
-        - transformers>=4.54.0
-        - accelerate>=1.9.0
-        - torchvision>=0.22.1
-        - hqq
-        - torchao
     args:
       model: nano_ocr_video
       data_path: /data
@@ -1096,6 +1104,17 @@ applications:
       - name: Deployment
         autoscaling_config:
           min_replicas: 0
+
+        ray_actor_options:
+          num_cpus: 2
+          runtime_env:
+            uv:
+              - transformers>=4.54.0
+              - accelerate>=1.9.0
+              - torchvision>=0.22.1
+              - torchao>=0.10.0
+              - qwen-vl-utils
+              - pillow
   - name: movie_pattern_intensify
     route_prefix: /movie_pattern_intensify
     import_path: inference_ray.main:app_builder
