@@ -1,0 +1,16 @@
+# Runtime image for running TIBAVA on an HPC node with Apptainer (no Docker).
+# Python code + deps come from the host's uv venv (tibava/.venv); this image only
+# supplies the system services that docker-compose would otherwise provide.
+Bootstrap: docker
+From: debian:bookworm-slim
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update
+    apt-get install -y --no-install-recommends \
+        libmagickwand-dev imagemagick ffmpeg git curl ca-certificates procps \
+        postgresql postgresql-client memcached redis-server nginx
+    rm -rf /var/lib/apt/lists/*
+
+%environment
+    export PATH=/usr/lib/postgresql/15/bin:$PATH
