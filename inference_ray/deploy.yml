@@ -104,7 +104,7 @@ applications:
             uv:
               - "open-clip-torch==2.24.0"
               - git+https://github.com/SpringsteinM/imageio.git
-              - torch==2.2.0
+              - torch==2.4.0
               - scikit-learn==1.4.0
               - transformers==4.37.2
   - name: clip_text_embedding
@@ -126,7 +126,7 @@ applications:
             uv:
               - "open-clip-torch==2.24.0"
               - git+https://github.com/SpringsteinM/imageio.git
-              - torch==2.2.0
+              - torch==2.4.0
               - scikit-learn==1.4.0
               - transformers==4.37.2
   - name: clip_ontology_probs
@@ -149,7 +149,7 @@ applications:
             uv:
               - "open-clip-torch==2.24.0"
               - git+https://github.com/SpringsteinM/imageio.git
-              - torch==2.2.0
+              - torch==2.4.0
               - scikit-learn==1.4.0
               - transformers==4.37.2
   - name: clip_probs
@@ -172,7 +172,7 @@ applications:
             uv:
               - "open-clip-torch==2.24.0"
               - git+https://github.com/SpringsteinM/imageio.git
-              - torch==2.2.0
+              - torch==2.4.0
               - scikit-learn==1.4.0
               - transformers==4.37.2
   - name: color_analyser
@@ -247,7 +247,7 @@ applications:
             uv:
               - scikit-learn==1.4.0
               - opencv-python-headless==4.9.0.80
-              - torch==2.2.0
+              - torch==2.4.0
   - name: insightface_image_detector_torch
     route_prefix: /insightface_image_detector_torch
     import_path: inference_ray.main:app_builder
@@ -267,7 +267,7 @@ applications:
             uv:
               - scikit-learn==1.4.0
               - opencv-python-headless==4.9.0.80
-              - torch==2.2.0
+              - torch==2.4.0
   - name: insightface_facesize
     route_prefix: /insightface_facesize
     import_path: inference_ray.main:app_builder
@@ -360,7 +360,7 @@ applications:
             uv:
               - scikit-learn==1.4.0
               - opencv-python-headless==4.9.0.80
-              - torch==2.2.0
+              - torch==2.4.0
 
   - name: scalar_threshold
     route_prefix: /scalar_threshold
@@ -432,7 +432,7 @@ applications:
         ray_actor_options:
           runtime_env:
             uv:
-              - torch==2.2.0
+              - torch==2.4.0
   - name: thumbnail_generator
     route_prefix: /thumbnail_generator
     import_path: inference_ray.main:app_builder
@@ -463,7 +463,7 @@ applications:
         ray_actor_options:
           runtime_env:
             uv:
-              - torch==2.2.0
+              - torch==2.4.0
 
   - name: video_to_video
     route_prefix: /video_to_video
@@ -552,7 +552,7 @@ applications:
             uv:
               - librosa==0.10.1
               - setuptools<82
-              - torch==2.2.0
+              - torch==2.4.0
               - scikit-learn==1.4.0
               - transformers==4.37.2
 
@@ -745,7 +745,7 @@ applications:
           runtime_env:
             uv:
               - git+https://github.com/SpringsteinM/imageio.git
-              - torch==2.2.0
+              - torch==2.4.0
               - pillow
               - scikit-learn==1.4.0
               - transformers==4.37.2
@@ -771,7 +771,7 @@ applications:
           runtime_env:
             uv:
               - git+https://github.com/SpringsteinM/imageio.git
-              - torch==2.2.0
+              - torch==2.4.0
               - pillow
               - scikit-learn==1.4.0
               - transformers==4.37.2
