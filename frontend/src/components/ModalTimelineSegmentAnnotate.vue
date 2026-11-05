@@ -1,11 +1,11 @@
 <template>
-  <v-dialog persistent v-model="show" max-width="1000" @keydown.esc="close">
+  <v-dialog persistent :value="show" max-width="1000" @keydown.esc="close">
     <v-card>
-      <v-toolbar color="primary" dark>{{
-        $t("timelineSegment.title")
-      }}</v-toolbar>
+      <v-toolbar color="primary" dark>
+        {{ $t("timelineSegment.title") }}
+      </v-toolbar>
       <v-card-text>
-        <v-form @submit="submit">
+        <v-form @submit.prevent="submit">
           <v-combobox
             v-if="show"
             clearable
@@ -32,16 +32,17 @@
 
             <template v-slot:item="{ item }">
               <v-chip>
-                <v-btn disable icon x-small :color="item.color" class="mr-1">
-                  <v-icon>{{ "mdi-palette" }}</v-icon>
+                <v-btn disabled icon x-small :color="item.color" class="mr-1">
+                  <v-icon>mdi-palette</v-icon>
                 </v-btn>
                 <v-btn
                   v-if="item.category"
-                  disable
+                  disabled
                   x-small
-                  :color="item.color"
+                  :color="item.category.color || item.color"
                   class="mr-1"
-                  >{{ item.category.name }}
+                >
+                  {{ item.category.name }}
                 </v-btn>
                 <span>{{ item.name }}</span>
               </v-chip>
@@ -56,21 +57,26 @@
                   nudge-left="16"
                   :close-on-content-click="false"
                 >
-                  <template v-slot:activator="{ on }">
+                  <template v-slot:activator="{ on, attrs }">
                     <v-btn
-                      disable
                       icon
                       x-small
                       :color="item.color"
                       class="mr-1"
+                      v-bind="attrs"
                       v-on="on"
                     >
-                      <v-icon>{{ "mdi-palette" }}</v-icon>
+                      <v-icon>mdi-palette</v-icon>
                     </v-btn>
                   </template>
                   <v-card>
                     <v-card-text class="pa-0">
-                      <v-color-picker v-model="item.color" flat />
+                      <v-color-picker
+                        :value="item.color"
+                        @input="onColorChange(index, $event)"
+                        mode="hexa"
+                        flat
+                      />
                     </v-card-text>
                   </v-card>
                 </v-menu>
@@ -80,25 +86,24 @@
                   top
                   :close-on-content-click="false"
                 >
-                  <template v-slot:activator="{ on }">
+                  <template v-slot:activator="{ on, attrs }">
                     <v-btn
                       v-if="!item.category"
-                      disable
                       icon
                       x-small
-                      :color="item.category ? item.category.color : ''"
                       class="mr-2"
+                      v-bind="attrs"
                       v-on="on"
                     >
-                      <v-icon>{{ "mdi-menu" }}</v-icon>
+                      <v-icon>mdi-menu</v-icon>
                     </v-btn>
 
                     <v-btn
                       v-else
-                      disable
                       x-small
-                      :color="item.color"
+                      :color="item.category.color || item.color"
                       class="mr-2"
+                      v-bind="attrs"
                       v-on="on"
                     >
                       {{ item.category.name }}
@@ -110,14 +115,15 @@
                         clearable
                         v-model="item.category"
                         :items="annotationCategories"
+                        item-text="name"
                         flat
                         @change="onAnnotationCategoryChange(item)"
                       >
-                        <template v-slot:item="{ item }">
-                          {{ item.name }}
+                        <template v-slot:item="{ item: catItem }">
+                          {{ catItem.name }}
                         </template>
-                        <template v-slot:selection="{ item }">
-                          {{ item.name }}
+                        <template v-slot:selection="{ item: catItem }">
+                          {{ catItem.name }}
                         </template>
                       </v-combobox>
                     </v-card-text>
@@ -125,7 +131,7 @@
                 </v-menu>
                 <span>{{ item.name }}</span>
                 <v-btn icon class="ml-2" x-small @click="onDeleteItem(index)">
-                  <v-icon>{{ "mdi-close" }}</v-icon>
+                  <v-icon>mdi-close</v-icon>
                 </v-btn>
               </v-chip>
             </template>
@@ -142,44 +148,48 @@
 </template>
 
 <script>
-function getRandomColor() {
-  var letters = "0123456789ABCDEF";
-  var color = "#";
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
-function onlySpaces(str) {
-  return /^\s*$/.test(str);
-}
-
 import { mapStores } from "pinia";
-
 import { useTimelineStore } from "@/store/timeline";
 import { useTimelineSegmentStore } from "@/store/timeline_segment";
 import { useAnnotationCategoryStore } from "../store/annotation_category";
 import { useAnnotationStore } from "../store/annotation";
 import { useTimelineSegmentAnnotationStore } from "../store/timeline_segment_annotation";
 
-function uniqueIdArray(l) {
-  let keys = {};
-  l.forEach((e) => {
-    keys[e.id] = e;
-  });
+function getRandomColor() {
+  const letters = "0123456789ABCDEF";
+  let color = "#";
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
 
-  return Object.keys(keys).map((v) => keys[v]);
+function onlySpaces(str) {
+  return /^\s*$/.test(str);
+}
+
+function uniqueIdArray(list) {
+  const map = new Map();
+  list.forEach((item) => {
+    if (item?.id) {
+      map.set(item.id, item);
+    }
+  });
+  return Array.from(map.values());
 }
 
 export default {
   props: {
     show: {
+      type: Boolean,
       default: false,
     },
     annotateRange: {
+      type: Boolean,
       default: false,
     },
     timelineId: {
+      type: [String, Number],
       default: null,
     },
   },
@@ -193,13 +203,15 @@ export default {
     };
   },
   computed: {
+    ...mapStores(
+      useTimelineStore,
+      useTimelineSegmentStore,
+      useAnnotationCategoryStore,
+      useAnnotationStore,
+      useTimelineSegmentAnnotationStore
+    ),
     allExistingAnnotationCategories() {
-      let annotationCategories = this.annotationCategoryStore.all;
-
-      console.log(
-        `annotationCategories ${JSON.stringify(annotationCategories)}`
-      );
-      return annotationCategories;
+      return this.annotationCategoryStore.all || [];
     },
     annotationCategories: {
       get() {
@@ -212,75 +224,52 @@ export default {
       },
     },
     allExistingAnnotations() {
-      let annotations = this.annotationStore.all;
-      annotations.map((e) => {
-        if ("category_id" in e) {
-          e.category = this.annotationCategoryStore.get(e.category_id);
-        }
-        return e;
-      });
-      return annotations;
+      return (this.annotationStore.all || []).map((e) => ({
+        ...e,
+        color: e.color || "#1976D2",
+        colorMenu: false,
+        categoryMenu: false,
+        category: e.category_id
+          ? this.annotationCategoryStore.get(e.category_id)
+          : null,
+      }));
+    },
+    timelineSegments() {
+      return this.timelineSegmentStore.selected || [];
     },
     currentAnnotations() {
-      let annotations = [];
+      let segments = [];
       if (this.annotateRange && this.timelineId) {
         const start = this.timelineStore.selectedTimeRangeStart;
         const end = this.timelineStore.selectedTimeRangeEnd;
-        const timelineSegments = this.timelineSegmentStore.forTimelineTimeRange(
+        segments = this.timelineSegmentStore.forTimelineTimeRange(
           this.timelineId,
           start,
           end
         );
-        console.log(timelineSegments);
-        annotations = timelineSegments
-          .map((s) => {
-            return this.timelineSegmentAnnotationStore
-              .forTimelineSegment(s.id)
-              .map((a) => {
-                const annotation = this.annotationStore.get(a.annotation_id);
-                let category = null;
-                if ("category_id" in annotation) {
-                  category = this.annotationCategoryStore.get(
-                    annotation.category_id
-                  );
-                }
-                return {
-                  name: annotation.name,
-                  color: annotation.color,
-                  id: annotation.id,
-                  category: category,
-                };
-              });
-          })
-          .flat();
       } else {
-        annotations = this.timelineSegments
-          .map((s) => {
-            return this.timelineSegmentAnnotationStore
-              .forTimelineSegment(s.id)
-              .map((a) => {
-                const annotation = this.annotationStore.get(a.annotation_id);
-                let category = null;
-                if ("category_id" in annotation) {
-                  category = this.annotationCategoryStore.get(
-                    annotation.category_id
-                  );
-                }
-                return {
-                  name: annotation.name,
-                  color: annotation.color,
-                  id: annotation.id,
-                  category: category,
-                };
-              });
-          })
-          .flat();
+        segments = this.timelineSegments;
       }
 
-      annotations = uniqueIdArray(annotations);
+      const annotations = (segments || []).flatMap((s) => {
+        const segmentAnnotations =
+          this.timelineSegmentAnnotationStore.forTimelineSegment(s.id) || [];
+        return segmentAnnotations.map((a) => {
+          const annotation = this.annotationStore.get(a.annotation_id) || {};
+          return {
+            name: annotation.name,
+            color: annotation.color || "#1976D2",
+            id: annotation.id,
+            colorMenu: false,
+            categoryMenu: false,
+            category: annotation.category_id
+              ? this.annotationCategoryStore.get(annotation.category_id)
+              : null,
+          };
+        });
+      });
 
-      console.log(annotations);
-      return annotations;
+      return uniqueIdArray(annotations);
     },
     annotations: {
       get() {
@@ -289,26 +278,34 @@ export default {
           : this.annotationsProxy;
       },
       set(val) {
-        console.log(`Set value ${JSON.stringify(val)}`);
         this.annotationsProxy = val;
       },
     },
-    timelineSegments() {
-      return this.timelineSegmentStore.selected;
-    },
-    ...mapStores(
-      useTimelineStore,
-      useTimelineSegmentStore,
-      useAnnotationCategoryStore,
-      useAnnotationStore,
-      useTimelineSegmentAnnotationStore
-    ),
   },
   methods: {
     onDeleteItem(index) {
       const annotations = [...this.annotations];
       annotations.splice(index, 1);
       this.annotationsProxy = annotations;
+    },
+    onColorChange(index, newColor) {
+      console.log(JSON.stringify(newColor));
+      const hexColor =
+        typeof newColor === "object" && newColor !== null
+          ? newColor.hex
+          : newColor;
+
+      const updated = this.annotations.map((item, idx) => {
+        if (idx === index) {
+          return {
+            ...item,
+            color: hexColor,
+          };
+        }
+        return item;
+      });
+      console.log(JSON.stringify(updated));
+      this.annotationsProxy = updated;
     },
     async onKeydown(event) {
       if (event.code === "Enter" && this.lastKey === "Enter") {
@@ -320,167 +317,144 @@ export default {
       this.lastKey = event.code;
     },
     onAnnotationChange() {
-      if (this.isSubmitting) {
-        return;
-      }
+      if (this.isSubmitting) return;
+
       let inputs = [];
-      let self = this;
-      // split string annotations
+
       this.annotations.forEach((e) => {
         if (typeof e === "string") {
-          //filter empty name and categories
-          if (onlySpaces(e)) {
-            return;
-          }
-          let splits = e.split(":");
+          if (onlySpaces(e)) return;
+
+          const splits = e.split(":");
           if (splits.length > 1) {
-            let category = splits.shift();
-            let name = splits.join(":");
-            //filter empty name and categories
-            if (onlySpaces(category)) {
-              return;
-            }
-            if (onlySpaces(name)) {
-              return;
-            }
-            let color = getRandomColor();
-            // Filter existing categories and use the color of the category
-            let existingCategory = self.categories.filter(
-              (e) => e.name === category
+            const categoryName = splits.shift().trim();
+            const name = splits.join(":").trim();
+
+            if (onlySpaces(categoryName) || onlySpaces(name)) return;
+
+            const existingCat = this.annotationCategories.find(
+              (cat) => cat.name === categoryName
             );
-            if (existingCategory.length > 0) {
+
+            if (existingCat) {
               inputs.push({
-                name: name,
-                color: existingCategory[0].color,
-                category: existingCategory[0],
+                name,
+                color: existingCat.color || getRandomColor(),
+                colorMenu: false,
+                categoryMenu: false,
+                category: existingCat,
               });
             } else {
+              const color = getRandomColor();
               inputs.push({
-                name: name,
-                color: color,
-                category: { name: category, color: color },
+                name,
+                color,
+                colorMenu: false,
+                categoryMenu: false,
+                category: { name: categoryName, color },
               });
             }
           } else {
             inputs.push({
-              name: e,
+              name: e.trim(),
               color: getRandomColor(),
+              colorMenu: false,
+              categoryMenu: false,
               category: null,
             });
           }
-        } else if (typeof e === "object") {
-          inputs.push(e);
+        } else if (typeof e === "object" && e !== null) {
+          inputs.push({
+            colorMenu: false,
+            categoryMenu: false,
+            ...e,
+          });
         }
       });
-      //check if the name already exists
 
-      inputs = inputs.map((e) => {
-        let existing = this.allExistingAnnotations.find((i) => {
-          if (e.category === i.category && e.name === i.name) {
-            return true;
-          } else if (!e.category && !i.category && e.name === i.name) {
-            return true;
-          }
-          return false;
+      // Match against pre-existing annotations in the store
+      inputs = inputs.map((item) => {
+        const found = this.allExistingAnnotations.find((existing) => {
+          const matchCat =
+            (!item.category && !existing.category) ||
+            item.category?.name === existing.category?.name;
+          return matchCat && item.name === existing.name;
         });
-        if (existing) {
-          return existing;
-        } else {
-          return e;
-        }
-      });
-      //filter all duplicates
-      let existing = {};
-      inputs.forEach((e, i) => {
-        let name = "";
-        if (e.category) {
-          name = `${e.category.name}:${e.name}`;
-        } else {
-          name = `${e.name}`;
-        }
-        if (!(name in existing)) {
-          existing[name] = { element: e, index: i };
-        } else {
-          // if the existing element has already an id we will skipt that
-          if ("id" in existing[name]) {
-            return;
-          }
-          if ("id" in e) {
-            existing[name] = { element: e, index: i };
-            return;
-          }
-          if ("category" in existing && "category" in e) {
-            if ("id" in existing.category) {
-              return;
+        return found
+          ? {
+              ...found,
+              colorMenu: item.colorMenu ?? false,
+              categoryMenu: item.categoryMenu ?? false,
             }
+          : item;
+      });
 
-            if ("id" in e.category) {
-              existing[name] = { element: e, index: i };
-              return;
-            }
+      // Deduplicate selections
+      const uniqueMap = new Map();
+      inputs.forEach((item) => {
+        const key = item.category
+          ? `${item.category.name}:${item.name}`
+          : item.name;
+        if (!uniqueMap.has(key)) {
+          uniqueMap.set(key, item);
+        } else {
+          const current = uniqueMap.get(key);
+          if (!current.id && item.id) {
+            uniqueMap.set(key, item);
           }
         }
       });
 
-      if (this.isSubmitting) {
-        return;
-      }
-
-      inputs = Object.keys(existing).map((e) => {
-        return existing[e].element;
-      });
-      this.annotationsProxy = inputs;
+      this.annotationsProxy = Array.from(uniqueMap.values());
     },
     onAnnotationCategoryChange(item) {
       item.categoryMenu = false;
       if (typeof item.category === "string") {
-        console.log(item);
-        // categoryNames;
-
-        const annotationCategories = [...this.annotationCategories];
-        annotationCategories.push({
-          name: item.category,
-          color: item.color,
-        });
-        this.annotationCategoriesProxy = annotationCategories;
-
-        item.category = {
+        const newCategory = {
           name: item.category,
           color: item.color,
         };
+        this.annotationCategoriesProxy = [
+          ...this.annotationCategories,
+          newCategory,
+        ];
+        item.category = newCategory;
+      } else if (item.category && item.category.color) {
+        item.color = item.category.color;
       }
+      this.annotationsProxy = [...this.annotations];
     },
     async submit() {
-      if (this.isSubmitting) {
-        return;
-      }
+      console.log(JSON.stringify(this.annotations));
+      if (this.isSubmitting) return;
       this.isSubmitting = true;
 
-      if (this.annotateRange) {
-        await this.timelineSegmentStore.annotateRange({
-          timelineId: this.timelineId,
-          annotations: this.annotations,
-        });
-      } else {
-        console.log(this.timelineSegments.map((e) => e.id));
-        await this.timelineSegmentStore.annotateSegments({
-          timelineSegmentIds: this.timelineSegments.map((e) => e.id),
-          annotations: this.annotations,
-        });
+      try {
+        if (this.annotateRange) {
+          await this.timelineSegmentStore.annotateRange({
+            timelineId: this.timelineId,
+            annotations: this.annotations,
+          });
+        } else {
+          await this.timelineSegmentStore.annotateSegments({
+            timelineSegmentIds: this.timelineSegments.map((e) => e.id),
+            annotations: this.annotations,
+          });
+        }
+        this.$emit("update:show", false);
+      } catch (err) {
+        console.error("Failed to save annotations:", err);
+      } finally {
+        this.isSubmitting = false;
       }
-
-      // TODO
-
-      this.isSubmitting = false;
-      this.$emit("update:show", false);
     },
     close() {
       this.$emit("update:show", false);
     },
   },
   watch: {
-    show(newValue) {
-      if (newValue) {
+    show(val) {
+      if (val) {
         this.search = null;
         this.lastKey = null;
         this.isSubmitting = false;
