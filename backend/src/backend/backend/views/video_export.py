@@ -1,49 +1,44 @@
+import base64
+import csv
+import io
 import json
 import logging
-import traceback
-import logging
 import sys
-import io
-import csv
-import yaml
-import base64
+import traceback
+import zipfile
 from dataclasses import dataclass
-
+from enum import Enum
+from io import StringIO
 from typing import List, Tuple
 
-from backend.exporter_manager import ExporterManager
-from django.views import View
-from django.http import JsonResponse
-from django.conf import settings
-
-from pympi.Elan import Eaf, to_eaf
-from io import StringIO
+import numpy as np
 import pandas as pd
+import yaml
+from django.conf import settings
+from django.http import JsonResponse
+from django.views import View
+from pympi.Elan import Eaf, to_eaf
+from tibava_data import Annotation as Data_Annotation
+from tibava_data import DataManager, Shot
 
-import zipfile
-
-from backend.utils import (
-    download_url,
-    download_file,
-    media_url_to_video,
-    media_path_to_video,
-    media_dir_to_video,
-)
-
-from backend.utils.color import get_closest_color
+from backend.exporter_manager import ExporterManager
 from backend.models import (
-    Video,
     Annotation,
+    ExporterRun,
+    PluginRun,
+    PluginRunResult,
     Timeline,
     TimelineSegment,
-    PluginRunResult,
-    PluginRun,
+    Video,
 )
-from enum import Enum
-from tibava_data import DataManager, Shot
-from tibava_data import Annotation as Data_Annotation
-import numpy as np
-
+from backend.utils import (
+    download_file,
+    download_url,
+    media_dir_to_video,
+    media_path_to_video,
+    media_url_to_video,
+)
+from backend.utils.color import get_closest_color
 
 logger = logging.getLogger(__name__)
 
@@ -90,6 +85,23 @@ class TimeTypeExport(Enum):
     END = 2
     DURATION = 3
     DURATION_NO_GAP = 4
+
+
+class VideoExportStatus(View):
+    def get(self, request, job_id):
+        try:
+            if not request.user.is_authenticated:
+                return JsonResponse({"status": "error"})
+
+            try:
+                exporter_run_db = ExporterRun.objects.get(id=job_id)
+            except ExporterRun.DoesNotExist:
+                return JsonResponse({"status": "error", "type": "not_exist"})
+
+            print(exporter_run_db, flush=True)
+        except Exception:
+            logger.exception("Failed to generate merged export")
+            return JsonResponse({"status": "error"})
 
 
 class VideoExport(View):
@@ -623,14 +635,12 @@ class VideoExport(View):
                 with data_manager.create_data(
                     "AnnotationData", timeline_db.id.hex
                 ) as data:
-
                     print("ANNOTATION", data.to_dict(), flush=True)
                     shot_timeline_segments = TimelineSegment.objects.filter(
                         timeline=timeline_db
                     )
 
                     for segment in shot_timeline_segments:
-
                         annotations = []
 
                         if len(segment.timelinesegmentannotation_set.all()) > 0:
@@ -878,15 +888,16 @@ class VideoExport(View):
                 )
 
             elif request.POST.get("format") == "individual_csv":
-                export_manager = ExportManager()
-                export_manager("csv", video_db)
+                exporter_manager = ExporterManager()
+                exporter_job = exporter_manager("csv", video_db)
                 result = self.export_individual_csv(parameters, video_db)
                 return JsonResponse(
                     {
                         "status": "ok",
-                        "file": result,
-                        "video_name": video_db.name,
-                        "extension": "zip",
+                        "job_id": exporter_job["job_id"],
+                        # "file": result,
+                        # "video_name": video_db.name,
+                        # "extension": "zip",
                     }
                 )
 

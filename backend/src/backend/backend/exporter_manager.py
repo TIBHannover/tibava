@@ -76,22 +76,23 @@ class ExporterManager:
             parameters = {}
 
         result = {"status": True}
-        exporter_run = ExporterRun.objects.create(
+        exporter_run_db = ExporterRun.objects.create(
             video=video, type=plugin, status=ExporterRun.STATUS_QUEUED
         )
 
-        video_export.apply_async(
+        job = video_export.apply_async(
             (
                 {
                     "plugin": plugin,
                     "parameters": parameters,
                     "video": video.id,
-                    "exporter_run": exporter_run.id if exporter_run else None,
+                    "exporter_run": exporter_run_db.id if exporter_run_db else None,
                     "kwargs": kwargs,
                 },
             )
         )
 
+        result.update({"job_id": exporter_run_db.id})
         return result
 
 

@@ -36,7 +36,7 @@
                   @click="
                     downloadExport(
                       export_format.export,
-                      export_format.parameters,
+                      export_format.parameters
                     )
                   "
                   >{{ $t("modal.export.export") }}</v-btn
@@ -57,6 +57,7 @@
 import Parameters from "./Parameters.vue";
 import { mapStores } from "pinia";
 import { useVideoStore } from "@/store/video";
+import { useExporterStore } from "@/store/exporter";
 import { usePlayerStore } from "@/store/player";
 
 export default {
@@ -176,7 +177,7 @@ export default {
         .slice(0)
         .sort((a, b) => a.name.localeCompare(b.name));
     },
-    ...mapStores(useVideoStore, usePlayerStore),
+    ...mapStores(useExporterStore, useVideoStore, usePlayerStore),
   },
   methods: {
     async downloadExport(format, parameters) {
@@ -189,7 +190,7 @@ export default {
           return { name: e.name, value: e.value };
         }
       });
-      this.videoStore
+      this.exporterStore
         .export({ format: format, parameters: parameters })
         .then(() => {
           this.dialog = false;

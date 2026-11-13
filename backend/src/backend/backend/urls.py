@@ -21,6 +21,11 @@ urlpatterns = [
     path("video/delete", views.VideoDelete.as_view(), name="video_delete"),
     #
     path("video/export", views.VideoExport.as_view(), name="video_export"),
+    path(
+        "video/export/status/<uuid:job_id>",
+        views.VideoExportStatus.as_view(),
+        name="video_export_status",
+    ),
     #
     path("plugin/list", views.PluginList.as_view(), name="plugin_list"),
     path("plugin/run/new", views.PluginRunNew.as_view(), name="plugin_run_new"),

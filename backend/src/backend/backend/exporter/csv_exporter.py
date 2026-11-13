@@ -47,8 +47,8 @@ class CSVExporter(Exporter):
     def __call__(
         self,
         parameters: Dict,
-        video: Video = None,
-        exporter_run: ExporterRun = None,
+        video_id: uuid.UUID = None,
+        exporter_run_id: uuid.UUID = None,
         **kwargs,
     ):
         print("CSV", flush=True)
@@ -61,7 +61,7 @@ class CSVExporter(Exporter):
 
         data_manager = DataManager("/predictions/")
 
-        for timeline_db in Timeline.objects.filter(video=video):
+        for timeline_db in Timeline.objects.filter(video=video_id):
             annotations = {}
             tl_type = timeline_db.plugin_run_result
             # print(f"{timeline_db.name} --> {tl_type=}")

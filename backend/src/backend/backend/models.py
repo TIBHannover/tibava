@@ -109,12 +109,27 @@ class Plugin(models.Model):
 
 class ExporterRun(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+    video = models.ForeignKey("Video", on_delete=models.CASCADE, related_name="exports")
+
+    # Timestamps
     date = models.DateTimeField(auto_now_add=True)
-    update_date = models.DateTimeField(auto_now_add=True)
+    update_date = models.DateTimeField(auto_now=True)
+    started_at = models.DateTimeField(blank=True, null=True)
+    completed_at = models.DateTimeField(blank=True, null=True)
+
     type = models.CharField(max_length=256)
-    progress = models.FloatField(default=0.0)
+    name = models.CharField(max_length=256)
+    ext = models.CharField(max_length=256)
+    parameters = models.JSONField(default=dict, blank=True)
+    file = models.UUIDField(default=None, blank=True, null=True)
+
+    # Celery & Execution State
+    celery_task_id = models.CharField(
+        max_length=255, blank=True, null=True, db_index=True
+    )
     in_scheduler = models.BooleanField(default=False)
+    progress = models.FloatField(default=0.0)
+    error_message = models.TextField(blank=True, null=True)
 
     STATUS_UNKNOWN = "U"
     STATUS_ERROR = "E"
@@ -122,6 +137,7 @@ class ExporterRun(models.Model):
     STATUS_RUNNING = "R"
     STATUS_QUEUED = "Q"
     STATUS_WAITING = "W"
+    STATUS_CANCELED = "C"  # Optional: helpful if users can abort exports
     STATUS = {
         STATUS_UNKNOWN: "UNKNOWN",
         STATUS_ERROR: "ERROR",
@@ -129,25 +145,39 @@ class ExporterRun(models.Model):
         STATUS_RUNNING: "RUNNING",
         STATUS_QUEUED: "QUEUED",
         STATUS_WAITING: "WAITING",
+        STATUS_CANCELED: "CANCELED",
     }
 
     status = models.CharField(
         max_length=2,
         choices=[(k, v) for k, v in STATUS.items()],
-        default=STATUS_UNKNOWN,
+        default=STATUS_WAITING,
+        db_index=True,
     )
 
     def to_dict(self, include_refs_hashes=True, include_refs=False, **kwargs):
         result = {
             "id": self.id.hex,
             "type": self.type,
-            "date": self.date,
-            "update_date": self.update_date,
+            "date": self.date.isoformat() if self.date else None,
+            "update_date": self.update_date.isoformat() if self.update_date else None,
+            "started_at": self.started_at.isoformat() if self.started_at else None,
+            "completed_at": self.completed_at.isoformat()
+            if self.completed_at
+            else None,
             "progress": self.progress,
-            "status": self.STATUS[self.status],
+            "status": self.STATUS.get(self.status, "UNKNOWN"),
+            "name": self.name,
+            "file": self.file.hex if self.file else None,
+            "ext": self.ext,
+            "parameters": self.parameters,
+            "celery_task_id": self.celery_task_id,
+            "error_message": self.error_message,
         }
         if include_refs_hashes:
-            result["video_id"] = self.video.id.hex
+            result["video_id"] = (
+                self.video_id.hex
+            )  # Uses video_id to avoid an extra DB query
         return result
 
 
