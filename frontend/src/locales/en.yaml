@@ -210,7 +210,7 @@ modal:
     clip_ontology:
       plugin_name: Visual Concept Classification with a Concept List (CLIP)
       plugin_description: !md |
-        This plugin assigns the frames of the video to a list of visual concepts that you define, e.g., times of day, places, or types of scenes. It uses the same CLIP model as "Visual Concept Search" and compares each analyzed frame with the descriptions of all concepts in your list.
+        This plugin assigns the frames of the video to a list of visual concepts that you define, e.g., times of day, places, or types of scenes. It uses the same multilingual [CLIP](https://arxiv.org/abs/2103.00020) model ([model details](https://huggingface.co/laion/CLIP-ViT-B-32-xlm-roberta-base-laion5B-s13B-b90k)) as "Visual Concept Search" and compares each analyzed frame with the descriptions of all concepts in your list.
 
         The probabilities of all concepts add up to 1 for each frame, so every frame is assigned to your concepts, even if none of them fits. Your list should therefore cover all alternatives that can occur, e.g., _day_ and _night_, or _indoor_ and _outdoor_. To search for a single concept, use "Visual Concept Search" instead.
 
@@ -372,7 +372,7 @@ modal:
       plugin_description: !md |
         This plugin gives you an overview of the recurring settings in the video by grouping shots that show the same or a very similar place, e.g., the same apartment, office, or street. Unlike "Place Recognition", which assigns general categories such as "kitchen", it finds places that occur several times in this particular video.
 
-        The middle frame of each shot is described with a multilingual [CLIP](https://huggingface.co/laion/CLIP-ViT-B-32-xlm-roberta-base-laion5B-s13B-b90k) model, and similar images are grouped into clusters, ideally one per place. Since the comparison is based on how similar the images look, different places that look alike can end up in the same cluster.
+        The middle frame of each shot is described with a multilingual [CLIP](https://arxiv.org/abs/2103.00020) model ([model details](https://huggingface.co/laion/CLIP-ViT-B-32-xlm-roberta-base-laion5B-s13B-b90k)), and similar images are grouped into clusters, ideally one per place. Since the comparison is based on how similar the images look, different places that look alike can end up in the same cluster.
 
         Check the clusters in the tab "Places"; remove wrong images, merge clusters, or run the plugin again with a different threshold.
 
