@@ -117,19 +117,19 @@ modal:
       min: Minimum
       prod: Product
     audio_classification:
-      plugin_name: Sound Classification
+      plugin_name: Sound Classification (EAT)
       plugin_description: !md |
-        This plugin recognizes which kinds of sounds occur in each shot of the video, for example speech, laughter, music genres, musical instruments, animals, vehicles, or explosions. It uses the [EAT (Efficient Audio Transformer)](https://arxiv.org/abs/2401.03497) model, trained on Google's [AudioSet](https://research.google.com/audioset/) dataset, which distinguishes [527 sound classes](https://research.google.com/audioset/ontology/index.html).
+        This plugin recognizes which kinds of sounds occur in each shot of the video, for example speech, laughter, music genres, musical instruments, animals, vehicles, or explosions.         It uses the [EAT (Efficient Audio Transformer)](https://arxiv.org/abs/2401.03497) model, trained on Google's [AudioSet](https://research.google.com/audioset/) dataset, which distinguishes [527 sound classes](http://storage.googleapis.com/us_audioset/youtube_corpus/v1/csv/class_labels_indices.csv) (list as CSV file).
 
-        The audio is analyzed separately for each shot of the selected shot timeline. The audio of a shot is converted into a mel spectrogram, a representation of its frequencies over time, and the model estimates for every sound class how likely it is to be present. Several classes can be recognized at the same time, for example speech and background music. Only the first 10 seconds of each shot are analyzed; longer shots are classified based on their beginning.
-
-        The result is a timeline with one segment per shot, labeled with the recognized sound classes (English AudioSet names). Shots in which no class reaches the confidence threshold remain without a label.
+        The result is a timeline with one segment per shot, labeled with the recognized sound classes (English AudioSet names). Several classes can be recognized at the same time, for example speech and background music. Shots in which no class reaches the confidence threshold remain without a label. 
+        
+        **Note: Currently, onle the first 10 seconds of each shots are analyzed. We are working on a solution.**
 
         #### Parameters
 
-        - **Shot Boundaries from Timeline:** the timeline whose shots are analyzed, e.g., the timeline created by the "Shot Boundary Detection" plugin. Each shot is classified separately, and its boundaries become the segments of the result.
-        - **Number of predicted classes (top-k)** (advanced option): the maximum number of sound classes per shot. Only the most likely classes are considered; higher values allow more labels per shot.
-        - **Confidence threshold** (advanced option): the minimum probability a sound class needs to be shown. Higher values show fewer but more reliable labels; lower values also show uncertain ones.
+        - **Shot Boundaries from Timeline:** the timeline whose shots are analyzed, e.g., the result of the "Shot Boundary Detection" plugin.
+        - **Number of predicted classes (top-k):** the maximum number of sound classes per shot. Higher values allow more labels per shot. 
+        - **Confidence threshold:** the minimum probability a sound class needs to be shown. Higher values show fewer but more reliable labels; lower values also show uncertain ones.
       timeline_name: Audio Classification
       top_k: Number of predicted classes (top-k)
       threshold: Confidence threshold
@@ -138,49 +138,43 @@ modal:
       timeline_name: Audio Emotion Classification
       plugin_description: This plugin detects emotions from audio segments (retrieved with WhisperX).
     audio_frequency:
-      plugin_name: Audio Spectrogram
+      plugin_name: Audio Spectrogram (STFT)
       plugin_description: !md |
-        This plugin shows which frequencies are present in the audio track over time. The audio is extracted from the video as a mono signal and resampled for the selected frequency range. The [librosa](https://librosa.org/) library then computes a [short-time Fourier transform (STFT)](https://librosa.org/doc/latest/generated/librosa.stft.html): the signal is split into short, overlapping windows, and the strength of each frequency is measured within each window. The result is converted to decibels and displayed as a heatmap, with time on the horizontal axis and frequency on the vertical axis.
+        This plugin shows which frequencies are present in the audio track over time. The [librosa](https://librosa.org/) library computes a [short-time Fourier transform (STFT)](https://librosa.org/doc/latest/api/generated/librosa.stft.html): the audio is split into short, overlapping windows, and the strength of each frequency is measured within each window. The result is displayed as a heatmap, with time on the horizontal axis and frequency on the vertical axis, from low at the bottom to high at the top.
 
-        To keep the heatmap at a manageable size for long videos, neighboring time steps are averaged. Short sounds therefore remain visible, but appear blurred in time in long videos.
-
-        The intensities are scaled from 0 (weakest) to 1 (strongest value in the video), so they are relative to the video and cannot be compared between videos. The spectrogram can reveal voices, music, rhythmic patterns, and other recurring sounds.
+        The spectrogram can reveal voices, music, rhythmic patterns, and other recurring sounds. Intensities are scaled from 0 (weakest) to 1 (strongest in the video), so they are best compared within one video rather than between videos.
 
         #### Parameters
 
-        - **Frequency range** (advanced option): the highest frequency shown in the spectrogram. Higher ranges show more detail in music and noises but take longer to compute.
-        - **FFT window length (samples)** (advanced option): longer windows separate neighboring frequencies more finely but blur short sounds in time; shorter windows show short sounds more precisely but with coarser frequencies.
+        - **Sampling rate**: the highest frequency shown is half the sampling rate. Higher values show more detail in music and noises but take longer to compute.
+        - **FFT window length (samples)**: longer windows separate neighboring frequencies more finely but blur short sounds in time; shorter windows show short sounds more precisely but with coarser frequencies.
       timeline_name: Audio Spectrogram
-      sr: Frequency range
-      sr_hint: Highest frequency shown in the spectrogram. Higher ranges show more detail in music and noises but take longer to compute.
-      sr_4k: Up to 4 kHz (speech)
-      sr_8k: Up to 8 kHz (speech and most music)
-      sr_11k: Up to 11 kHz (full detail, slowest)
+      sr: Sampling Rate
       n_fft: FFT window length (samples)
-      n_fft_hint: Longer windows separate neighboring frequencies more finely but blur short sounds in time. Shorter windows show short sounds more precisely but with coarser frequencies.
-      n_fft_256: 256 (sharpest timing)
-      n_fft_2048: 2048 (finest frequencies)
     audio_gender:
       plugin_name: Audio Gender Classification
       timeline_name: Audio Gender Classification
       plugin_description: This plugin detects the gender from audio/speech segments (retrieved with WhisperX).
     audio_rms:
-      plugin_name: Audio Volume (Root Mean Square)
+      plugin_name: Audio Volume (RMS)
       plugin_description: !md |
-        This plugin measures how loud the audio track is over time. The audio is extracted from the video as a mono signal and resampled to the selected sampling rate. The [librosa](https://librosa.org/) library then computes the [root mean square (RMS) energy](https://librosa.org/doc/latest/generated/librosa.feature.rms.html) over short, overlapping windows of 2048 samples, moving forward 512 samples at a time.
+        This plugin measures how loud the audio track is over time. The [librosa](https://librosa.org/) library computes the [root mean square (RMS) energy](https://librosa.org/doc/latest/api/generated/librosa.feature.rms.html) of the audio in short, overlapping windows.
 
-        The resulting curve is scaled from 0 (quietest moment of the video) to 1 (loudest moment). The values are therefore relative to the video: they cannot be compared between videos and are not decibels. The timeline can reveal silent passages, loud scenes such as music or action sequences, and sudden changes in volume.
+        The timeline reveals silent passages, loud scenes such as music or action sequences, and sudden changes in volume. The curve is scaled from 0 (the quietest moment of the video) to 1 (the loudest), so it is best used to compare passages within one video rather than between videos.
 
         #### Parameters
-        **Sampling rate**: higher values give a finer time resolution but take longer to compute.
+        - **Sampling rate**: higher values give a finer time resolution but take longer to compute.
       timeline_name: RMS Volume
       sr: Sampling Rate
     audio_waveform:
       plugin_name: Audio Waveform
       plugin_description: !md |
-        This plugin draws the waveform of the audio track, the same view an audio editor shows. The audio is extracted from the video as a mono signal and loaded with the [librosa](https://librosa.org/) library. Because a video contains far more audio samples than a timeline can display, the signal is divided into short segments, and the lowest and highest value of each segment are kept. This way, loud peaks stay visible however long the video is.
+        This plugin draws the waveform of the audio track, similar to the view in an audio editor. The [librosa](https://librosa.org/) library [resamples](https://librosa.org/doc/latest/api/generated/librosa.resample.html) the audio to a fixed number of points so that it can be displayed as a timeline.
 
-        The middle of the timeline corresponds to silence; the further the curve swings up and down, the louder the sound. The scale is relative to the loudest moment of the video, so the waveform cannot be compared between videos. It shows at a glance where there is sound or silence and where short, loud events such as bangs or applause occur. To follow the volume over time, the "Audio Volume (Root Mean Square)" plugin is easier to read.
+        Silence lies around the middle of the timeline; the further the curve swings up and down, the louder the sound. The scale is relative to the quietest and loudest values of the video, so the waveform is best compared within one video. To follow the volume over time, the "Audio Volume (RMS)" plugin is easier to read.
+
+        #### Parameters
+        - **Sampling rate**: the rate at which the audio is loaded. Higher values keep more detail but take longer to compute.
       timeline_name: Audio Waveform
       sr: Sampling Rate
     blip:
@@ -600,39 +594,33 @@ modal:
     whisper:
       plugin_name: Speech Recognition (Whisper)
       plugin_description: !md |
-        This plugin automatically transcribes the speech in the video with OpenAI's [Whisper](https://github.com/openai/whisper) speech recognition model ([paper](https://arxiv.org/abs/2212.04356)), run with the Hugging Face [Transformers](https://huggingface.co/docs/transformers/) library. The audio track is processed in sections of 30 seconds. Whisper detects the spoken language automatically and writes the text in that language; it supports [99 languages](https://github.com/openai/whisper?tab=readme-ov-file#available-models-and-languages). The transcript is split into short phrases with their start and end times.
+        This plugin transcribes the speech in the video with OpenAI's [Whisper](https://github.com/openai/whisper) model ([paper](https://arxiv.org/abs/2212.04356)). Whisper detects the spoken language automatically and supports [about 100 languages](https://github.com/openai/whisper?tab=readme-ov-file#available-models-and-languages). The transcript is split into short phrases with their start and end times.
 
-        After the plugin has finished, the transcript is shown as a timeline and in the tab "Transcript", where you can search for words. The tab "Word Cloud" shows the most frequent words.
+        The transcript is shown as a timeline and in the tab "Transcript", where you can search for words. The tab "Word Cloud" shows the most frequent words.
 
-        Please note that the plugin does not distinguish between speakers. Whisper can occasionally produce text for passages with music, noise, or silence that was never spoken, so check important passages against the video.
-      timeline_name: Whisper Transcript
+        The plugin does not distinguish between speakers. Please use "Speech & Speaker Recognition (WhisperX)" for that. Whisper can occasionally produce text for music, noise, or silence, so check important passages against the video.
+      timeline_name: Whisper transcript
     whisper_x:
-      plugin_name: Speech & Speaker Recognition (WhisperX, deprecated)
-      plugin_description: !md |
-        This plugin uses a [faster version of OpenAI's Whisper model with speaker diarization](https://github.com/m-bain/whisperX) to automatically provide a transcription of the spoken language in the video (differentiated by the speaker). It supports more than 100 languages. A list of supported languages can be found [here](https://github.com/openai/whisper?tab=readme-ov-file#available-models-and-languages).
-      language_code_name: Language Code
-      language_code_hint: If not provided, the spoken language is detected automatically
-      timeline_name: WhisperX Transcript
-    whisper_x_origin:
       plugin_name: Speech & Speaker Recognition (WhisperX)
       plugin_description: !md |
         This plugin transcribes the speech in the video and determines who speaks when. It uses [WhisperX](https://github.com/m-bain/whisperX), which combines three steps:
 
-        1. **Speech recognition:** OpenAI's [Whisper](https://github.com/openai/whisper) model (large-v3) transcribes the audio. Passages without speech are detected and skipped first, which reduces text being invented during music or silence.
-        2. **Word alignment:** a [wav2vec 2.0](https://arxiv.org/abs/2006.11477) model for the spoken language aligns every word precisely with the audio.
-        3. **Speaker diarization:** [pyannote.audio](https://github.com/pyannote/pyannote-audio) computes a voice profile for short sections of speech and groups similar voices into speakers. Each phrase is then assigned to one speaker.
+        1. **Speech recognition:** OpenAI's [Whisper](https://github.com/openai/whisper) model (large-v3) transcribes the audio. Passages without speech are skipped, which reduces invented text during music or silence.
+        2. **Word alignment:** a [wav2vec 2.0](https://arxiv.org/abs/2006.11477) model aligns every word precisely with the audio.
+        3. **Speaker diarization:** [pyannote.audio](https://github.com/pyannote/pyannote-audio) groups similar voices into speakers and assigns each phrase to one speaker.
 
-        The result is a group of two timelines: "Speech Transcript" contains each phrase together with its speaker, and "Speaker" shows when each speaker talks. Speakers are numbered (SPEAKER_00, SPEAKER_01, …) separately for each video; they are not identified by name.
+        The result is a group of two timelines: "Speech Transcript" contains each phrase with its speaker, and "Speaker" shows when each speaker talks. Speakers are numbered (SPEAKER_00, SPEAKER_01, …) separately for each video; they are not identified by name.
 
         #### Parameters
 
-        - **Language Code:** the language spoken in the video as a two-letter code, e.g., `en` or `de`. Keep `none` to detect the language automatically. Entering it is more reliable for short videos or videos with a lot of music. Only languages for which WhisperX provides an alignment model are supported; for other languages, the plugin fails.
-        - **Speaker clustering threshold** (advanced option): how similar two voices must be to be treated as the same speaker in a first grouping step. Lower values separate voices more strictly and produce more speakers; higher values merge more voices and produce fewer speakers.
-        - **Speaker regularization (Fb)** (advanced option): how strongly the refinement step that follows prefers a small number of speakers. Higher values merge similar voices more readily and produce fewer speakers; lower values allow more speakers.
-        - **Acoustic scaling (Fa)** (advanced option): how much weight the refinement step gives to differences between voices compared with the speaker regularization. Higher values let small differences in a voice count more, which tends to produce more speakers. In most cases, this value does not need to be changed.
-      timeline_name: Transcription
+        - **Language Code:** the spoken language as a two-letter code, e.g., `en` or `de`. Keep `none` to detect it automatically. Entering it is more reliable for short videos or videos with a lot of music. It supports the [41 languages with a WhisperX alignment model](https://github.com/m-bain/whisperX/blob/main/whisperx/alignment.py).
+        - **Speaker clustering threshold:** how similar two voices must be to count as the same speaker. Lower values produce more speakers, higher values fewer.
+        - **Speaker regularization (Fb):** how strongly a small number of speakers is preferred. Higher values produce fewer speakers.
+        - **Acoustic scaling (Fa):** how much small differences between voices count. Higher values tend to produce more speakers. 
       language_code_name: Language Code
-      threshold: VAD Threshold
+      language_code_hint: If not provided, the spoken language is detected automatically
+      timeline_name: WhisperX Transcript
+      threshold: Speaker clustering threshold
       fb: Speaker regularization (Fb)
       fa: Acoustic scaling (Fa)
     x_clip:
