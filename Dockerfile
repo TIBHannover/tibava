@@ -2,63 +2,62 @@
 FROM python:3.12-slim-bookworm AS builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libmagickwand-dev imagemagick git ffmpeg
+    libmagickwand-dev imagemagick git ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install uv using the official standalone installer
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+# Pin uv version so upstream releases don't silently bust your layer cache
+COPY --from=ghcr.io/astral-sh/uv:0.13 /uv /uvx /bin/
 
-# Set working directory
 WORKDIR /app
 
-# Enable bytecode compilation for faster container startup
-ENV UV_COMPILE_BYTECODE=1
+ENV UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy \
+    UV_CACHE_DIR=/root/.cache/uv
 
 ARG WORKSPACE_MEMBER
 
-# Copy only the dependency files first to leverage Docker's layer caching
-COPY uv.lock /app/uv.lock
-COPY .python-version /app/.python-version
-COPY pyproject.toml /app/pyproject.toml
-# COPY README.md /app/README.md
+# 1. Copy ONLY the lockfile and every workspace member's pyproject.toml first
+COPY uv.lock .python-version pyproject.toml ./
+COPY packages/tibava_data/pyproject.toml ./packages/tibava_data/pyproject.toml
+COPY packages/tibava_interface/pyproject.toml ./packages/tibava_interface/pyproject.toml
+COPY packages/tibava_utils/pyproject.toml ./packages/tibava_utils/pyproject.toml
+COPY inference_ray/pyproject.toml ./inference_ray/pyproject.toml
+COPY analyser/pyproject.toml ./analyser/pyproject.toml
+COPY backend/pyproject.toml ./backend/pyproject.toml
+
+# 2. Install ONLY external dependencies (cached unless uv.lock or a pyproject.toml changes!)
+RUN --mount=type=cache,target=/root/.cache/uv,sharing=locked \
+    uv sync --frozen --no-dev --package ${WORKSPACE_MEMBER} --no-install-project --no-install-workspace
+
+# 3. NOW copy the actual source code (editing .py files only invalidates from here down)
 COPY packages/ /app/packages/
 COPY backend/ /app/backend/
 COPY analyser/ /app/analyser/
 COPY inference_ray/ /app/inference_ray/
 
-# Install dependencies into a virtual environment at /app/.venv
-# We use --no-install-project because the application code isn't copied yet
+# 4. Install your local workspace packages into the existing .venv (~1-2 seconds, zero downloads)
 RUN --mount=type=cache,target=/root/.cache/uv,sharing=locked \
-    # uv sync --frozen --no-dev --package ${WORKSPACE_MEMBER}
     uv sync --frozen --no-dev --package ${WORKSPACE_MEMBER} --no-editable
 
 
 # --- Stage 2: Final lightweight runtime ---
 FROM python:3.12-slim-bookworm
 
-
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libmagickwand-dev imagemagick git ffmpeg
+    libmagickwand-dev imagemagick git ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Re-declare the ARG in the new stage
-ARG WORKSPACE_MEMBER
-
-# Copy the isolated virtual environment
 COPY --from=builder /app/.venv /app/.venv
 
-# Copy ONLY the target package's source code into the final image
-COPY .python-version /app/.python-version
+COPY .python-version pyproject.toml uv.lock ./
 COPY analyser/ /app/analyser/
 COPY backend/ /app/backend/
 COPY frontend/ /app/frontend/
 COPY inference_ray/ /app/inference_ray/
 COPY packages/ /app/packages/
-COPY pyproject.toml /app/pyproject.toml
-COPY uv.lock /app/uv.lock
 
-# Place the virtual environment's binaries at the front of the PATH
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Run your application
 ENTRYPOINT []
