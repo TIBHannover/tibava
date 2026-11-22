@@ -303,7 +303,7 @@ export default {
               description: this.$t("modal.plugin.whisper_x.plugin_description"),
               icon: "mdi-waveform",
               plugin: "whisper_x",
-              id: 105,
+              id: 109,
               parameters: [
                 {
                   field: "text_field",
@@ -323,37 +323,6 @@ export default {
                       "modal.plugin.whisper_x.language_code_hint"
                     )})`,
                 },
-              ],
-            },
-            {
-              name: this.$t("modal.plugin.whisper_x_origin.plugin_name"),
-              description: this.$t(
-                "modal.plugin.whisper_x_origin.plugin_description"
-              ),
-              icon: "mdi-waveform",
-              plugin: "whisper_x_origin",
-              id: 109,
-              parameters: [
-                {
-                  field: "text_field",
-                  name: "timeline",
-                  value: this.$t("modal.plugin.whisper_x_origin.timeline_name"),
-                  text: this.$t("modal.plugin.timeline_name"),
-                },
-              ],
-              optional_parameters: [
-                {
-                  field: "text_field",
-                  name: "language_code",
-                  value: "none", // TODO should be no value (currently then no task is started)
-                  text:
-                    this.$t(
-                      "modal.plugin.whisper_x_origin.language_code_name"
-                    ) +
-                    ` (${this.$t(
-                      "modal.plugin.whisper_x.language_code_hint"
-                    )})`,
-                },
 
                 {
                   field: "slider",
@@ -362,7 +331,7 @@ export default {
                   value: 0.6,
                   step: 0.05,
                   name: "threshold",
-                  text: this.$t("modal.plugin.whisper_x_origin.threshold"),
+                  text: this.$t("modal.plugin.whisper_x.threshold"),
                 },
                 {
                   field: "slider",
@@ -371,7 +340,7 @@ export default {
                   value: 0.8,
                   step: 0.05,
                   name: "Fb",
-                  text: this.$t("modal.plugin.whisper_x_origin.fb"),
+                  text: this.$t("modal.plugin.whisper_x.fb"),
                 },
                 {
                   field: "slider",
@@ -380,7 +349,7 @@ export default {
                   value: 0.07,
                   step: 0.01,
                   name: "Fa",
-                  text: this.$t("modal.plugin.whisper_x_origin.fa"),
+                  text: this.$t("modal.plugin.whisper_x.fa"),
                 },
               ],
             },

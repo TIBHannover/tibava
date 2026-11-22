@@ -40,5 +40,4 @@ from .thumbnail import *
 from .vllm_ollama import *
 from .whisper import *
 from .whisper_x import *
-from .whisper_x_origin import *
 from .xclip import *

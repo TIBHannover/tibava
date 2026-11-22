@@ -28,6 +28,9 @@ class WhisperXParser(Parser):
         self.valid_parameter = {
             "timeline": {"parser": str, "default": "WhisperX Transcript"},
             "language_code": {"parser": str, "default": None},
+            "threshold": {"parser": float, "default": 0.6},
+            "Fb": {"parser": float, "default": 0.8},
+            "Fa": {"parser": float, "default": 0.07},
         }
 
     def __call__(self, parameters: Dict = None, **kwargs) -> Dict:
@@ -82,7 +85,12 @@ class WhisperX(Task):
         result = self.run_analyser(
             client,
             "whisper_x",
-            parameters={"language_code": parameters.get("language_code")},
+            parameters={
+                "language_code": parameters.get("language_code"),
+                "threshold": parameters.get("threshold"),
+                "Fb": parameters.get("Fb"),
+                "Fa": parameters.get("Fa"),
+            },
             inputs={**result[0]},
             downloads=["transcript", "speaker"],
         )
@@ -121,21 +129,31 @@ class WhisperX(Task):
                 )
                 result_timelines[transcript_data.name] = timeline.id.hex
                 color_list = ["#DDDDDD", "#EEEEEE"]  # white/gray
-                for anno_id, annotation in enumerate(transcript_data.annotations):
+                for anno_id, (speaker, annotation) in enumerate(
+                    zip(speaker_data.annotations, transcript_data.annotations)
+                ):
                     timeline_segment_db = TimelineSegment.objects.create(
                         timeline=timeline,
                         start=annotation.start,
                         end=annotation.end,
                     )
-                    for label in annotation.labels:
+                    for speaker_label, label in zip(speaker.labels, annotation.labels):
                         label = str(label)
+                        speaker_label = str(speaker_label)
                         if len(label) > settings.ANNOTATION_MAX_LENGTH:
                             label = (
                                 label[: max(0, settings.ANNOTATION_MAX_LENGTH - 4)]
                                 + " ..."
                             )
+                        if len(speaker_label) > settings.ANNOTATION_MAX_LENGTH:
+                            speaker_label = (
+                                speaker_label[
+                                    : max(0, settings.ANNOTATION_MAX_LENGTH - 4)
+                                ]
+                                + " ..."
+                            )
                         annotation_db, _ = Annotation.objects.get_or_create(
-                            name=label,
+                            name="[" + speaker_label + "]: " + label,
                             video=video,
                             category=category_db,
                             owner=user,

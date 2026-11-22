@@ -198,13 +198,6 @@
       "whisper_x": {
         "plugin_name": "Speech and Speaker Recognition (WhisperX)",
         "plugin_description": "This plugin uses a <a href=\"https://github.com/m-bain/whisperX\">faster version of OpenAI's Whisper model with speaker diarization</a> to automatically provide a transcription of the spoken language in the video (differentiated by the speaker). It supports more than 100 languages. A list of supported languages can be found <a href=\"https://github.com/openai/whisper?tab=readme-ov-file#available-models-and-languages\">here</a>.",
-        "language_code_name": "Language Code",
-        "language_code_hint": "If not provided, the spoken language is detected automatically",
-        "timeline_name": "WhisperX Transcript"
-      },
-      "whisper_x_origin": {
-        "plugin_name": "WhisperX Original",
-        "plugin_description": "Speech recognition and forced phoneme alignment using WhisperX.",
         "timeline_name": "Transcription",
         "language_code_name": "Language Code",
         "threshold": "VAD Threshold",

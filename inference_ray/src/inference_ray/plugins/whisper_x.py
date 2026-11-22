@@ -17,7 +17,7 @@ default_config = {
     "port": 6379,
 }
 
-default_parameters = {"language_code": None}
+default_parameters = {"language_code": None, "threshold": 0.6, "Fb": 0.8, "Fa": 0.07}
 
 requires = {
     "audio": AudioData,
@@ -55,6 +55,8 @@ class WhisperX(
         parameters: Dict = None,
         callbacks: Callable = None,
     ) -> Dict[str, Data]:
+        import tempfile
+
         import librosa
         import torch
         import whisperx
@@ -81,7 +83,11 @@ class WhisperX(
             data_manager.create_data("AnnotationData") as speaker_data,
         ):
             with input_data.open_audio("r") as f_audio:
-                y, sr = librosa.load(f_audio, sr=16000)
+                temp_file = tempfile.NamedTemporaryFile(suffix=".wav")
+                temp_file.write(f_audio.read())
+
+                y = whisperx.load_audio(temp_file.name)
+                temp_file.close()
                 transcription = self.model.transcribe(
                     audio=y, batch_size=8, language=parameters.get("language_code")
                 )
@@ -103,6 +109,22 @@ class WhisperX(
                     device,
                     return_char_alignments=False,
                 )
+
+                p = self.diarize_model.model  # pyannote Pipeline inside WhisperX
+                params = p.parameters(instantiated=True)
+                print(params)  # confirm Fa/Fb exist in your version
+
+                # {'segmentation': {'min_duration_off': 0.0}, 'clustering': {'threshold': 0.6, 'Fa': 0.07, 'Fb': 0.8}}
+                params["clustering"]["threshold"] = parameters.get(
+                    "threshold", 0.6
+                )  # AHC warm start: lower = more initial clusters
+                params["clustering"]["Fb"] = parameters.get(
+                    "Fb", 0.8
+                )  # lower = less speaker regularization
+                params["clustering"]["Fa"] = parameters.get(
+                    "Fa", 0.07
+                )  # leave at first
+                p.instantiate(params)
 
                 diarize_segments = self.diarize_model(y)
                 logging.error(diarize_segments)
