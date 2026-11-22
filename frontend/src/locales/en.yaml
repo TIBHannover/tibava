@@ -258,30 +258,24 @@ modal:
         - **Normalize Results?:** if enabled, the curve is scaled so that the darkest frame of the video is 0 and the brightest is 1. This makes differences within a video easier to see. If disabled, the absolute values are shown, which can be compared between videos.
       timeline_name: Brightness
     face_clustering:
-      plugin_name: Face Clustering
+      plugin_name: Face Clustering (InsightFace)
       plugin_description: !md |
-        This plugin gives you an overview of the main characters in the video by grouping their faces into clusters, ideally one cluster per person. It is not meant to find every appearance of a person; that is done in a second step (see below).
-
-        Frames are taken from the video at the selected rate, and faces are detected with the [SCRFD](https://arxiv.org/abs/2105.04714) face detector of [InsightFace](https://github.com/deepinsight/insightface). Faces smaller than the selected minimum height are discarded: small faces are often blurry and would make the clusters less stable. For each remaining face, an [ArcFace](https://arxiv.org/abs/1801.07698) model computes a numerical description of the facial features, and faces with similar features are grouped into clusters. Two faces end up in the same cluster if they are similar enough, either directly or through a chain of similar faces. Because of this chaining, a threshold that is only slightly too high can merge different people into one cluster.
+        This plugin gives you an overview of the main characters by grouping their faces into clusters, ideally one per person. It does not find every appearance of a person; that is done in step 2 of the workflow below. Faces are detected and facial features are extracted with [InsightFace](https://github.com/deepinsight/insightface) ([SCRFD](https://arxiv.org/abs/2105.04714) and [ArcFace](https://arxiv.org/abs/1801.07698)). Similar faces are then grouped together.
 
         #### Typical workflow
 
-        1. **Create clusters:** run this plugin and check the clusters in the tab "Faces". Each main character relevant for your analysis should have one cluster that contains only this person. Remove wrong faces or merge clusters where needed, or run the plugin again with a different threshold.
-        2. **Convert clusters to timelines:** for each relevant cluster, create a timeline in the tab "Faces". The average of the cluster's sample faces is used as a reference for the person, and **all faces in the video** are compared with it. The timeline shows for each moment how similar the most similar face is to the reference. The values are scaled per timeline, so the highest value is always 1: read the timeline as "where the person most likely appears", not as a yes/no answer.
-        3. **Visualize relations:** use the visualization options of TIB-AV-A to create a constellation graph that shows which persons appear together.
-
-        The persons are not identified by name, but you can manually provide names in step 2. 
+        1. **Find the main persons:** check the clusters in the tab "Faces"; remove wrong faces, merge clusters, or run the plugin again with a different threshold.
+        2. **Find all appearances:** convert relevant clusters to timelines in the tab "Faces". Now _all faces_ in the video are compared with the cluster, and the timeline shows where the person most likely appears.
+        3. **Visualize relations:** use the visualization options to create a constellation graph of which persons appear together.
 
         #### Parameters
 
-        - **Clustering threshold:** how different two faces may be and still belong to the same cluster. Lower values create more and purer clusters, but one person may be split into several clusters. Higher values create fewer clusters, but different people may be merged.
-        - **Maximum number of clusters:** how many of the largest clusters are kept. Smaller clusters, often minor characters or false detections, are discarded.
-        - **Sample faces per cluster:** how many face images of each cluster are shown in the tab "Faces". These sample faces are also the reference when a cluster is converted to a timeline: more samples make the reference more robust, provided they all show the same person.
-        - **Minimum face height:** the minimum height of a face as a fraction of the frame height. Higher values keep only larger, sharper faces and make the clusters more stable; lower values also include people in the background, but blurry faces can mix up the clusters. Small faces are still taken into account when a cluster is converted to a timeline.
-        - **Frames per Second (FPS)** (advanced option): how many frames per second are searched for faces. Higher values find more faces, including people who are only visible briefly, but take longer to compute.
-
-        **Tip:** if a cluster contains several people, lower the clustering threshold. If one person is spread over several clusters, raise it slightly or merge the clusters in the tab "Faces".
-      
+        - **Clustering threshold:** lower values split people into more, purer clusters; higher values merge more faces, possibly of different people.
+        - **Maximum number of clusters:** how many of the largest clusters are kept.
+        - **Sample faces per cluster:** how many faces per cluster are shown and used as the reference in step 2.
+        - **Minimum face height:** smaller faces are ignored for clustering, which makes the clusters more reliable. They are still found in step 2 of the workflow.
+        - **Clustering method:** the algorithm used to group similar faces.
+        - **Frames per Second (FPS):** higher values also find briefly visible people but take longer.
       threshold:
         name: Clustering threshold
         hint_left: More clusters, higher cluster purity
@@ -299,39 +293,35 @@ modal:
         hint_left: Smaller faces included
         hint_right: Only larger faces
       clustering_method_name: Select a clustering method
-      clustering_method_hint: Both methods currently produce the same result.
+      clustering_method_hint: Algorithm used to group similar faces
     face_identification:
-      plugin_name: Face Search by Example Image
+      plugin_name: Face Search by Image (InsightFace)
       plugin_description: !md |
-        This plugin searches the video for a person shown in an example image you upload, and creates a timeline showing where this person most likely appears. It is useful if you already have a photo of the person. To get an overview of the main characters without a photo, use the "Face Clustering" plugin instead.
+        This plugin searches the video for a person shown in an example image you upload. To get an overview of the main characters without a photo, use "Face Clustering (InsightFace)" instead. Faces are detected and facial features are extracted with [InsightFace](https://github.com/deepinsight/insightface) ([SCRFD](https://arxiv.org/abs/2105.04714) and [ArcFace](https://arxiv.org/abs/1801.07698)). Every face in the video is then compared with the example face.
 
-        The face in the example image and all faces in the video are detected with the [SCRFD](https://arxiv.org/abs/2105.04714) face detector of [InsightFace](https://github.com/deepinsight/insightface). For each face, an [ArcFace](https://arxiv.org/abs/1801.07698) model computes a numerical description of the facial features. Frames are taken from the video at the selected rate, and every face in a frame is compared with the example face. For each moment, the timeline shows how similar the most similar face is.
-
-        The values are scaled per timeline, so the highest value is always 1, even if the person does not appear in the video at all. Read the timeline as "where the person most likely appears", not as a yes/no answer.
+        The highest value of the timeline is always 1, even if the person does not appear in the video at all. Thus, read the timeline as "where the person most likely appears", not as a yes/no answer.
 
         #### Parameters
 
-        - **Example image:** a photo of the person you are looking for, as JPG, PNG, or WebP file. The face should be clearly and entirely visible, in good resolution, and the image should show only this person: if it contains several faces, all of them are searched for. If no face is found in the image, the plugin fails.
-        - **Frames per Second (FPS)** (advanced option): how many frames per second are searched. Higher values also find people who are only visible briefly, but take longer to compute.
+        - **Example image:** a photo of the person, ideally showing only this face, clearly visible. If it contains several faces, all of them are searched for; if it contains none, the plugin fails.
+        - **Frames per Second (FPS):** higher values also find briefly visible people but take longer.
       timeline_name: Face Search
       query_images: Example image (JPG, PNG, or WebP)
       query_images_hint: The image should show only the person you are looking for, with the face clearly visible and in good quality.
     facedetection:
       plugin_name: Face Detection
     faceemotion:
-      plugin_name: Facial Expression Recognition
+      plugin_name: Facial Expression Recognition (DeepFace)
       plugin_description: !md |
-        This plugin recognizes the facial expressions of the people in the video. Frames are taken from the video at the selected rate, and faces are detected with the [SCRFD](https://arxiv.org/abs/2105.04714) face detector of [InsightFace](https://github.com/deepinsight/insightface). Since facial expressions should be clearly visible, use the parameter "minimum face size" to discard small faces. Each face is then classified with the facial expression model of [DeepFace](https://github.com/serengil/deepface) into seven classes (cf. Ekman): angry, disgust, fear, happy, sad, surprise, and neutral.
+        This plugin recognizes the facial expressions of the people in the video. Faces are detected with [InsightFace](https://github.com/deepinsight/insightface) and classified with the facial expression model of [DeepFace](https://github.com/serengil/deepface) into seven classes based on Ekman's basic emotions: angry, disgust, fear, happy, sad, surprise, and neutral.
 
-        The result consists of one timeline per expression, showing its probability over time. If several faces are visible at the same time, their probabilities are combined, so in scenes with many faces all expressions can receive high values. If a shot timeline is selected, an additional timeline labels each shot with the expression that has the highest average probability within the shot.
-
-        Results are most reliable for frontal, large, and well-lit faces with clear expressions; subtle expressions are often classified as neutral or confused with each other.
+        The result consists of one timeline per expression, showing its probability over time. If several faces are visible at the same time, their probabilities are combined. If a shot timeline is selected, an additional timeline labels each shot with its most likely expression. Results are most reliable for large, frontal, well-lit faces; subtle expressions are often classified as neutral.
 
         #### Parameters
 
-        - **Shot Boundaries from Timeline:** If a shot timeline is selected, each shot is labeled with its most likely expression; without it, only the probability timelines are created.
-        - **Minimum face height:** the minimum height of a face as a fraction of the frame height. Facial expressions can only be recognized in sufficiently large faces, so higher values give more reliable results; lower values also include people in the background, whose expressions are often misclassified.
-        - **Frames per Second (FPS)** (advanced option): how many frames per second are analyzed. Higher values also capture short expressions but take longer to compute.
+        - **Shot Boundaries from Timeline:** optional; if selected, each shot is labeled with its most likely expression.
+        - **Minimum face height:** smaller faces are ignored. Higher values give more reliable results and combine fewer faces, but people in the background are not analyzed. Lower values include them, but mix more and less reliable faces into the result.
+        - **Frames per Second (FPS):** higher values also capture short expressions but take longer.
       timeline_name: Facial Expressions
     facesize:
       plugin_name: Face Size Analysis
