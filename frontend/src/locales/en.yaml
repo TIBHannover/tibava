@@ -94,20 +94,25 @@ modal:
       plugin_description: This plugin does active speaker detection based on audio and tracked face data.
       timeline_name: Active Speaker Detection
     aggregation:
-      plugin_name: Combine Timelines (Logical Operators)
+      plugin_name: Combine Timelines
       plugin_description: !md |
-        This plugin allows you to combine information from multiple timelines with logical operators. In this way, more complex patterns can be revealed. For example, the _logical and_ can be used to detect when two concepts or persons are visible simultaneously.
+        This plugin combines several timelines into one, which can reveal more complex patterns. For example, _Logical And_ shows when two concepts or persons are visible at the same time.
 
-        **Tip:** You can perform the plugin multiple times to create more complex patterns. The following example performs three aggregations to detect when a _Concept A_ is simultaneously visible with _Concept B_ or _Concept C_:
+        You can run the plugin several times to build more complex patterns. For example, to find when _Concept A_ is visible together with _Concept B_ or _Concept C_:
 
-        AGG1 = (Concept A) Logical And (Concept B)\
-        AGG2 = (Concept A) Logical And (Concept C)\
-        AGG3 = (AGG1) Logical Or (AGG2)
+        AGG1 = (Concept B) Logical Or (Concept C)\
+        AGG2 = (Concept A) Logical And (AGG1)
+
+        **Tip:** To find when something is _not_ visible, first invert its timeline with the "Invert Timeline" plugin.
 
         #### Parameters
 
-        - **Timelines to combine:** two or more timelines with scalar values (e.g., probabilities). Timelines with annotations, such as shots or transcripts, cannot be combined.
-        - **Aggregation Method:** how the values are combined.
+        - **Select Timeline:** two or more timelines with values between 0 and 1, e.g., probabilities. Timelines with annotations, such as shots or transcripts, cannot be combined.
+        - **Aggregation Method:** how the values are combined:
+          - **Logical Or:** high where at least one timeline is high.
+          - **Logical And:** high only where all timelines are high.
+          - **Mean:** the average of all timelines.
+          - **Product:** the values of all timelines multiplied.
       timeline_name: Aggregated Timeline
       method: Aggregation Method
       logical_or: Logical Or
@@ -331,14 +336,14 @@ modal:
       plugin_description: !md |
         This plugin inverts a timeline with values: high values become low and low values become high. Each value is replaced by 1 minus the value; values outside the range from 0 to 1 are first scaled to this range.
 
-        Together with the "Combine Timelines" plugin, it can be used to find moments when something is _not_ the case. For example, to find when person A is visible but person B is not:
+        Together with the "Combine Timelines" plugin, it can be used to find moments when something is _not_ the case. For example, to find when _Concept A_ is visible without _Concept B_:
 
-        INV = Invert (Person B)\
-        RESULT = (Person A) Logical And (INV)
+        INV1 = Invert Timeline (Concept B)\
+        AGG1 = (Concept A) Logical And (INV1)
 
         #### Parameters
 
-        - **Timeline to invert:** the timeline with values to be inverted, e.g., a person timeline or the result of "Single-Object Classification (CLIP)".
+        - **Select Timeline:** the timeline with values to be inverted, e.g., a person timeline or the result of "Visual Concept Search".
       timeline_name: Inverted Timeline
     movie_pattern_frameshare:
       plugin_name: Movie Pattern Frameshare
