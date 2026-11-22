@@ -37,7 +37,7 @@ from .text_ner import *
 from .text_pos import *
 from .text_sentiment import *
 from .thumbnail import *
-from .vllm_ollama import *
+from .vlm_ollama import *
 from .whisper import *
 from .whisper_x import *
 from .xclip import *

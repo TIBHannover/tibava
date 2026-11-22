@@ -1099,16 +1099,16 @@ export default {
             },
 
             {
-              name: this.$t("modal.plugin.vllm.plugin_name"),
-              description: this.$t("modal.plugin.vllm.plugin_description"),
+              name: this.$t("modal.plugin.vlm.plugin_name"),
+              description: this.$t("modal.plugin.vlm.plugin_description"),
               icon: "mdi-eye",
-              plugin: "vllm_ollama",
+              plugin: "vlm_ollama",
               id: 409,
               parameters: [
                 {
                   field: "text_field",
                   name: "timeline",
-                  value: this.$t("modal.plugin.vllm.timeline_name"),
+                  value: this.$t("modal.plugin.vlm.timeline_name"),
                   text: this.$t("modal.plugin.timeline_name"),
                 },
                 {
@@ -1123,7 +1123,7 @@ export default {
                   field: "text_field",
                   name: "query_term",
                   value: "",
-                  text: this.$t("modal.plugin.vllm.search_term"),
+                  text: this.$t("modal.plugin.vlm.search_term"),
                 },
               ],
               optional_parameters: [],

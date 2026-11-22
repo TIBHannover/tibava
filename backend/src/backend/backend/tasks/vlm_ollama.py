@@ -1,37 +1,41 @@
-from typing import Dict, List
 import logging
+from typing import Dict, List
 
-from ..utils.analyser_client import TaskAnalyserClient
+from django.conf import settings
+from django.db import transaction
+from tibava_data import DataManager, Shot
 
-from backend.models import PluginRun, PluginRunResult, Video, Timeline
+from backend.models import (
+    Annotation,
+    AnnotationCategory,
+    PluginRun,
+    PluginRunResult,
+    TibavaUser,
+    Timeline,
+    TimelineSegment,
+    TimelineSegmentAnnotation,
+    Video,
+)
 from backend.plugin_manager import PluginManager
 from backend.utils import media_path_to_video
 from backend.utils.parser import Parser
 from backend.utils.task import Task
-from tibava_data import Shot, DataManager
-from backend.models import (
-    AnnotationCategory,
-    TimelineSegment,
-    Annotation,
-    TimelineSegmentAnnotation,
-    TibavaUser,
-)
-from django.db import transaction
-from django.conf import settings
+
+from ..utils.analyser_client import TaskAnalyserClient
 
 
-@PluginManager.export_parser("vllm_ollama")
-class VLLMOllamaParser(Parser):
+@PluginManager.export_parser("vlm_ollama")
+class VLMOllamaParser(Parser):
     def __init__(self):
         self.valid_parameter = {
-            "timeline": {"parser": str, "default": "vllm_ollama"},
+            "timeline": {"parser": str, "default": "vlm_ollama"},
             "shot_timeline_id": {"required": True},
             "query_term": {"parser": str, "required": True},
         }
 
 
-@PluginManager.export_plugin("vllm_ollama")
-class VLLMOllama(Task):
+@PluginManager.export_plugin("vlm_ollama")
+class VLMOllama(Task):
     def __init__(self):
         self.config = {
             "output_path": "/predictions/",
@@ -89,7 +93,7 @@ class VLLMOllama(Task):
 
         result = self.run_analyser(
             client,
-            "vllm_ollama",
+            "vlm_ollama",
             parameters={"query_term": parameters.get("query_term")},
             inputs={"input": result[0]["output"], "shots": shots_id},
             downloads=["annotations"],

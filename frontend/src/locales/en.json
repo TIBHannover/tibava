@@ -204,8 +204,8 @@
         "fb": "Filter Bank (Fb)",
         "fa": "False Alarm Rate (Fa)"
       },
-      "vllm": {
-        "plugin_name": "Vision Language Model (VLLM)",
+      "vlm": {
+        "plugin_name": "Vision Language Model (VLM)",
         "plugin_description": "Analyze video frames and scenes using vision-language models via Ollama (gemma4).",
         "timeline_name": "Vision Analysis",
         "search_term": "Query / Prompt"

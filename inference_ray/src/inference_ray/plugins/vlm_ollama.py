@@ -1,12 +1,17 @@
-from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from tibava_data import VideoData, ImagesData, AnnotationData, Annotation, ShotsData
-from tibava_data import DataManager, Data
-
-from typing import Callable, Optional, Dict, Union
-
 import logging
-import numpy as np
+from typing import Callable, Dict, Optional, Union
 
+import numpy as np
+from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
+from tibava_data import (
+    Annotation,
+    AnnotationData,
+    Data,
+    DataManager,
+    ImagesData,
+    ShotsData,
+    VideoData,
+)
 
 default_config = {
     "data_dir": "/data/",
@@ -27,8 +32,8 @@ provides = {
 }
 
 
-@AnalyserPluginManager.export("vllm_ollama")
-class VLLMOllama(
+@AnalyserPluginManager.export("vlm_ollama")
+class VLMOllama(
     AnalyserPlugin,
     config=default_config,
     parameters=parameters,
@@ -49,9 +54,10 @@ class VLLMOllama(
         callbacks: Callable = None,
     ) -> Dict[str, Data]:
 
-        from ollama import Client
         import base64
+
         import imageio.v3 as iio
+        from ollama import Client
 
         def encode_image(image: np.ndarray) -> str:
             jpg_bytes = iio.imwrite("<bytes>", image, extension=".jpg", quality=85)
@@ -87,6 +93,7 @@ class VLLMOllama(
                         "images": [encode_image(frame.get("frame"))],
                     }
                     result = self.ollama_client.chat(
+                        options=custom_options,
                         model="gemma4",
                         messages=[message],
                     )
