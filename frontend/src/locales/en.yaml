@@ -195,41 +195,37 @@ modal:
     clip:
       plugin_name: Visual Concept Search (CLIP)
       plugin_description: !md |
-        This plugin searches the video for any visual concept you describe in words, e.g., objects, places, situations, times of day, or weather conditions. It uses a multilingual [OpenCLIP](https://github.com/mlfoundations/open_clip) model ([model details](https://huggingface.co/laion/CLIP-ViT-B-32-xlm-roberta-base-laion5B-s13B-b90k)) trained by [LAION](https://laion.ai/) on billions of image–text pairs, based on the CLIP architecture by [Radford et al. (2021)](https://arxiv.org/abs/2103.00020).
+        This plugin searches the video for any visual concept you describe in words, e.g., objects, places, situations, times of day, or weather conditions. It uses a multilingual [CLIP](https://arxiv.org/abs/2103.00020) model ([model details](https://huggingface.co/laion/CLIP-ViT-B-32-xlm-roberta-base-laion5B-s13B-b90k)) that compares each analyzed frame with your description.
 
-        Frames are taken from the video at the selected rate, and CLIP compares each frame with your description. To make the comparison more robust, the description is automatically inserted into 80 standard phrasings such as "a photo of a …" or "a drawing of a …", and the results are averaged. The timeline shows for each moment how well the frame matches the description.
+        The highest value of the timeline is always 1, even if the concept does not appear in the video at all. Thus, read the timeline as "where the concept most likely appears", not as a yes/no answer.
 
-        The values are scaled per timeline, so the best-matching moment is always 1, even if the concept does not appear in the video at all. Read the timeline as "where the concept most likely appears", not as a yes/no answer.
-
-        CLIP works well for concepts that can be recognized in a single frame. For concepts that require movement over time, such as human actions, use the "Action Classification (X-CLIP)" plugin.
+        CLIP works well for concepts that can be recognized in a single frame. For actions and other concepts that require movement over time, use "Action Search".
 
         #### Parameters
 
-        - **Concept Description:** the concept you are looking for, in simple, unambiguous terms, e.g., _car_, _a red car_, or _people dancing in the rain_. Do not add phrases like "a photo of", because they are added automatically. Descriptions in other languages work as well, but English usually gives the best results.
-        - **Frames per Second (FPS)** (advanced option): how many frames per second are analyzed. Higher values also find concepts that are only visible briefly, but take longer to compute.
+        - **Concept Description:** the concept you are looking for, in simple, unambiguous terms, e.g., _car_, _a red car_, or _a beach at sunset_. Do not add phrases like "a photo of", because they are added automatically. Descriptions in other languages work as well, but English usually gives the best results.
+        - **Frames per Second (FPS):** higher values also find briefly visible concepts but take longer.
       timeline_name: Concept Search
       search_term: Concept Description
     clip_ontology:
       plugin_name: Visual Concept Classification with a Concept List (CLIP)
       plugin_description: !md |
-        This plugin assigns the frames of the video to a list of visual concepts that you define, e.g., times of day, places, or types of scenes. It uses the same multilingual [OpenCLIP](https://github.com/mlfoundations/open_clip) model ([model details](https://huggingface.co/laion/CLIP-ViT-B-32-xlm-roberta-base-laion5B-s13B-b90k)) trained by [LAION](https://laion.ai/) as the "Visual Concept Search (CLIP)" plugin.
+        This plugin assigns the frames of the video to a list of visual concepts that you define, e.g., times of day, places, or types of scenes. It uses the same CLIP model as "Visual Concept Search" and compares each analyzed frame with the descriptions of all concepts in your list.
 
-        Frames are taken from the video at the selected rate, and CLIP compares each frame with the descriptions of all concepts in your list. The similarities are converted into probabilities that add up to 1 for each frame. Each frame is therefore always assigned to the concepts in your list, even if none of them fits. Your list should therefore cover all alternatives that can occur, e.g., _day_ and _night_, or _indoor_ and _outdoor_. To search for a single concept on its own, use the "Visual Concept Search (CLIP)" plugin instead.
+        The probabilities of all concepts add up to 1 for each frame, so every frame is assigned to your concepts, even if none of them fits. Your list should therefore cover all alternatives that can occur, e.g., _day_ and _night_, or _indoor_ and _outdoor_. To search for a single concept, use "Visual Concept Search" instead.
 
-        The result consists of one timeline per concept, showing its probability over time. If a shot timeline is selected, an additional timeline labels each shot with the concept that has the highest average probability within the shot.
-
-        CLIP works well for concepts that can be recognized in a single frame. For concepts that require movement over time, such as human actions, use the "Action Classification (X-CLIP)" plugin.
+        The result consists of one timeline per concept, showing its probability over time. If a shot timeline is selected, an additional timeline labels each shot with its most likely concept. 
 
         #### Parameters
 
-        - **Shot Boundaries from Timeline:** optional. If a shot timeline is selected, each shot is labeled with its most likely concept.
-        - **Concept Lexicon:** a CSV file with one concept per row and two columns separated by commas: the name of the concept, which is used as the name of its timeline, and a description in simple, unambiguous terms. Unlike in "Visual Concept Search (CLIP)", the descriptions are used exactly as written, so full phrases work best. Do not include a header row. Example:
+        - **Shot Boundaries from Timeline:** the shots to be labeled, e.g., the result of "Shot Boundary Detection".
+        - **Concept Lexicon:** a CSV file with one concept per row and two columns separated by commas: the name of the concept, which is used as the name of its timeline, and a description in simple, unambiguous terms. Unlike in "Visual Concept Search", the descriptions are used exactly as written, so full phrases work best. Do not include a header row. Example:
 
           "day","a photo taken at daylight"\
           "night","a photo taken during the night"
 
           If you create the file with a spreadsheet program, make sure it is saved with commas, not semicolons.
-        - **Frames per Second (FPS)** (advanced option): how many frames per second are analyzed. Higher values also find concepts that are only visible briefly, but take longer to compute.
+        - **Frames per Second (FPS):** higher values also find briefly visible concepts but take longer.
       timeline_name: Concepts
       concepts: Concept Lexicon
       concepts_hint: CSV file with one concept per row; first column the name, second column a description
@@ -372,26 +368,20 @@ modal:
       timeline_name: OCR
       search_term: Search Term
     place_clustering:
-      plugin_name: Place Clustering (CLIP)
+      plugin_name: Place Clustering
       plugin_description: !md |
-        This plugin gives you an overview of the recurring settings in the video by grouping shots that show the same or a very similar place, e.g., the same apartment, office, or street. Unlike "Place Recognition (Places365)", which assigns general categories such as "kitchen", it finds places that occur several times in this particular video.
+        This plugin gives you an overview of the recurring settings in the video by grouping shots that show the same or a very similar place, e.g., the same apartment, office, or street. Unlike "Place Recognition", which assigns general categories such as "kitchen", it finds places that occur several times in this particular video.
 
-        For each shot of the selected shot timeline, the middle frame is used. A multilingual [OpenCLIP](https://github.com/mlfoundations/open_clip) model computes a numerical description of each image, and images with similar descriptions are grouped into clusters, ideally one cluster per place. Two shots end up in the same cluster if they are similar enough, either directly or through a chain of similar shots. Because of this chaining, a threshold that is only slightly too high can merge different places into one cluster.
+        The middle frame of each shot is described with a multilingual [CLIP](https://huggingface.co/laion/CLIP-ViT-B-32-xlm-roberta-base-laion5B-s13B-b90k) model, and similar images are grouped into clusters, ideally one per place. Since the comparison is based on how similar the images look, different places that look alike can end up in the same cluster.
 
-        Please note that the comparison is based on how similar the images look. Two different places that look alike, e.g., two kitchens, can end up in the same cluster, and the same place shown from very different angles can be split into several clusters.
-
-        #### Typical workflow
-
-        1. **Create clusters:** run this plugin and check the clusters in the tab "Places". Remove wrong images or merge clusters where needed, or run the plugin again with a different threshold.
-        2. **Convert clusters to timelines:** for each relevant cluster, create a timeline in the tab "Places" to see when the place appears in the video.
+        Check the clusters in the tab "Places"; remove wrong images, merge clusters, or run the plugin again with a different threshold.
 
         #### Parameters
 
-        - **Shot Boundaries from Timeline:** the shots to be grouped, e.g., the timeline created by the "Shot Boundary Detection" plugin. One image per shot is used, so the quality of the shot timeline directly determines the result.
-        - **Clustering threshold:** how different two images may be and still belong to the same cluster. Lower values create more and purer clusters, but one place may be split into several clusters. Higher values create fewer clusters, but different places may be merged.
-        - **Maximum number of clusters:** how many of the largest clusters are kept. Smaller clusters, often places that appear only once, are discarded.
-
-        **Tip:** if a cluster contains different places, lower the clustering threshold. If one place is spread over several clusters, raise it slightly or merge the clusters in the tab "Places".
+        - **Shot Boundaries from Timeline:** the shots to be grouped, e.g., the result of "Shot Boundary Detection".
+        - **Clustering threshold:** lower values split places into more, purer clusters; higher values merge more shots, possibly of different places.
+        - **Maximum number of clusters:** how many of the largest clusters are kept.
+        - **Clustering method:** the algorithm used to group similar images.
       encoder_name: Select an image encoder
       threshold:
         name: Clustering threshold
@@ -402,7 +392,7 @@ modal:
         hint_left: Fewer clusters to display
         hint_right: More clusters to display
       clustering_method_name: Select a clustering method
-      clustering_method_hint: Both methods currently produce the same result.
+      clustering_method_hint: Algorithm used to group similar images
     place_identification:
       plugin_name: Place Identification
     places_classification:
@@ -414,18 +404,14 @@ modal:
         - **16 categories:** e.g., home or hotel, transportation, forest or field
         - **365 categories:** e.g., kitchen, bus station, bamboo forest
 
-        The full list of categories and how they are grouped can be found [here](https://docs.google.com/spreadsheets/d/1H7ADoEIGgbF_eXh9kcJjCs5j_r3VJwke4nebhkdzksg/edit#gid=142478777).
+        The [full list of categories](https://docs.google.com/spreadsheets/d/1H7ADoEIGgbF_eXh9kcJjCs5j_r3VJwke4nebhkdzksg/edit#gid=142478777) shows how they are grouped.
 
-        Frames are taken from the video at the selected rate, and the model estimates for each frame how likely each of the 365 categories is; the probabilities of the coarser levels are derived from them. Each shot of the selected shot timeline is then labeled with the most likely place on each of the three levels on average across the shot.
-
-        The result is a timeline with three labels per shot, one for each level, together with one timeline for each of the three top-level categories that shows its probability over time.
-
-        Please note that the model recognizes the type of a place, not a specific location: it can tell that a scene shows a church, but not which church. To group shots that show the same location, use the "Place Clustering" plugin.
+        The result is a timeline with the most likely place per shot on each of the three levels, together with one timeline for each of the three top-level categories that shows its probability over time. The model recognizes the type of a place, not a specific location.
 
         #### Parameters
 
-        - **Shot Boundaries from Timeline:** the shots to be labeled, e.g., the timeline created by the "Shot Boundary Detection" plugin. Its quality determines the result, so check it for missed or false cuts first.
-        - **Frames per Second (FPS)** (advanced option): how many frames per second are analyzed. Higher values capture changes of the place within a shot more precisely but take longer to compute.
+        - **Shot Boundaries from Timeline:** the shots to be labeled, e.g., the result of "Shot Boundary Detection".
+        - **Frames per Second (FPS):** how many frames per second are analyzed. Higher values capture changes of the place within a shot more precisely but take longer to compute.
       timeline_name: Places
     shot_angle:
       plugin_name: Camera Angle Classification
@@ -565,12 +551,12 @@ modal:
         This plugin creates small preview images of the video. They are used in the tab "Shots", which shows three thumbnails for each shot: one from the beginning, one from the middle, and one from the end.
 
         The plugin runs automatically when a video is uploaded, so you normally do not need to start it yourself. Run it again only if the thumbnails in the tab "Shots" are missing, e.g., because the automatic run failed.
-    vllm:
-      plugin_name: Visual Question Answering
+    vlm:
+      plugin_name: Visual Question Answering (Gemma 4)
       plugin_description: !md |
-        This plugin lets you ask a question about every shot of the video, or give an instruction such as "Describe the image", and stores the answer of a generative large vision-language model as an annotation of the shot. It uses Google's Gemma 4 model, which understands both images and text and runs locally at an [Ollama](https://ollama.com/) instance at TIB. Thus, **the images are not sent to an external service**.
+        This plugin lets you ask a question about every shot of the video, or give an instruction such as "Describe the image", and stores the answer of a generative large vision-language model (LVLM) as an annotation of the shot. It uses Google's [Gemma 4](https://ai.google.dev/gemma) model, which runs on a local [Ollama](https://ollama.com/) instance at TIB, so **the images are not sent to an external service**.
 
-        For each shot of the selected shot timeline, the frame in the middle of the shot is sent to the model together with your prompt. The answer is stored as the label of the shot. The same prompt on the same video always gives the same answers.
+        The model sees the middle frame of each shot, so it cannot answer questions about what happens over the course of a shot. The same prompt on the same video always gives the same answers.
 
         The result is a timeline with one segment per shot, labeled with the model's answer. With prompts that ask for short, fixed answers, the timeline can be used like a classification, for example:
 
@@ -578,12 +564,12 @@ modal:
         _How many people are visible? Answer only with a number._\
         _Is this scene indoors or outdoors? Answer with one word._
 
-        Please note that the model only sees one frame per shot, so it cannot answer questions about what happens over the course of a shot. Like all language models, it can give wrong answers that sound convincing, so check important results against the video.
+        Like all language models, it can give wrong answers that sound convincing, so check important results against the video.
 
         #### Parameters
 
-        - **Shot Boundaries from Timeline:** the shots to be analyzed, e.g., the timeline created by the "Shot Boundary Detection" plugin. One frame per shot is used.
-        - **Query / Prompt:** the question or instruction for the model. Ask for short answers, e.g., "Answer only with yes or no", because the complete answer becomes the label of the shot; very long answers are shortened. The prompt can be written in other languages as well.
+        - **Shot Boundaries from Timeline:** the shots to be analyzed, e.g., the result of "Shot Boundary Detection".
+        - **Query / Prompt:** the question or instruction for the model. Ask for short answers, because the complete answer becomes the label of the shot. The prompt can be written in other languages as well.
       timeline_name: Visual Question Answering
       search_term: Query / Prompt
     whisper:
@@ -621,18 +607,16 @@ modal:
     x_clip:
       plugin_name: Action Search (X-CLIP)
       plugin_description: !md |
-        This plugin searches the video for visual concepts and actions you describe in words, e.g., _people dancing_, _a person playing guitar_, or _someone running_. It uses [X-CLIP](https://arxiv.org/abs/2207.07285), a video version of CLIP that analyzes short video clips instead of single frames, and can therefore recognize what happens over time. The model was trained on the [Kinetics](https://arxiv.org/abs/1705.06950) dataset of human actions and works best for everyday and sports activities.
+        This plugin searches the video for actions you describe in words, e.g., _people dancing_, _a person playing guitar_, or _someone running_. It uses [X-CLIP](https://arxiv.org/abs/2207.07285), a video version of CLIP that analyzes short video clips instead of single frames and can therefore recognize what happens over time. The model was trained on the [Kinetics](https://arxiv.org/abs/1705.06950) dataset of human actions and works best for everyday and sports activities.
 
-        Frames are taken from the video at the selected rate and grouped into clips of eight frames. X-CLIP compares each clip with your description, and the timeline shows for each clip how well it matches.
+        The highest value of the timeline is always 1, even if the action does not occur in the video at all. Thus, read the timeline as "where the action most likely happens", not as a yes/no answer.
 
-        The values are scaled per timeline, so the best-matching clip is always 1, even if the action does not occur in the video at all. Read the timeline as "where the action most likely happens", not as a yes/no answer.
-
-        For concepts that can be recognized in a single frame, such as objects or places, the "Visual Concept Search (CLIP)" plugin is usually more precise.
+        For concepts that can be recognized in a single frame, such as objects or places, "Visual Concept Search" is usually more precise.
 
         #### Parameters
 
-        - **Action Description:** the action you are looking for, in English and in simple, unambiguous terms, e.g., _people dancing_ or _a person riding a bicycle_. Short descriptions of the activity usually work best.
-        - **Frames per Second (FPS)** (advanced option): how many frames per second are used. Because each clip always consists of eight frames, this value also determines how long each clip is: lower values give longer clips, which suit slow or long actions; higher values give shorter clips with a finer time resolution, but longer actions may then be split into fragments.
+        - **Action Description:** the action you are looking for, in English and in simple, unambiguous terms, e.g., _a person riding a bicycle_ or _someone opening a door_.
+        - **Frames per Second (FPS):** each clip consists of eight frames, so this value also sets the clip length. Lower values give longer clips for slow actions; higher values give a finer time resolution but may split longer actions.
       timeline_name: Action Search
       search_term: Action Description
   shortcut:
