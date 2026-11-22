@@ -433,28 +433,30 @@ modal:
         - **Low:** the camera is below the subject and looks up at it
         - **Dutch:** the camera is tilted sideways, so that the horizon is slanted
 
-        Frames are taken from the video at the selected rate, and the model estimates for each frame how likely each camera angle is. Each shot of the selected shot timeline is then labeled with the camera angle that is the most likely on average across the shot.
-
-        The result is a timeline with one camera angle per shot, together with one timeline per camera angle that shows its probability over time.
-
-        Please note that each frame is assigned exactly one camera angle. A shot that is both tilted sideways and taken from above is therefore labeled either "Dutch" or "High". The model analyzes a square section from the center of each frame, so details at the left and right edges of widescreen images are not taken into account.
+        The result is a timeline with the most likely camera angle per shot, together with one timeline per camera angle that shows its probability over time.
 
         #### Parameters
 
-        - **Shot Boundaries from Timeline:** the shots to be labeled, e.g., the timeline created by the "Shot Boundary Detection" plugin. Its quality determines the result, so check it for missed or false cuts first.
-        - **Frames per Second (FPS)** (advanced option): how many frames per second are analyzed. Higher values capture changes of the camera angle within a shot more precisely but take longer to compute.
+        - **Shot Boundaries from Timeline:** the shots to be labeled, e.g., the result of "Shot Boundary Detection".
+        - **Frames per Second (FPS):** how many frames per second are analyzed. Higher values capture changes of the camera angle within a shot more precisely but take longer to compute.
       timeline_name: Camera Angles
     shot_density:
       plugin_name: Shot Density (Cutting Rate)
       plugin_description: !md |
-        This plugin shows how fast the video is edited over time, i.e., how closely the cuts follow each other. It uses the shot boundaries of a selected timeline, e.g., the timeline created by the "Shot Boundary Detection" plugin. The [kernel density estimation](https://scikit-learn.org/stable/modules/density.html#kernel-density-estimation) of the [scikit-learn](https://scikit-learn.org/) library places a bell-shaped curve on each cut and adds these curves up. Where many cuts follow each other closely, the curve is high; during long shots, it is low.
+        This plugin shows how fast the video is edited over time, i.e., how closely the cuts follow each other. Based on the shots of a selected timeline, a [kernel density estimation](https://scikit-learn.org/stable/modules/density.html#kernel-density-estimation) places a smooth curve around each cut and adds these curves up: where many cuts follow each other closely, the result is high; during long shots, it is low.
 
-        The result is a timeline that distinguishes fast-paced passages, such as action sequences or montages, from slow-paced ones. The values are scaled from 0 (slowest editing in the video) to 1 (fastest), so they are relative to the video and cannot be compared between videos. 
+        The timeline distinguishes fast-paced passages, such as action sequences or montages, from slow-paced ones. The values are scaled from 0 (slowest editing in the video) to 1 (fastest), so they are best compared within one video.
+
+        #### Parameters
+
+        - **Shot Boundaries from Timeline:** the shots whose cuts are analyzed, e.g., the result of "Shot Boundary Detection".
+        - **Bandwidth (seconds):** how far the influence of each cut spreads. Higher values give a smoother curve that shows the overall pace; lower values also show short bursts of fast cutting.
+        - **Frames per Second (FPS):** how finely the curve is sampled over time.
       timeline_name: Shot Density
-      input_timeline: Shot Boundaries from Timelin
+      input_timeline: Shot Boundaries from Timeline
       bandwidth: Bandwidth (seconds)
     shot_detection:
-      plugin_name: Shot Boundary Detection
+      plugin_name: Shot Boundary Detection (TransNet V2)
       plugin_description: !md |
         This plugin automatically splits the video into shots. It uses [TransNet V2](https://arxiv.org/abs/2008.04838), a neural network trained to recognize both hard cuts and gradual transitions such as dissolves and fades. Every frame of the video is analyzed, and the network estimates for each frame how likely a shot transition takes place. 
 
@@ -474,18 +476,14 @@ modal:
         - **Knee:** the camera is at about knee height
         - **Ground:** the camera is placed on or close to the ground
 
-        The camera level describes where the camera is, not in which direction it looks. Use the "Camera Angle Classification" plugin to determine whether the camera looks up, down, or straight ahead.
+        The camera level describes where the camera is, not in which direction it looks; for that, use "Camera Angle Classification". Since the levels are defined relative to people, results are less reliable for shots without people.
 
-        Frames are taken from the video at the selected rate, and the model estimates for each frame how likely each camera level is. Each shot of the selected shot timeline is then labeled with the camera level that is the most likely on average across the shot.
-
-        The result is a timeline with one camera level per shot, together with one timeline per camera level that shows its probability over time.
-
-        Please note that the camera level is defined relative to the people in the scene. For shots without people, it is estimated from the surroundings, which is less reliable. The model analyzes a square section from the center of each frame, so details at the left and right edges of widescreen images are not taken into account.
+        The result is a timeline with the most likely camera level per shot, together with one timeline per camera level that shows its probability over time.
 
         #### Parameters
 
-        - **Shot Boundaries from Timeline:** the shots to be labeled, e.g., the timeline created by the "Shot Boundary Detection" plugin. Its quality determines the result, so check it for missed or false cuts first.
-        - **Frames per Second (FPS)** (advanced option): how many frames per second are analyzed. Higher values capture changes of the camera level within a shot more precisely but take longer to compute.
+        - **Shot Boundaries from Timeline:** the shots to be labeled, e.g., the result of "Shot Boundary Detection".
+        - **Frames per Second (FPS):** how many frames per second are analyzed. Higher values capture changes of the camera level within a shot more precisely but take longer to compute.
       timeline_name: Camera Levels
     shot_scalar_annotation:
       plugin_name: Average Value per Shot
@@ -500,7 +498,7 @@ modal:
         - **Timeline with values:** the timeline whose curve is averaged per shot.
       timeline_name: Average Value per Shot
     shot_scale_and_movement:
-      plugin_name: Shot Scale and Camera Movement
+      plugin_name: Shot Scale & Camera Movement
       plugin_description: !md |
         This plugin classifies both the shot scale and the camera movement of each shot. It uses a [VideoMAE](https://arxiv.org/abs/2203.12602) video transformer that we trained on the [MovieShots](https://arxiv.org/abs/2008.03548) dataset of shots from movie trailers. Unlike classifiers that look at single frames, it analyzes short video sections and can therefore recognize camera movements.
 
@@ -519,13 +517,13 @@ modal:
         - **Push:** the camera moves toward the subject or zooms in
         - **Pull:** the camera moves away from the subject or zooms out
 
-        The video is split into sections of half a second, and the model estimates for each section how likely each class is. Each shot of the selected shot timeline is then labeled with the most likely scale and the most likely movement on average across the shot.
-
-        The result consists of two groups of timelines, one for the shot scale and one for the camera movement. Each group contains a timeline with one label per shot and one timeline per class showing its probability over time.
+        The result consists of two groups of timelines, one for the shot scale and one for the camera movement. Each group contains a timeline with the most likely class per shot and one timeline per class showing its probability over time.
 
         #### Parameters
 
-        - **Shot Boundaries from Timeline:** the shots to be labeled, e.g., the timeline created by the "Shot Boundary Detection" plugin. Its quality determines the result, so check it for missed or false cuts first.
+        - **Timeline names:** the first field names the shot scale timelines, the second the camera movement timelines.
+        - **Shot Boundaries from Timeline:** the shots to be labeled, e.g., the result of "Shot Boundary Detection".
+        - **Frames per Second (FPS):** how many frames per second are passed to the model. Higher values capture camera movements more precisely but take longer to compute.
       timeline_name_scale: Shot Scales
       timeline_name_movement: Shot Movements
     shot_type_classification:
@@ -561,7 +559,7 @@ modal:
       plugin_description: !md |
         This plugin creates small preview images of the video. They are used in the tab "Shots", which shows three thumbnails for each shot: one from the beginning, one from the middle, and one from the end.
 
-        The plugin runs automatically when a video is uploaded, so you normally do not need to start it yourself. Run it again only if the thumbnails in the tab "Shots" are missing, e.g., because the automatic run failed. If it has been run several times, the most recent thumbnails are used.
+        The plugin runs automatically when a video is uploaded, so you normally do not need to start it yourself. Run it again only if the thumbnails in the tab "Shots" are missing, e.g., because the automatic run failed.
     vllm:
       plugin_name: Visual Question Answering
       plugin_description: !md |
