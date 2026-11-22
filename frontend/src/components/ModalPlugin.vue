@@ -1150,17 +1150,8 @@ export default {
                   text: this.$t("modal.plugin.timeline_name"),
                 },
               ],
-              optional_parameters: [
-                {
-                  field: "slider",
-                  min: 1,
-                  max: 10,
-                  value: 2,
-                  step: 1,
-                  name: "fps",
-                  text: this.$t("modal.plugin.fps"),
-                },
-              ],
+              // TransNet V2 always analyzes every frame, so there is no FPS setting.
+              optional_parameters: [],
             },
             {
               name: this.$t("modal.plugin.shot_density.plugin_name"),
