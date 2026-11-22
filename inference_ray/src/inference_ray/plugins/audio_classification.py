@@ -1,13 +1,18 @@
-from typing import List, Tuple, Callable, Dict, BinaryIO
-
-from pathlib import Path
+import logging
 import sys
+from pathlib import Path
+from typing import BinaryIO, Callable, Dict, List, Tuple
 
 from inference_ray.plugin import AnalyserPlugin, AnalyserPluginManager
-from tibava_data import AudioData, ListData, Annotation, ShotsData, AnnotationData
-from tibava_data import DataManager, Data
-
-import logging
+from tibava_data import (
+    Annotation,
+    AnnotationData,
+    AudioData,
+    Data,
+    DataManager,
+    ListData,
+    ShotsData,
+)
 
 default_config = {
     "data_dir": "/data/",
@@ -603,6 +608,7 @@ class AudioClassification(
 
         import csv
         import tempfile
+
         import librosa
         import soundfile as sf
 
@@ -648,17 +654,18 @@ class AudioClassification(
         parameters: Dict = None,
         callbacks: Callable = None,
     ) -> Dict[str, Data]:
-        import torchaudio
-        import torch
-        import soundfile as sf
-        import numpy as np
-        from transformers import AutoModel
         import csv
         import tempfile
         from typing import BinaryIO, List, Tuple
-        import librosa
 
-        self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
+        import librosa
+        import numpy as np
+        import soundfile as sf
+        import torch
+        import torchaudio
+        from transformers import AutoModel
+
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
         def aggregate_probs(
             top3_label_probs: List[Tuple[List[str], List[float]]],
