@@ -229,32 +229,34 @@ modal:
       concepts: Concept Lexicon
       concepts_hint: CSV file with one concept per row; first column the name, second column a description
     color_analysis:
-      plugin_name: Dominant Color(s)
+      plugin_name: Dominant Colors
       plugin_description: !md |
-        This plugin determines the dominant colors of the video over time. Frames are taken from the video at the selected rate and scaled down to the selected maximum resolution. For each frame, the colors of all pixels are grouped with the [k-means clustering algorithm](https://scikit-learn.org/stable/modules/clustering.html#k-means) of the [scikit-learn](https://scikit-learn.org/) library into the selected number of groups. The average color of each group is one dominant color, and the groups are ranked by how many pixels they contain.
+        This plugin determines the dominant colors of the video over time. For each analyzed frame, the colors of all pixels are grouped with the [k-means clustering algorithm](https://scikit-learn.org/stable/modules/clustering.html#k-means) of the [scikit-learn](https://scikit-learn.org/) library; the average color of each group is one dominant color.
 
-        The result is shown as color timelines. With one color, a single timeline shows it; with several colors, a group contains one timeline per rank, where "#0" is the color covering the largest area of the frame, "#1" the second largest, and so on.
+        The result is shown as color timelines. With one color, a single timeline shows the dominant color over time. With several colors, one timeline is created for each of the most dominant colors, numbered "#0", "#1", and so on.
 
         #### Parameters
 
-        - **Number of dominant color(s):** how many colors are determined per frame; each color gets its own timeline. Higher values also show secondary colors.
-        - **Frames per Second (FPS)** (advanced option): how many frames per second are analyzed. Higher values show color changes more precisely in time but take longer to compute.
-        - **Maximum Image Resolution** (advanced option): the size, in pixels, of the longer side of the frames after scaling down. Higher values let small areas count more precisely but take longer to compute; since dominant colors cover large areas, low values are usually sufficient.
-        - **Maximum Number of Iterations for k-Means Clustering** (advanced option): how many refinement steps the clustering may take per frame. Higher values can group the colors slightly more precisely but take longer to compute; this value rarely needs to be changed.
-      timeline_name: Dominant Color(s)
+        - **Number of dominant color(s):** how many dominant colors are determined per frame.
+        - **Frames per Second (FPS):** how many frames per second are analyzed. Higher values show color changes more precisely in time but take longer to compute.
+        - **Maximum image resolution used for the analysis:** frames are scaled down to this size before the analysis. Low values are usually sufficient, since dominant colors cover large areas.
+        - **Maximum number of iterations for k-Means clustering:** how many refinement steps the clustering may take per frame. 
+      timeline_name: Dominant Colors
       slider: Number of dominant color(s)
-      max_resolution: Maximum image resolution used for the analysis 
+      max_resolution: Maximum image resolution used for the analysis
       max_iter: Maximum number of iterations for k-Means clustering
     color_brightness_analysis:
       plugin_name: Brightness
       plugin_description: !md |
-        This plugin measures how bright the video is over time. Frames are taken from the video at the selected rate and converted to the HSV color model with the [OpenCV](https://opencv.org/) library. The brightness of a frame is the average "value" (V) of all its pixels, where 0 is black and 1 is the maximum brightness. The timeline can reveal dark and bright scenes, for example night and day scenes, as well as fades and lighting changes.
+        This plugin measures how bright the video is over time. For each analyzed frame, the [OpenCV](https://opencv.org/) library converts the image to the HSV color model, and the brightness is the average "value" (V) of all pixels, from 0 (black) to 1 (maximum brightness).
+
+        The timeline can reveal dark and bright scenes, for example night and day scenes, as well as fades and lighting changes.
 
         #### Parameters
 
-        - **Frames per Second (FPS)** (advanced option): how many frames per second are analyzed. Higher values show brightness changes more precisely in time but take longer to compute.
-        - **Normalize Results?** (advanced option): if enabled, the curve is scaled so that the darkest frame of the video is 0 and the brightest is 1. This makes differences within a video easier to see, but the values can no longer be compared between videos. If disabled, the absolute values are shown, which can be compared between videos.
-      timeline_name: Video Brightness
+        - **Frames per Second (FPS):** how many frames per second are analyzed. Higher values show brightness changes more precisely in time but take longer to compute.
+        - **Normalize Results?:** if enabled, the curve is scaled so that the darkest frame of the video is 0 and the brightest is 1. This makes differences within a video easier to see. If disabled, the absolute values are shown, which can be compared between videos.
+      timeline_name: Brightness
     face_clustering:
       plugin_name: Face Clustering
       plugin_description: !md |
