@@ -119,11 +119,11 @@ modal:
     audio_classification:
       plugin_name: Sound Classification (EAT)
       plugin_description: !md |
-        This plugin recognizes which kinds of sounds occur in each shot of the video, for example speech, laughter, music genres, musical instruments, animals, vehicles, or explosions.         It uses the [EAT (Efficient Audio Transformer)](https://arxiv.org/abs/2401.03497) model, trained on Google's [AudioSet](https://research.google.com/audioset/) dataset, which distinguishes [527 sound classes](http://storage.googleapis.com/us_audioset/youtube_corpus/v1/csv/class_labels_indices.csv) (list as CSV file).
+        This plugin recognizes which kinds of sounds occur in each shot of the video, for example speech, laughter, music genres, musical instruments, animals, vehicles, or explosions. It uses the [EAT (Efficient Audio Transformer)](https://arxiv.org/abs/2401.03497) model, trained on Google's [AudioSet](https://research.google.com/audioset/) dataset, which distinguishes [527 sound classes](http://storage.googleapis.com/us_audioset/youtube_corpus/v1/csv/class_labels_indices.csv) (list as CSV file).
 
         The result is a timeline with one segment per shot, labeled with the recognized sound classes (English AudioSet names). Several classes can be recognized at the same time, for example speech and background music. Shots in which no class reaches the confidence threshold remain without a label. 
         
-        **Note: Currently, onle the first 10 seconds of each shots are analyzed. We are working on a solution.**
+        **Note: Currently, only the first 10 seconds of each shot are analyzed. We are working on a solution.**
 
         #### Parameters
 
@@ -140,7 +140,7 @@ modal:
     audio_frequency:
       plugin_name: Audio Spectrogram (STFT)
       plugin_description: !md |
-        This plugin shows which frequencies are present in the audio track over time. The [librosa](https://librosa.org/) library computes a [short-time Fourier transform (STFT)](https://librosa.org/doc/latest/api/generated/librosa.stft.html): the audio is split into short, overlapping windows, and the strength of each frequency is measured within each window. The result is displayed as a heatmap, with time on the horizontal axis and frequency on the vertical axis, from low at the bottom to high at the top.
+        This plugin shows which frequencies are present in the audio track over time. The [librosa](https://librosa.org/) library computes a [short-time Fourier transform (STFT)](https://librosa.org/doc/latest/api/generated/librosa.stft.html): the audio is split into short, overlapping windows, and the strength of each frequency is measured within each window. The result is displayed as a heatmap, with time on the horizontal axis and frequency on the vertical axis.
 
         The spectrogram can reveal voices, music, rhythmic patterns, and other recurring sounds. Intensities are scaled from 0 (weakest) to 1 (strongest in the video), so they are best compared within one video rather than between videos.
 
@@ -599,7 +599,7 @@ modal:
         The transcript is shown as a timeline and in the tab "Transcript", where you can search for words. The tab "Word Cloud" shows the most frequent words.
 
         The plugin does not distinguish between speakers. Please use "Speech & Speaker Recognition (WhisperX)" for that. Whisper can occasionally produce text for music, noise, or silence, so check important passages against the video.
-      timeline_name: Whisper transcript
+      timeline_name: Whisper Transcript
     whisper_x:
       plugin_name: Speech & Speaker Recognition (WhisperX)
       plugin_description: !md |
