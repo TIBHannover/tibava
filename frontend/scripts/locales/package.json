@@ -1,0 +1,10 @@
+{
+  "name": "tibava-locales",
+  "private": true,
+  "description": "Converts src/locales/*.yaml to the JSON files loaded by vue-i18n. Kept separate from the app dependencies on purpose.",
+  "type": "module",
+  "dependencies": {
+    "js-yaml": "4.1.0",
+    "marked": "15.0.12"
+  }
+}

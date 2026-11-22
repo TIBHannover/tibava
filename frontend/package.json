@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "locales": "npm --prefix scripts/locales install --no-audit --no-fund && node scripts/locales/build.mjs"
   },
   "dependencies": {
     "@mdi/font": "^6.5.95",

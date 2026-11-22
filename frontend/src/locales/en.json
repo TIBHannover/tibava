@@ -1,81 +1,21 @@
 {
-  "views": {
-    "home": {
-      "new_video": "Upload new video"
-    }
-  },
-  "terms": {
-    "title": "TERMS OF USE",
-    "content": "<strong>1. Introduction</strong><br><br>These Terms of Use (\"Terms\") govern access to and use of the video portal (\"Portal\") of TIB-AV-A. By using the Portal, you agree to the following Terms of Use.<br><br><strong>2. Rights to Upload</strong><br><br>2.1. By uploading content (\"Content\") to the Portal, you grant TIB-AV-A the non-exclusive right to store, process, analyze, and use the Content in order to provide the Portal's services.<br>2.2. You confirm that you have the necessary rights to upload the Content, including copyrights, trademark rights, and other rights required for the use of the Content.<br><br><strong>3. Processing and Analysis</strong><br><br>3.1. TIB-AV-A processes and analyzes the Content to provide the Portal's services, including the analysis of usage data and the optimization of the Content.<br>3.2. By using the Portal, you agree that TIB-AV-A may process and analyze the Content to provide the Portal's services.<br><br><strong>4. Data Protection</strong><br><br>4.1. TIB-AV-A treats your personal data confidentially and in accordance with data protection regulations.<br>4.2. By using the Portal, you agree that TIB-AV-A may process your personal data to provide the Portal's services.<br><br><strong>5. Liability</strong><br><br>5.1. TIB-AV-A is not liable for damages resulting from the use of the Portal, including the infringement of third-party rights.<br>5.2. By using the Portal, you agree that TIB-AV-A cannot be held liable for damages resulting from the use of the Portal.<br><br><strong>6. Changes</strong><br><br>6.1. TIB-AV-A may change these Terms of Use at any time.<br>6.2. By continuing to use the Portal after changes to the Terms of Use, you agree to the modified Terms of Use.<br><br><strong>7. Final Provisions</strong><br><br>7.1. These Terms of Use govern the entire contractual relationship between you and TIB-AV-A.<br>7.2. By using the Portal, you agree to these Terms of Use and confirm that you accept the following terms."
-  },
-  "welcome": {
-    "title": "TIB AV-Analytics",
-    "text": "Welcome to the TIB AV-Analytics (TIB-AV-A) video analysis platform for systematic film and video analysis.",
-    "demo_title": "Video Demonstration",
-    "login_title": "How to create an account?",
-    "login_text": "If you do not have an account yet, you can create an account at the top right (\"Login\" -> \"Register\"). <br> New users can upload a maximum number of ten videos with a maximum file size of 500 MB. <br><br> If you have questions regarding account creation or if you want to analyze more or larger video files, please write an email to <a href=\"mailto:matthias.springstein@tib.eu\">matthias.springstein@tib.eu</a> with a short explanation of your intended use case",
-    "format_title": "Video File Support",
-    "format_text": "Please note that TIB-AV-A currently only supports the analysis of <span style='font-weight: bold;'>mp4 video files</span> to avoid long processing times due to transcoding videos on our server. Please transcode them before uploading. If you have questions, feel free to contact us: <a href=\"mailto:matthias.springstein@tib.eu\">matthias.springstein@tib.eu</a>"
-  },
-  "plugin": {
-    "menu": {
-      "title": "Pipelines",
-      "new": "New"
-    }
-  },
-  "visualization": {
-    "title": "Create Visualization",
-    "start": "Apply",
-    "reset": "Reset",
-    "controls": {
-      "plotTypes": {
-        "controlName": "Select Plot Type",
-        "resultControlName": "Select Timeline to Visualize",
-        "linePlot": "Line Plot",
-        "scatterPlot": "Scatter Plot",
-        "histogramChart": "Histogram Chart",
-        "stackedBarChart": "Stacked Bar Chart",
-        "constellationGraph": "Constellation Graph"
-      },
-      "mapping": {
-        "mappingTitle": "Visualization Mapping",
-        "xTitle": "Select x axis data:",
-        "xSelect": "Not selected",
-        "yTitle": "Select y axis data:",
-        "ySelect": "Not selected"
-      }
-    }
-  },
-  "timelineSegment": {
-    "title": "Title",
-    "close": "Close",
-    "update": "Update",
-    "delete": "Delete",
-    "annotate": {
-      "selection": "Annotate selected segment(s)",
-      "range": "Annotate selected range"
-    },
-    "split": "Create cut",
-    "merge": "Merge selected range",
-    "mergeleft": "Merge with left segment",
-    "mergeright": "Merge with right segment",
-    "color": "Color"
-  },
   "button": {
-    "search": "Search",
     "totimeline": "Convert to timeline",
     "deleteCluster": "Delete",
     "edit": "Edit",
-    "apply": "Apply",
     "cancel": "Cancel",
     "close": "Close",
     "delete": "Delete",
     "create": "Create"
   },
+  "field": {
+    "required": "This field is required."
+  },
   "modal": {
     "terms": {
       "title": "Terms",
-      "accept": "Accept"
+      "accept": "Accept",
+      "link": "Terms of Use"
     },
     "error": {
       "title": "Error",
@@ -119,21 +59,14 @@
         "export_name": "Export Project",
         "include_video": "Include video"
       },
-      "json": {
-        "export_name": "JSON"
-      },
       "elan": {
         "export_name": "ELAN"
       },
       "export": "Export",
       "close": "Close"
     },
-    "analyse": {
-      "title": "Analyse"
-    },
     "plugin": {
       "search": {
-        "prompt": "Search Plugin",
         "select": "Select Plugin"
       },
       "groups": {
@@ -167,9 +100,14 @@
       "scalar_timeline_hint": "*The scalar values of the selected timelines will be aggregated",
       "fps": "Frames per Second (FPS)",
       "normalize": "Normalize Results?",
+      "active_speaker_detection": {
+        "plugin_name": "Active Speaker Detection",
+        "plugin_description": "This plugin does active speaker detection based on audio and tracked face data.",
+        "timeline_name": "Active Speaker Detection"
+      },
       "aggregation": {
-        "plugin_name": "Aggregate Timelines",
-        "plugin_description": "This plugin allows you to combine information from multiple timelines with logical operators. In this way, more complex patterns can be revealed. For example, the <em>logical and</em> can be used to detect when two concepts or persons are visible simultaneously. <br><br><b>Tip:</b> You can perform the plugin multiple times to create more complex patterns. The following example performs three aggregations to detect when a <em>Concept A</em> is simultaneously visible with <em>Concept B</em> or <em>Concept C</em>: <br><br>AGG1 = (Concept A) Logical And (Concept B) <br> AGG2 = (Concept A) Logical And (Concept C) <br> AGG3 = (AGG1) Logical Or (AGG2)",
+        "plugin_name": "Combine Timelines (Logical Operators)",
+        "plugin_description": "<p>This plugin allows you to combine information from multiple timelines with logical operators. In this way, more complex patterns can be revealed. For example, the <em>logical and</em> can be used to detect when two concepts or persons are visible simultaneously.</p>\n<p><strong>Tip:</strong> You can perform the plugin multiple times to create more complex patterns. The following example performs three aggregations to detect when a <em>Concept A</em> is simultaneously visible with <em>Concept B</em> or <em>Concept C</em>:</p>\n<p>AGG1 = (Concept A) Logical And (Concept B)<br>AGG2 = (Concept A) Logical And (Concept C)<br>AGG3 = (AGG1) Logical Or (AGG2)</p>\n<h4>Parameters</h4>\n<ul>\n<li><strong>Timelines to combine:</strong> two or more timelines with scalar values (e.g., probabilities). Timelines with annotations, such as shots or transcripts, cannot be combined.</li>\n<li><strong>Aggregation Method:</strong> how the values are combined.</li>\n</ul>",
         "timeline_name": "Aggregated Timeline",
         "method": "Aggregation Method",
         "logical_or": "Logical Or",
@@ -215,39 +153,129 @@
         "timeline_name": "Audio Emotion Classification",
         "plugin_description": "This plugin detects emotions from audio segments (retrieved with WhisperX)."
       },
+      "audio_frequency": {
+        "plugin_name": "Audio Spectrogram",
+        "plugin_description": "<p>This plugin shows which frequencies are present in the audio track over time. The audio is extracted from the video as a mono signal and resampled for the selected frequency range. The <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://librosa.org/\">librosa</a> library then computes a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://librosa.org/doc/latest/generated/librosa.stft.html\">short-time Fourier transform (STFT)</a>: the signal is split into short, overlapping windows, and the strength of each frequency is measured within each window. The result is converted to decibels and displayed as a heatmap, with time on the horizontal axis and frequency on the vertical axis.</p>\n<p>To keep the heatmap at a manageable size for long videos, neighboring time steps are averaged. Short sounds therefore remain visible, but appear blurred in time in long videos.</p>\n<p>The intensities are scaled from 0 (weakest) to 1 (strongest value in the video), so they are relative to the video and cannot be compared between videos. The spectrogram can reveal voices, music, rhythmic patterns, and other recurring sounds.</p>\n<h4>Parameters</h4>\n<ul>\n<li><strong>Frequency range</strong> (advanced option): the highest frequency shown in the spectrogram. Higher ranges show more detail in music and noises but take longer to compute.</li>\n<li><strong>FFT window length (samples)</strong> (advanced option): longer windows separate neighboring frequencies more finely but blur short sounds in time; shorter windows show short sounds more precisely but with coarser frequencies.</li>\n</ul>",
+        "timeline_name": "Audio Spectrogram",
+        "sr": "Frequency range",
+        "sr_hint": "Highest frequency shown in the spectrogram. Higher ranges show more detail in music and noises but take longer to compute.",
+        "sr_4k": "Up to 4 kHz (speech)",
+        "sr_8k": "Up to 8 kHz (speech and most music)",
+        "sr_11k": "Up to 11 kHz (full detail, slowest)",
+        "n_fft": "FFT window length (samples)",
+        "n_fft_hint": "Longer windows separate neighboring frequencies more finely but blur short sounds in time. Shorter windows show short sounds more precisely but with coarser frequencies.",
+        "n_fft_256": "256 (sharpest timing)",
+        "n_fft_2048": "2048 (finest frequencies)"
+      },
       "audio_gender": {
         "plugin_name": "Audio Gender Classification",
         "timeline_name": "Audio Gender Classification",
         "plugin_description": "This plugin detects the gender from audio/speech segments (retrieved with WhisperX)."
       },
-      "active_speaker_detection": {
-        "plugin_name": "Active Speaker Detection",
-        "plugin_description": "This plugin does active speaker detection based on audio and tracked face data.",
-        "timeline_name": "Active Speaker Detection"
+      "audio_rms": {
+        "plugin_name": "Audio Volume (Root Mean Square)",
+        "plugin_description": "<p>This plugin measures how loud the audio track is over time. The audio is extracted from the video as a mono signal and resampled to the selected sampling rate. The <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://librosa.org/\">librosa</a> library then computes the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://librosa.org/doc/latest/generated/librosa.feature.rms.html\">root mean square (RMS) energy</a> over short, overlapping windows of 2048 samples, moving forward 512 samples at a time.</p>\n<p>The resulting curve is scaled from 0 (quietest moment of the video) to 1 (loudest moment). The values are therefore relative to the video: they cannot be compared between videos and are not decibels. The timeline can reveal silent passages, loud scenes such as music or action sequences, and sudden changes in volume.</p>\n<h4>Parameters</h4>\n<p><strong>Sampling rate</strong>: higher values give a finer time resolution but take longer to compute.</p>",
+        "timeline_name": "RMS Volume",
+        "sr": "Sampling Rate"
       },
-      "audio_classification": {
-        "plugin_name": "Audio Classification",
-        "plugin_description": "This plugin classifies sounds from video segments.",
-        "timeline_name": "Audio Classification",
-        "segmentation_selector_description": "Select the type of segments you want to use to classify the audio fragments:"
+      "audio_waveform": {
+        "plugin_name": "Audio Waveform",
+        "plugin_description": "<p>This plugin draws the waveform of the audio track, the same view an audio editor shows. The audio is extracted from the video as a mono signal and loaded with the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://librosa.org/\">librosa</a> library. Because a video contains far more audio samples than a timeline can display, the signal is divided into short segments, and the lowest and highest value of each segment are kept. This way, loud peaks stay visible however long the video is.</p>\n<p>The middle of the timeline corresponds to silence; the further the curve swings up and down, the louder the sound. The scale is relative to the loudest moment of the video, so the waveform cannot be compared between videos. It shows at a glance where there is sound or silence and where short, loud events such as bangs or applause occur. To follow the volume over time, the &quot;Audio Volume (Root Mean Square)&quot; plugin is easier to read.</p>",
+        "timeline_name": "Audio Waveform",
+        "sr": "Sampling Rate"
       },
-      "audio_frequency": {
-        "plugin_name": "Audio Spectrogram",
-        "plugin_description": "This plugin computes the spectrogram of the audio signal that could reveal rhythmic patterns (e.g., music), voices, or other sound patterns.",
-        "timeline_name": "Audio Spectrogram",
-        "sr": "Sampling Rate",
-        "n_fft": "Length of the FFT (Fast Fourier Transform) window"
+      "blip": {
+        "plugin_name": "Visual Question Answering (InstructBLIP)",
+        "plugin_description": "<p>This plugin uses the large vision language model <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://arxiv.org/abs/2305.06500\">InstructBLIP</a> that is similar to GPT-4 to perform question answering over the video. It can be used for various purposes, for example, to automatically find concepts within the video. Here are some examples:</p>\n<p><em>Does this image show a car? Please answer with yes or no!<br>Does this image show at least three persons? Please answer with yes or no!<br>Is this photo taken in a restaurant? Please answer with yes or no!</em></p>",
+        "timeline_name": "InstructBLIP Visual QA",
+        "search_term": "Question"
+      },
+      "clip": {
+        "plugin_name": "Visual Concept Search (CLIP)",
+        "plugin_description": "<p>This plugin searches the video for any visual concept you describe in words, e.g., objects, places, situations, times of day, or weather conditions. It uses a multilingual <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/mlfoundations/open_clip\">OpenCLIP</a> model (<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://huggingface.co/laion/CLIP-ViT-B-32-xlm-roberta-base-laion5B-s13B-b90k\">model details</a>) trained by <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://laion.ai/\">LAION</a> on billions of image–text pairs, based on the CLIP architecture by <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://arxiv.org/abs/2103.00020\">Radford et al. (2021)</a>.</p>\n<p>Frames are taken from the video at the selected rate, and CLIP compares each frame with your description. To make the comparison more robust, the description is automatically inserted into 80 standard phrasings such as &quot;a photo of a …&quot; or &quot;a drawing of a …&quot;, and the results are averaged. The timeline shows for each moment how well the frame matches the description.</p>\n<p>The values are scaled per timeline, so the best-matching moment is always 1, even if the concept does not appear in the video at all. Read the timeline as &quot;where the concept most likely appears&quot;, not as a yes/no answer.</p>\n<p>CLIP works well for concepts that can be recognized in a single frame. For concepts that require movement over time, such as human actions, use the &quot;Action Classification (X-CLIP)&quot; plugin.</p>\n<h4>Parameters</h4>\n<ul>\n<li><strong>Concept Description:</strong> the concept you are looking for, in simple, unambiguous terms, e.g., <em>car</em>, <em>a red car</em>, or <em>people dancing in the rain</em>. Do not add phrases like &quot;a photo of&quot;, because they are added automatically. Descriptions in other languages work as well, but English usually gives the best results.</li>\n<li><strong>Frames per Second (FPS)</strong> (advanced option): how many frames per second are analyzed. Higher values also find concepts that are only visible briefly, but take longer to compute.</li>\n</ul>",
+        "timeline_name": "Concept Search",
+        "search_term": "Concept Description"
+      },
+      "clip_ontology": {
+        "plugin_name": "Visual Concept Classification with a Concept List (CLIP)",
+        "plugin_description": "<p>This plugin assigns the frames of the video to a list of visual concepts that you define, e.g., times of day, places, or types of scenes. It uses the same multilingual <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/mlfoundations/open_clip\">OpenCLIP</a> model (<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://huggingface.co/laion/CLIP-ViT-B-32-xlm-roberta-base-laion5B-s13B-b90k\">model details</a>) trained by <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://laion.ai/\">LAION</a> as the &quot;Visual Concept Search (CLIP)&quot; plugin.</p>\n<p>Frames are taken from the video at the selected rate, and CLIP compares each frame with the descriptions of all concepts in your list. The similarities are converted into probabilities that add up to 1 for each frame. Each frame is therefore always assigned to the concepts in your list, even if none of them fits. Your list should therefore cover all alternatives that can occur, e.g., <em>day</em> and <em>night</em>, or <em>indoor</em> and <em>outdoor</em>. To search for a single concept on its own, use the &quot;Visual Concept Search (CLIP)&quot; plugin instead.</p>\n<p>The result consists of one timeline per concept, showing its probability over time. If a shot timeline is selected, an additional timeline labels each shot with the concept that has the highest average probability within the shot.</p>\n<p>CLIP works well for concepts that can be recognized in a single frame. For concepts that require movement over time, such as human actions, use the &quot;Action Classification (X-CLIP)&quot; plugin.</p>\n<h4>Parameters</h4>\n<ul>\n<li><p><strong>Shot Boundaries from Timeline:</strong> optional. If a shot timeline is selected, each shot is labeled with its most likely concept.</p>\n</li>\n<li><p><strong>Concept Lexicon:</strong> a CSV file with one concept per row and two columns separated by commas: the name of the concept, which is used as the name of its timeline, and a description in simple, unambiguous terms. Unlike in &quot;Visual Concept Search (CLIP)&quot;, the descriptions are used exactly as written, so full phrases work best. Do not include a header row. Example:</p>\n<p>&quot;day&quot;,&quot;a photo taken at daylight&quot;<br>&quot;night&quot;,&quot;a photo taken during the night&quot;</p>\n<p>If you create the file with a spreadsheet program, make sure it is saved with commas, not semicolons.</p>\n</li>\n<li><p><strong>Frames per Second (FPS)</strong> (advanced option): how many frames per second are analyzed. Higher values also find concepts that are only visible briefly, but take longer to compute.</p>\n</li>\n</ul>",
+        "timeline_name": "Concepts",
+        "concepts": "Concept Lexicon",
+        "concepts_hint": "CSV file with one concept per row; first column the name, second column a description"
+      },
+      "color_analysis": {
+        "plugin_name": "Dominant Color(s)",
+        "plugin_description": "<p>This plugin determines the dominant colors of the video over time. Frames are taken from the video at the selected rate and scaled down to the selected maximum resolution. For each frame, the colors of all pixels are grouped with the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://scikit-learn.org/stable/modules/clustering.html#k-means\">k-means clustering algorithm</a> of the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://scikit-learn.org/\">scikit-learn</a> library into the selected number of groups. The average color of each group is one dominant color, and the groups are ranked by how many pixels they contain.</p>\n<p>The result is shown as color timelines. With one color, a single timeline shows it; with several colors, a group contains one timeline per rank, where &quot;#0&quot; is the color covering the largest area of the frame, &quot;#1&quot; the second largest, and so on.</p>\n<h4>Parameters</h4>\n<ul>\n<li><strong>Number of dominant color(s):</strong> how many colors are determined per frame; each color gets its own timeline. Higher values also show secondary colors.</li>\n<li><strong>Frames per Second (FPS)</strong> (advanced option): how many frames per second are analyzed. Higher values show color changes more precisely in time but take longer to compute.</li>\n<li><strong>Maximum Image Resolution</strong> (advanced option): the size, in pixels, of the longer side of the frames after scaling down. Higher values let small areas count more precisely but take longer to compute; since dominant colors cover large areas, low values are usually sufficient.</li>\n<li><strong>Maximum Number of Iterations for k-Means Clustering</strong> (advanced option): how many refinement steps the clustering may take per frame. Higher values can group the colors slightly more precisely but take longer to compute; this value rarely needs to be changed.</li>\n</ul>",
+        "timeline_name": "Dominant Color(s)",
+        "slider": "Number of dominant color(s)",
+        "max_resolution": "Maximum image resolution used for the analysis",
+        "max_iter": "Maximum number of iterations for k-Means clustering"
+      },
+      "color_brightness_analysis": {
+        "plugin_name": "Brightness",
+        "plugin_description": "<p>This plugin measures how bright the video is over time. Frames are taken from the video at the selected rate and converted to the HSV color model with the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://opencv.org/\">OpenCV</a> library. The brightness of a frame is the average &quot;value&quot; (V) of all its pixels, where 0 is black and 1 is the maximum brightness. The timeline can reveal dark and bright scenes, for example night and day scenes, as well as fades and lighting changes.</p>\n<h4>Parameters</h4>\n<ul>\n<li><strong>Frames per Second (FPS)</strong> (advanced option): how many frames per second are analyzed. Higher values show brightness changes more precisely in time but take longer to compute.</li>\n<li><strong>Normalize Results?</strong> (advanced option): if enabled, the curve is scaled so that the darkest frame of the video is 0 and the brightest is 1. This makes differences within a video easier to see, but the values can no longer be compared between videos. If disabled, the absolute values are shown, which can be compared between videos.</li>\n</ul>",
+        "timeline_name": "Video Brightness"
+      },
+      "face_clustering": {
+        "plugin_name": "Face Clustering",
+        "plugin_description": "<p>This plugin gives you an overview of the main characters in the video by grouping their faces into clusters, ideally one cluster per person. It is not meant to find every appearance of a person; that is done in a second step (see below).</p>\n<p>Frames are taken from the video at the selected rate, and faces are detected with the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://arxiv.org/abs/2105.04714\">SCRFD</a> face detector of <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/deepinsight/insightface\">InsightFace</a>. Faces smaller than the selected minimum height are discarded: small faces are often blurry and would make the clusters less stable. For each remaining face, an <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://arxiv.org/abs/1801.07698\">ArcFace</a> model computes a numerical description of the facial features, and faces with similar features are grouped into clusters. Two faces end up in the same cluster if they are similar enough, either directly or through a chain of similar faces. Because of this chaining, a threshold that is only slightly too high can merge different people into one cluster.</p>\n<h4>Typical workflow</h4>\n<ol>\n<li><strong>Create clusters:</strong> run this plugin and check the clusters in the tab &quot;Faces&quot;. Each main character relevant for your analysis should have one cluster that contains only this person. Remove wrong faces or merge clusters where needed, or run the plugin again with a different threshold.</li>\n<li><strong>Convert clusters to timelines:</strong> for each relevant cluster, create a timeline in the tab &quot;Faces&quot;. The average of the cluster&#39;s sample faces is used as a reference for the person, and <strong>all faces in the video</strong> are compared with it. The timeline shows for each moment how similar the most similar face is to the reference. The values are scaled per timeline, so the highest value is always 1: read the timeline as &quot;where the person most likely appears&quot;, not as a yes/no answer.</li>\n<li><strong>Visualize relations:</strong> use the visualization options of TIB-AV-A to create a constellation graph that shows which persons appear together.</li>\n</ol>\n<p>The persons are not identified by name, but you can manually provide names in step 2. </p>\n<h4>Parameters</h4>\n<ul>\n<li><strong>Clustering threshold:</strong> how different two faces may be and still belong to the same cluster. Lower values create more and purer clusters, but one person may be split into several clusters. Higher values create fewer clusters, but different people may be merged.</li>\n<li><strong>Maximum number of clusters:</strong> how many of the largest clusters are kept. Smaller clusters, often minor characters or false detections, are discarded.</li>\n<li><strong>Sample faces per cluster:</strong> how many face images of each cluster are shown in the tab &quot;Faces&quot;. These sample faces are also the reference when a cluster is converted to a timeline: more samples make the reference more robust, provided they all show the same person.</li>\n<li><strong>Minimum face height:</strong> the minimum height of a face as a fraction of the frame height. Higher values keep only larger, sharper faces and make the clusters more stable; lower values also include people in the background, but blurry faces can mix up the clusters. Small faces are still taken into account when a cluster is converted to a timeline.</li>\n<li><strong>Frames per Second (FPS)</strong> (advanced option): how many frames per second are searched for faces. Higher values find more faces, including people who are only visible briefly, but take longer to compute.</li>\n</ul>\n<p><strong>Tip:</strong> if a cluster contains several people, lower the clustering threshold. If one person is spread over several clusters, raise it slightly or merge the clusters in the tab &quot;Faces&quot;.</p>",
+        "threshold": {
+          "name": "Clustering threshold",
+          "hint_left": "More clusters, higher cluster purity",
+          "hint_right": "Fewer clusters, lower cluster purity"
+        },
+        "max_cluster": {
+          "name": "Maximum number of clusters",
+          "hint_left": "Fewer clusters to display",
+          "hint_right": "More clusters to display"
+        },
+        "max_faces": {
+          "name": "Sample faces per cluster",
+          "hint_left": "Fewer faces per cluster",
+          "hint_right": "More faces per cluster"
+        },
+        "min_face_height": {
+          "name": "Minimum face height",
+          "hint_left": "Smaller faces included",
+          "hint_right": "Only larger faces"
+        },
+        "clustering_method_name": "Select a clustering method",
+        "clustering_method_hint": "Both methods currently produce the same result."
+      },
+      "face_identification": {
+        "plugin_name": "Face Search by Example Image",
+        "plugin_description": "<p>This plugin searches the video for a person shown in an example image you upload, and creates a timeline showing where this person most likely appears. It is useful if you already have a photo of the person. To get an overview of the main characters without a photo, use the &quot;Face Clustering&quot; plugin instead.</p>\n<p>The face in the example image and all faces in the video are detected with the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://arxiv.org/abs/2105.04714\">SCRFD</a> face detector of <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/deepinsight/insightface\">InsightFace</a>. For each face, an <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://arxiv.org/abs/1801.07698\">ArcFace</a> model computes a numerical description of the facial features. Frames are taken from the video at the selected rate, and every face in a frame is compared with the example face. For each moment, the timeline shows how similar the most similar face is.</p>\n<p>The values are scaled per timeline, so the highest value is always 1, even if the person does not appear in the video at all. Read the timeline as &quot;where the person most likely appears&quot;, not as a yes/no answer.</p>\n<h4>Parameters</h4>\n<ul>\n<li><strong>Example image:</strong> a photo of the person you are looking for, as JPG, PNG, or WebP file. The face should be clearly and entirely visible, in good resolution, and the image should show only this person: if it contains several faces, all of them are searched for. If no face is found in the image, the plugin fails.</li>\n<li><strong>Frames per Second (FPS)</strong> (advanced option): how many frames per second are searched. Higher values also find people who are only visible briefly, but take longer to compute.</li>\n</ul>",
+        "timeline_name": "Face Search",
+        "query_images": "Example image (JPG, PNG, or WebP)",
+        "query_images_hint": "The image should show only the person you are looking for, with the face clearly visible and in good quality."
+      },
+      "facedetection": {
+        "plugin_name": "Face Detection"
+      },
+      "faceemotion": {
+        "plugin_name": "Facial Expression Recognition",
+        "plugin_description": "<p>This plugin recognizes the facial expressions of the people in the video. Frames are taken from the video at the selected rate, and faces are detected with the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://arxiv.org/abs/2105.04714\">SCRFD</a> face detector of <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/deepinsight/insightface\">InsightFace</a>. Since facial expressions should be clearly visible, use the parameter &quot;minimum face size&quot; to discard small faces. Each face is then classified with the facial expression model of <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/serengil/deepface\">DeepFace</a> into seven classes (cf. Ekman): angry, disgust, fear, happy, sad, surprise, and neutral.</p>\n<p>The result consists of one timeline per expression, showing its probability over time. If several faces are visible at the same time, their probabilities are combined, so in scenes with many faces all expressions can receive high values. If a shot timeline is selected, an additional timeline labels each shot with the expression that has the highest average probability within the shot.</p>\n<p>Results are most reliable for frontal, large, and well-lit faces with clear expressions; subtle expressions are often classified as neutral or confused with each other.</p>\n<h4>Parameters</h4>\n<ul>\n<li><strong>Shot Boundaries from Timeline:</strong> If a shot timeline is selected, each shot is labeled with its most likely expression; without it, only the probability timelines are created.</li>\n<li><strong>Minimum face height:</strong> the minimum height of a face as a fraction of the frame height. Facial expressions can only be recognized in sufficiently large faces, so higher values give more reliable results; lower values also include people in the background, whose expressions are often misclassified.</li>\n<li><strong>Frames per Second (FPS)</strong> (advanced option): how many frames per second are analyzed. Higher values also capture short expressions but take longer to compute.</li>\n</ul>",
+        "timeline_name": "Facial Expressions"
+      },
+      "facesize": {
+        "plugin_name": "Face Size Analysis",
+        "timeline_name": "Face Size"
+      },
+      "invert": {
+        "plugin_name": "Invert Timeline",
+        "plugin_description": "<p>This plugin inverts a timeline with values: high values become low and low values become high. Each value is replaced by 1 minus the value; values outside the range from 0 to 1 are first scaled to this range.</p>\n<p>Together with the &quot;Combine Timelines&quot; plugin, it can be used to find moments when something is <em>not</em> the case. For example, to find when person A is visible but person B is not:</p>\n<p>INV = Invert (Person B)<br>RESULT = (Person A) Logical And (INV)</p>\n<h4>Parameters</h4>\n<ul>\n<li><strong>Timeline to invert:</strong> the timeline with values to be inverted, e.g., a person timeline or the result of &quot;Single-Object Classification (CLIP)&quot;.</li>\n</ul>",
+        "timeline_name": "Inverted Timeline"
+      },
+      "movie_pattern_frameshare": {
+        "plugin_name": "Movie Pattern Frameshare",
+        "plugin_description": "This plugin detects the movie pattern frameshare based on the shot boundaries of a selected timeline.",
+        "timeline_name": "Movie Pattern Frameshare",
+        "min_length": "Minimum Length of the Pattern in Shots"
       },
       "movie_pattern_intensify": {
         "plugin_name": "Movie Pattern Intensify",
         "plugin_description": "This plugin detects the movie pattern intensification based on the shot boundaries of a selected timeline.",
         "timeline_name": "Movie Pattern Intensify",
-        "min_length": "Minimum Length of the Pattern in Shots"
-      },
-      "movie_pattern_shot_reverse_shot": {
-        "plugin_name": "Movie Pattern Shot Reverse Shot",
-        "plugin_description": "This plugin detects the movie pattern shot reverse shot based on the shot boundaries of a selected timeline.",
-        "timeline_name": "Movie Pattern Shot Reverse Shot",
         "min_length": "Minimum Length of the Pattern in Shots"
       },
       "movie_pattern_opposition": {
@@ -256,11 +284,82 @@
         "timeline_name": "Movie Pattern Opposition",
         "min_length": "Minimum Length of the Pattern in Shots"
       },
-      "movie_pattern_frameshare": {
-        "plugin_name": "Movie Pattern Frameshare",
-        "plugin_description": "This plugin detects the movie pattern frameshare based on the shot boundaries of a selected timeline.",
-        "timeline_name": "Movie Pattern Frameshare",
+      "movie_pattern_shot_reverse_shot": {
+        "plugin_name": "Movie Pattern Shot Reverse Shot",
+        "plugin_description": "This plugin detects the movie pattern shot reverse shot based on the shot boundaries of a selected timeline.",
+        "timeline_name": "Movie Pattern Shot Reverse Shot",
         "min_length": "Minimum Length of the Pattern in Shots"
+      },
+      "nano_ocr": {
+        "plugin_name": "OCR (Nanonets)"
+      },
+      "ocr": {
+        "plugin_name": "OCR",
+        "timeline_name": "OCR",
+        "search_term": "Search Term"
+      },
+      "place_clustering": {
+        "plugin_name": "Place Clustering (CLIP)",
+        "plugin_description": "<p>This plugin gives you an overview of the recurring settings in the video by grouping shots that show the same or a very similar place, e.g., the same apartment, office, or street. Unlike &quot;Place Recognition (Places365)&quot;, which assigns general categories such as &quot;kitchen&quot;, it finds places that occur several times in this particular video.</p>\n<p>For each shot of the selected shot timeline, the middle frame is used. A multilingual <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/mlfoundations/open_clip\">OpenCLIP</a> model computes a numerical description of each image, and images with similar descriptions are grouped into clusters, ideally one cluster per place. Two shots end up in the same cluster if they are similar enough, either directly or through a chain of similar shots. Because of this chaining, a threshold that is only slightly too high can merge different places into one cluster.</p>\n<p>Please note that the comparison is based on how similar the images look. Two different places that look alike, e.g., two kitchens, can end up in the same cluster, and the same place shown from very different angles can be split into several clusters.</p>\n<h4>Typical workflow</h4>\n<ol>\n<li><strong>Create clusters:</strong> run this plugin and check the clusters in the tab &quot;Places&quot;. Remove wrong images or merge clusters where needed, or run the plugin again with a different threshold.</li>\n<li><strong>Convert clusters to timelines:</strong> for each relevant cluster, create a timeline in the tab &quot;Places&quot; to see when the place appears in the video.</li>\n</ol>\n<h4>Parameters</h4>\n<ul>\n<li><strong>Shot Boundaries from Timeline:</strong> the shots to be grouped, e.g., the timeline created by the &quot;Shot Boundary Detection&quot; plugin. One image per shot is used, so the quality of the shot timeline directly determines the result.</li>\n<li><strong>Clustering threshold:</strong> how different two images may be and still belong to the same cluster. Lower values create more and purer clusters, but one place may be split into several clusters. Higher values create fewer clusters, but different places may be merged.</li>\n<li><strong>Maximum number of clusters:</strong> how many of the largest clusters are kept. Smaller clusters, often places that appear only once, are discarded.</li>\n</ul>\n<p><strong>Tip:</strong> if a cluster contains different places, lower the clustering threshold. If one place is spread over several clusters, raise it slightly or merge the clusters in the tab &quot;Places&quot;.</p>",
+        "encoder_name": "Select an image encoder",
+        "threshold": {
+          "name": "Clustering threshold",
+          "hint_left": "More clusters, higher cluster purity",
+          "hint_right": "Fewer clusters, lower cluster purity"
+        },
+        "max_cluster": {
+          "name": "Maximum number of clusters",
+          "hint_left": "Fewer clusters to display",
+          "hint_right": "More clusters to display"
+        },
+        "clustering_method_name": "Select a clustering method",
+        "clustering_method_hint": "Both methods currently produce the same result."
+      },
+      "place_identification": {
+        "plugin_name": "Place Identification"
+      },
+      "places_classification": {
+        "plugin_name": "Place Recognition",
+        "plugin_description": "<p>This plugin recognizes the type of place shown in each shot, e.g., a kitchen, a street, a forest, or a church. It uses a ResNet-50 network trained on the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"http://places2.csail.mit.edu/\">Places365</a> dataset of about 1.8 million place (or scene) images. Places are recognized on three levels of detail:</p>\n<ul>\n<li><strong>3 categories:</strong> indoor, outdoor natural, and outdoor man-made</li>\n<li><strong>16 categories:</strong> e.g., home or hotel, transportation, forest or field</li>\n<li><strong>365 categories:</strong> e.g., kitchen, bus station, bamboo forest</li>\n</ul>\n<p>The full list of categories and how they are grouped can be found <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://docs.google.com/spreadsheets/d/1H7ADoEIGgbF_eXh9kcJjCs5j_r3VJwke4nebhkdzksg/edit#gid=142478777\">here</a>.</p>\n<p>Frames are taken from the video at the selected rate, and the model estimates for each frame how likely each of the 365 categories is; the probabilities of the coarser levels are derived from them. Each shot of the selected shot timeline is then labeled with the most likely place on each of the three levels on average across the shot.</p>\n<p>The result is a timeline with three labels per shot, one for each level, together with one timeline for each of the three top-level categories that shows its probability over time.</p>\n<p>Please note that the model recognizes the type of a place, not a specific location: it can tell that a scene shows a church, but not which church. To group shots that show the same location, use the &quot;Place Clustering&quot; plugin.</p>\n<h4>Parameters</h4>\n<ul>\n<li><strong>Shot Boundaries from Timeline:</strong> the shots to be labeled, e.g., the timeline created by the &quot;Shot Boundary Detection&quot; plugin. Its quality determines the result, so check it for missed or false cuts first.</li>\n<li><strong>Frames per Second (FPS)</strong> (advanced option): how many frames per second are analyzed. Higher values capture changes of the place within a shot more precisely but take longer to compute.</li>\n</ul>",
+        "timeline_name": "Places"
+      },
+      "shot_angle": {
+        "plugin_name": "Camera Angle Classification",
+        "plugin_description": "<p>This plugin determines the camera angle of each shot, i.e., from which direction the camera looks at the scene. It uses a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://arxiv.org/abs/2301.00808\">ConvNeXt V2</a> image classifier that we trained on the camera angle annotations of the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://cinescale.github.io/\">CineScale</a> dataset of feature films. It distinguishes five camera angles:</p>\n<ul>\n<li><strong>Overhead:</strong> the camera looks straight down from above (bird&#39;s-eye view)</li>\n<li><strong>High:</strong> the camera is above the subject and looks down at it</li>\n<li><strong>Neutral:</strong> the camera is at about the height of the subject and looks straight at it</li>\n<li><strong>Low:</strong> the camera is below the subject and looks up at it</li>\n<li><strong>Dutch:</strong> the camera is tilted sideways, so that the horizon is slanted</li>\n</ul>\n<p>Frames are taken from the video at the selected rate, and the model estimates for each frame how likely each camera angle is. Each shot of the selected shot timeline is then labeled with the camera angle that is the most likely on average across the shot.</p>\n<p>The result is a timeline with one camera angle per shot, together with one timeline per camera angle that shows its probability over time.</p>\n<p>Please note that each frame is assigned exactly one camera angle. A shot that is both tilted sideways and taken from above is therefore labeled either &quot;Dutch&quot; or &quot;High&quot;. The model analyzes a square section from the center of each frame, so details at the left and right edges of widescreen images are not taken into account.</p>\n<h4>Parameters</h4>\n<ul>\n<li><strong>Shot Boundaries from Timeline:</strong> the shots to be labeled, e.g., the timeline created by the &quot;Shot Boundary Detection&quot; plugin. Its quality determines the result, so check it for missed or false cuts first.</li>\n<li><strong>Frames per Second (FPS)</strong> (advanced option): how many frames per second are analyzed. Higher values capture changes of the camera angle within a shot more precisely but take longer to compute.</li>\n</ul>",
+        "timeline_name": "Camera Angles"
+      },
+      "shot_density": {
+        "plugin_name": "Shot Density (Cutting Rate)",
+        "plugin_description": "<p>This plugin shows how fast the video is edited over time, i.e., how closely the cuts follow each other. It uses the shot boundaries of a selected timeline, e.g., the timeline created by the &quot;Shot Boundary Detection&quot; plugin. The <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://scikit-learn.org/stable/modules/density.html#kernel-density-estimation\">kernel density estimation</a> of the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://scikit-learn.org/\">scikit-learn</a> library places a bell-shaped curve on each cut and adds these curves up. Where many cuts follow each other closely, the curve is high; during long shots, it is low.</p>\n<p>The result is a timeline that distinguishes fast-paced passages, such as action sequences or montages, from slow-paced ones. The values are scaled from 0 (slowest editing in the video) to 1 (fastest), so they are relative to the video and cannot be compared between videos. </p>",
+        "timeline_name": "Shot Density",
+        "input_timeline": "Shot Boundaries from Timelin",
+        "bandwidth": "Bandwidth (seconds)"
+      },
+      "shot_detection": {
+        "plugin_name": "Shot Boundary Detection",
+        "plugin_description": "<p>This plugin automatically splits the video into shots. It uses <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://arxiv.org/abs/2008.04838\">TransNet V2</a>, a neural network trained to recognize both hard cuts and gradual transitions such as dissolves and fades. Every frame of the video is analyzed, and the network estimates for each frame how likely a shot transition takes place. </p>\n<p>The result is a timeline with one segment per shot. Many other plugins use this timeline as input, for example to annotate shots or compute the shot density. Mistakes can be corrected directly on the timeline: right-click a shot to split it at the current position or to merge it with its neighbors.</p>\n<p>Please note that very fast camera movements, flashes, or sudden lighting changes can occasionally be mistaken for cuts, and very soft transitions can be missed.</p>",
+        "timeline_name": "Shots"
+      },
+      "shot_level": {
+        "plugin_name": "Camera Level Classification",
+        "plugin_description": "<p>This plugin determines the camera level of each shot, i.e., at which height the camera is placed relative to the subject. It uses a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://arxiv.org/abs/2301.00808\">ConvNeXt V2</a> image classifier that we trained on the camera level annotations of the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://cinescale.github.io/\">CineScale</a> dataset of feature films. It distinguishes six camera levels:</p>\n<ul>\n<li><strong>Aerial:</strong> the camera is high above the scene, e.g., on a crane, helicopter, or drone</li>\n<li><strong>Eye:</strong> the camera is at the eye level of the people in the scene</li>\n<li><strong>Shoulder:</strong> the camera is at about shoulder height</li>\n<li><strong>Hip:</strong> the camera is at about hip height</li>\n<li><strong>Knee:</strong> the camera is at about knee height</li>\n<li><strong>Ground:</strong> the camera is placed on or close to the ground</li>\n</ul>\n<p>The camera level describes where the camera is, not in which direction it looks. Use the &quot;Camera Angle Classification&quot; plugin to determine whether the camera looks up, down, or straight ahead.</p>\n<p>Frames are taken from the video at the selected rate, and the model estimates for each frame how likely each camera level is. Each shot of the selected shot timeline is then labeled with the camera level that is the most likely on average across the shot.</p>\n<p>The result is a timeline with one camera level per shot, together with one timeline per camera level that shows its probability over time.</p>\n<p>Please note that the camera level is defined relative to the people in the scene. For shots without people, it is estimated from the surroundings, which is less reliable. The model analyzes a square section from the center of each frame, so details at the left and right edges of widescreen images are not taken into account.</p>\n<h4>Parameters</h4>\n<ul>\n<li><strong>Shot Boundaries from Timeline:</strong> the shots to be labeled, e.g., the timeline created by the &quot;Shot Boundary Detection&quot; plugin. Its quality determines the result, so check it for missed or false cuts first.</li>\n<li><strong>Frames per Second (FPS)</strong> (advanced option): how many frames per second are analyzed. Higher values capture changes of the camera level within a shot more precisely but take longer to compute.</li>\n</ul>",
+        "timeline_name": "Camera Levels"
+      },
+      "shot_scalar_annotation": {
+        "plugin_name": "Average Value per Shot",
+        "plugin_description": "<p>This plugin converts a timeline with scalar values (e.g., probabilities) into shot annotations. For each shot of the selected shot timeline, the average of the values within the shot is computed. The result is a new timeline with one segment per shot, labeled with the average value. The color of each segment indicates the value compared with the other shots: the higher the value, the brighter the color.</p>\n<p>Shot annotations can be compared shot by shot and exported together with the other annotations, e.g., to <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://archive.mpi.nl/tla/elan\">ELAN</a> for further analysis. Shots that are shorter than the time step of the selected curve contain no value and remain without a segment.</p>\n<h4>Parameters</h4>\n<ul>\n<li><strong>Shot Boundaries from Timeline:</strong> the shots for which the averages are computed, e.g., the timeline created by the &quot;Shot Boundary Detection&quot; plugin.</li>\n<li><strong>Timeline with values:</strong> the timeline whose curve is averaged per shot.</li>\n</ul>",
+        "timeline_name": "Average Value per Shot"
+      },
+      "shot_scale_and_movement": {
+        "plugin_name": "Shot Scale and Camera Movement",
+        "plugin_description": "<p>This plugin classifies both the shot scale and the camera movement of each shot. It uses a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://arxiv.org/abs/2203.12602\">VideoMAE</a> video transformer that we trained on the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://arxiv.org/abs/2008.03548\">MovieShots</a> dataset of shots from movie trailers. Unlike classifiers that look at single frames, it analyzes short video sections and can therefore recognize camera movements.</p>\n<p>The model distinguishes five shot scales:</p>\n<ul>\n<li><strong>Extreme Close-Up:</strong> only a small detail fills the frame, e.g., the eyes of a person or a part of an object</li>\n<li><strong>Close-Up:</strong> a face, a hand, or a small object fills most of the frame</li>\n<li><strong>Medium:</strong> a person from about the waist up, or a subject seen at a similar distance</li>\n<li><strong>Full:</strong> a person from head to toe, or a subject that is entirely visible and fills the frame</li>\n<li><strong>Long:</strong> people or objects appear small in their surroundings, e.g., landscapes or wide views of a scene</li>\n</ul>\n<p>and four types of camera movement:</p>\n<ul>\n<li><strong>Static:</strong> the camera does not move</li>\n<li><strong>Motion:</strong> the camera moves, e.g., pans, tilts, or follows a subject</li>\n<li><strong>Push:</strong> the camera moves toward the subject or zooms in</li>\n<li><strong>Pull:</strong> the camera moves away from the subject or zooms out</li>\n</ul>\n<p>The video is split into sections of half a second, and the model estimates for each section how likely each class is. Each shot of the selected shot timeline is then labeled with the most likely scale and the most likely movement on average across the shot.</p>\n<p>The result consists of two groups of timelines, one for the shot scale and one for the camera movement. Each group contains a timeline with one label per shot and one timeline per class showing its probability over time.</p>\n<h4>Parameters</h4>\n<ul>\n<li><strong>Shot Boundaries from Timeline:</strong> the shots to be labeled, e.g., the timeline created by the &quot;Shot Boundary Detection&quot; plugin. Its quality determines the result, so check it for missed or false cuts first.</li>\n</ul>",
+        "timeline_name_scale": "Shot Scales",
+        "timeline_name_movement": "Shot Movements"
+      },
+      "shot_type_classification": {
+        "plugin_name": "Shot Scale Classification",
+        "plugin_description": "<p>This plugin determines the shot scale (or shot size) of each shot, i.e., how large the people or objects appear in the frame. A neural network (ResNet) classifies frames of the video into five shot sizes, i.e., Extreme Close-Up, Close-Up, Medium Shot, Full Shot, and Long Shot. </p>\n<p>Frames are taken from the video at the selected rate, and the network estimates for each frame how likely each shot size is. Each shot of the selected shot timeline is then labeled with the shot size that is the most likely on average across the shot. If the shot size changes within a shot, e.g., because of a zoom or camera movement, the label shows the size that dominates on average; the probability timelines show the changes in detail.</p>\n<p>The result is a timeline with one shot size per shot, together with one timeline per shot size that shows its probability over time.</p>\n<h4>Parameters</h4>\n<ul>\n<li><strong>Shot Boundaries from Timeline:</strong> the shots to be labeled, e.g., the timeline created by the &quot;Shot Boundary Detection&quot; plugin. Its quality determines the result, so check it for missed or false cuts first.</li>\n<li><strong>Frames per Second (FPS)</strong> (advanced option): how many frames per second are analyzed. Higher values capture changes in shot size within a shot more precisely but take longer to compute.</li>\n</ul>",
+        "timeline_name": "Shot Scales"
       },
       "text_ner": {
         "plugin_name": "Named Entity Recognition and Disambiguation (NERD)",
@@ -279,171 +378,46 @@
         "plugin_description": "This plugin performs sentiment analysis based on the speaker segments of WhisperX. The predicted label is shown as well as the predicted probabilities for each sentiment.",
         "model_selector_description": "Model Type"
       },
-      "blip": {
-        "plugin_name": "Visual Question Answering (InstructBLIP)",
-        "plugin_description": "This plugin uses the large vision language model <a href=\"https://arxiv.org/abs/2305.06500\">InstructBLIP</a> that is similar to GPT-4 to perform question answering over the video. It can be used for various purposes, for example, to automatically find concepts within the video. Here are some examples: <br><br> <em>Does this image show a car? Please answer with yes or no! <br> Does this image show at least three persons? Please answer with yes or no! <br> Is this photo taken in a restaurant? Please answer with yes or no!</em>",
-        "timeline_name": "InstructBLIP Visual QA",
-        "search_term": "Question"
-      },
-      "clip": {
-        "plugin_name": "Single-Object Classification (CLIP)",
-        "plugin_description": "This plugin uses a multilingual <a href=\"https://github.com/mlfoundations/open_clip\">OpenCLIP (Contrastive Language-Image Pretraining) model</a> provided by <a href=\"https://laion.ai/\">LAION</a> (<a href=\"https://huggingface.co/laion/CLIP-ViT-B-32-xlm-roberta-base-laion5B-s13B-b90k\">more details</a>), based on the original CLIP architecture introduced by <a href=\"https://arxiv.org/abs/2103.00020\">Radford et al. (2021)</a>. <br><br> CLIP allows for searching the video content for arbitrary visual concepts given a textual description. The textual description should describe the concept of interest in simple, unambiguous terms. Here is an example: <em>A photo of a car.</em> <br><br>CLIP works well for a large variety of concepts (e.g., objects, places, events, daytimes, weather conditions, etc.) that can be identified from a single video frame. To identify concepts that require temporal context from the video such as human actions, we recommend using the \"Action Recognition\" plugin. <br><br> Please note that the plugin requires more time if you first use it for a video. After the first use, the results will be computed much faster due to caching.",
-        "timeline_name": "Object Classification",
-        "search_term": "Concept Description"
-      },
-      "clip_ontology": {
-        "plugin_name": "Multi-Object Classification (CLIP)",
-        "plugin_description": "This plugin uses a multilingual <a href=\"https://github.com/mlfoundations/open_clip\">OpenCLIP (Contrastive Language-Image Pretraining) model</a> provided by <a href=\"https://laion.ai/\">LAION</a> (<a href=\"https://huggingface.co/laion/CLIP-ViT-B-32-xlm-roberta-base-laion5B-s13B-b90k\">more details</a>), based on the original CLIP architecture introduced by <a href=\"https://arxiv.org/abs/2103.00020\">Radford et al. (2021)</a>. <br><br> CLIP allows for searching the video content for a set of arbitrary visual concepts given a csv file containing the concept name and an associated textual description. The textual description should describe the concept of interest in simple, unambiguous terms. Here is an example: <br><br> \"day\",\"a photo taken at daylight\" <br> \"night\",\"a photo taken during the night\" <br><br> It works well for a large variety of concepts (e.g., objects, places, events, daytimes, weather conditions, etc.) that can be identified from a single video frame. To identify concepts that require temporal context from the video such as human actions, we recommend using the \"Action Recognition\" plugin. <br><br> Please note that the plugin requires more time if you first use it for a video. After the first use, the results will be computed much faster due to caching.",
-        "timeline_name": "Object Classification",
-        "concepts": "Concept Lexicon",
-        "concepts_hint": "CSV file with timeline name and a description for the concept in each row"
-      },
-      "x_clip": {
-        "plugin_name": "Action Classification (X-CLIP)",
-        "plugin_description": "This plugin uses <a href=\"https://arxiv.org/abs/2207.07285\">X-CLIP</a> that allows for searching the video content for arbitrary actions given a textual description. The textual description should describe the action in simple, unambiguous terms. Here is an example: <em>A video showing a person dancing</em> <br><br> Please note that the plugin requires more time if you first use it for a video. After the first use, the results will be computed much faster.",
-        "timeline_name": "Action Classification",
-        "search_term": "Action Description"
-      },
-      "color_analysis": {
-        "plugin_name": "Dominant Color(s)",
-        "plugin_description": "This plugin uses a clustering algorithm (k-Means) to determine the top-k dominant colors within the video. The number of dominant colors can be selected by the slider below.",
-        "timeline_name": "Dominant Color(s)",
-        "slider": "Number of dominant color(s)",
-        "buttongroup": "Show dominant color(s) in:",
-        "singletimeline": "Single Timeline",
-        "multipletimelines": "Individual Timelines",
-        "max_resolution": "Maximum Image Resolution",
-        "max_iter": "Maximum Number of Iterations for k-Means Clustering"
-      },
-      "color_brightness_analysis": {
-        "plugin_name": "Video Brightness",
-        "plugin_description": "This plugin computes the brightness of frames within the video. It can reveal darker and brighter content that can, for example, reveal the daytime of a scene.",
-        "timeline_name": "Video Brightness"
-      },
-      "facedetection": {
-        "plugin_name": "Face Detection",
-        "timeline_name": "Faces"
-      },
-      "face_clustering": {
-        "plugin_name": "Face Clustering",
-        "clustering_method_name": "Select a clustering method",
-        "plugin_description": "This plugin automatically performs a clustering algorithm to automatically determine the dominant faces (persons) in the video. Selecting the threshold for clustering is crucial to achieve good results. After performing the clustering, each resulting cluster visible in the tab \"Faces\" should ideally only contain images of the same person. If this is not the case, the threshold needs to be lowered so that fewer images are grouped in the same cluster. <br><br>Note that after performing the clustering, the clusters can be manually adjusted and a person constellation graph can be created in the tab \"Faces\". Moreover, you can create a timeline for a specific person to see when the person is visible in the video.",
-        "threshold": {
-          "hint_left": "More clusters, higher cluster purity",
-          "hint_right": "Fewer clusters, lower cluster purity"
-        },
-        "max_cluster": {
-          "hint_left": "Fewer clusters to display",
-          "hint_right": "More clusters to display"
-        },
-        "max_faces": {
-          "hint_left": "Fewer faces per cluster",
-          "hint_right": "More faces per cluster"
-        },
-        "min_face_height": {
-          "hint_left": "Smaller minimum face height",
-          "hint_right": "Larger minimum face height"
-        }
-      },
-      "faceemotion": {
-        "plugin_name": "Face Emotion Recognition",
-        "plugin_description": "This plugin automatically recognizes the facial expression for each face found in the video. It differentiates between seven basic emotions: Angry, Disgust, Fear, Happy, Sad, Surprise, and Neutral. <br><br> Please note that there can be multiple faces visible at the same time. The timelines created by this plugin show that maximum score for each emotion over all faces visible at the same time.",
-        "timeline_name": "Face Emotions",
-        "fps": "Frames per Second (FPS)",
-        "min_facesize": "Minimum Face Size [px]"
-      },
-      "face_identification": {
-        "plugin_name": "Face Identification with an Example Image",
-        "plugin_description": "This plugin performs a face identification based on an uploaded example image of the person of interest. Please note that the image must be uploaded as a jpg file and that it should only contain the person you are interested in. The plugin might fail, if the face is not detected in your uploaded photo. So, please make sure that the face is clearly and entirely visible. <br><br> To automatically identify the main characters within the video, we recommend using the \"Face Clustering\" plugin.",
-        "timeline_name": "Face Identification",
-        "query_images": "Select query image (jpg format)",
-        "query_images_hint": "*The image should only depict the person you want to search for in good resolution and quality"
-      },
-      "ocr": {
-        "plugin_name": "OCR",
-        "timeline_name": "OCR",
-        "search_term": "Search Term"
-      },
-      "facesize": {
-        "plugin_name": "Face Size Analysis",
-        "timeline_name": "Face Size"
-      },
-      "place_clustering": {
-        "plugin_name": "Place Clustering",
-        "plugin_description": "This plugin automatically performs a clustering algorithm to automatically determine the dominant places in the video. Selecting the threshold for clustering is crucial to achieve good results. After performing the clustering, each resulting cluster visible in the tab \"Places\" should ideally only contain images of the same place. If this is not the case, the threshold needs to be lowered so that fewer images are grouped in the same cluster. <br><br>Note that after performing the clustering, the clusters can be manually adjusted and a constellation graph can be created. Moreover, you can create a timeline for a specific place to see when the place is visible in the video.",
-        "encoder_name": "Select an image encoder",
-        "clustering_method_name": "Select a clustering method",
-        "threshold": {
-          "hint_left": "More clusters, higher cluster purity",
-          "hint_right": "Fewer clusters, lower cluster purity"
-        },
-        "max_cluster": {
-          "hint_left": "Fewer clusters to display",
-          "hint_right": "More clusters to display"
-        }
-      },
-      "place_identification": {
-        "plugin_name": "Place Identification"
-      },
-      "places_classification": {
-        "plugin_name": "Place Recognition",
-        "plugin_description": "This plugin uses a model trained on the <a href=\"http://places2.csail.mit.edu/\">Places365 dataset</a> to identify places within the video in three hierarchy levels with 3, 16, and 365 place categories. The first hierarchy level contains the places: indoor, outdoor natural, and outdoor man-made. The set of place categories in the other levels can be found <a href=\"https://docs.google.com/spreadsheets/d/1H7ADoEIGgbF_eXh9kcJjCs5j_r3VJwke4nebhkdzksg/edit#gid=142478777\">here</a>.",
-        "timeline_name": "Places"
-      },
-      "shot_detection": {
-        "plugin_name": "Shot Boundary Detection",
-        "plugin_description": "This plugin automatically detects shot boundaries within the video using a deep learning model. You can create or merge cuts by right-clicking on the resulting timeline.",
-        "timeline_name": "Shots"
-      },
-      "shot_density": {
-        "plugin_name": "Shot Density",
-        "plugin_description": "This plugin predicts the density of the shots within a video. In this way, you can differentiate between slow and fast-paced scenes. The computation is performed based on a selected timeline, e.g., the timeline that is created by the \"Shot Boundary Detection\" plugin.",
-        "timeline_name": "Shot Density",
-        "input_timeline": "Select Timeline",
-        "kernel": "Gaussian",
-        "bandwidth": "Bandwidth"
-      },
-      "shot_scalar_annotation": {
-        "plugin_name": "Scalar Shot Annotation",
-        "plugin_description": "This plugin annotates shots based on a selected shot timeline with the average value of a timeline with scalar values. This plugin can be primarily used to import information created within TIB-AV-A to <a href=\"https://archive.mpi.nl/tla/elan\">ELAN</a>.",
-        "timeline_name": "Scalar Shot Annotation"
-      },
-      "shot_type_classification": {
-        "plugin_name": "Shot Size Classification",
-        "plugin_description": "This plugin predicts the shot sizes within the video based on a deep learning model. It differentiates between five shot sizes: Extreme Close-Up, Close-Up, Medium Shot, Full Shot, and Long Shot. <br><br>By selecting a timeline that contains shots, e.g., the timeline that is created by the \"Shot Boundary Detection\" plugin, each shot will be automatically labeled by its dominant shot size.",
-        "timeline_name": "Shot Sizes"
-      },
       "thumbnail": {
         "plugin_name": "Thumbnail Generation",
-        "plugin_description": "This plugin creates thumbnails for the video that are used in the tab \"Shots\". The plugin is automatically performed once a video is uploaded. Please only perform it again if the thumbnails appear to be missing."
+        "plugin_description": "<p>This plugin creates small preview images of the video. They are used in the tab &quot;Shots&quot;, which shows three thumbnails for each shot: one from the beginning, one from the middle, and one from the end.</p>\n<p>The plugin runs automatically when a video is uploaded, so you normally do not need to start it yourself. Run it again only if the thumbnails in the tab &quot;Shots&quot; are missing, e.g., because the automatic run failed. If it has been run several times, the most recent thumbnails are used.</p>"
       },
-      "shot_angle": {
-        "plugin_name": "Shot Angle Classification",
-        "plugin_description": "This plugin classifies the angle of each shot within the video based on a deep learning model. All shots will be automatically labeled by its dominant shot angle. Possible labels: Overhead, High, Neutral, Low, Dutch",
-        "timeline_name": "Shot Angles"
+      "vllm": {
+        "plugin_name": "Visual Question Answering",
+        "plugin_description": "<p>This plugin lets you ask a question about every shot of the video, or give an instruction such as &quot;Describe the image&quot;, and stores the answer of a generative large vision-language model as an annotation of the shot. It uses Google&#39;s Gemma 4 model, which understands both images and text and runs locally at an <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://ollama.com/\">Ollama</a> instance at TIB. Thus, <strong>the images are not sent to an external service</strong>.</p>\n<p>For each shot of the selected shot timeline, the frame in the middle of the shot is sent to the model together with your prompt. The answer is stored as the label of the shot. The same prompt on the same video always gives the same answers.</p>\n<p>The result is a timeline with one segment per shot, labeled with the model&#39;s answer. With prompts that ask for short, fixed answers, the timeline can be used like a classification, for example:</p>\n<p><em>Is there a car in this image? Answer only with yes or no.</em><br><em>How many people are visible? Answer only with a number.</em><br><em>Is this scene indoors or outdoors? Answer with one word.</em></p>\n<p>Please note that the model only sees one frame per shot, so it cannot answer questions about what happens over the course of a shot. Like all language models, it can give wrong answers that sound convincing, so check important results against the video.</p>\n<h4>Parameters</h4>\n<ul>\n<li><strong>Shot Boundaries from Timeline:</strong> the shots to be analyzed, e.g., the timeline created by the &quot;Shot Boundary Detection&quot; plugin. One frame per shot is used.</li>\n<li><strong>Query / Prompt:</strong> the question or instruction for the model. Ask for short answers, e.g., &quot;Answer only with yes or no&quot;, because the complete answer becomes the label of the shot; very long answers are shortened. The prompt can be written in other languages as well.</li>\n</ul>",
+        "timeline_name": "Visual Question Answering",
+        "search_term": "Query / Prompt"
       },
-      "shot_level": {
-        "plugin_name": "Shot Level Classification",
-        "plugin_description": "This plugin classifies the level of each shot within the video based on a deep learning model. All shots will be automatically labeled by its dominant shot level. Possible labels: Aerial, Eye, Shoulder, Hip, Knee, Ground",
-        "timeline_name": "Shot Levels"
+      "whisper": {
+        "plugin_name": "Speech Recognition (Whisper)",
+        "plugin_description": "<p>This plugin automatically transcribes the speech in the video with OpenAI&#39;s <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/openai/whisper\">Whisper</a> speech recognition model (<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://arxiv.org/abs/2212.04356\">paper</a>), run with the Hugging Face <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://huggingface.co/docs/transformers/\">Transformers</a> library. The audio track is processed in sections of 30 seconds. Whisper detects the spoken language automatically and writes the text in that language; it supports <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/openai/whisper?tab=readme-ov-file#available-models-and-languages\">99 languages</a>. The transcript is split into short phrases with their start and end times.</p>\n<p>After the plugin has finished, the transcript is shown as a timeline and in the tab &quot;Transcript&quot;, where you can search for words. The tab &quot;Word Cloud&quot; shows the most frequent words.</p>\n<p>Please note that the plugin does not distinguish between speakers. Whisper can occasionally produce text for passages with music, noise, or silence that was never spoken, so check important passages against the video.</p>",
+        "timeline_name": "Whisper Transcript"
       },
-      "shot_scale_and_movement": {
-        "plugin_name": "Shot Scale and Movement Classification",
-        "plugin_description": "This plugin classifies scale/size and movement of each shot within the video based on a deep learning model. All shots will be automatically labeled by its dominant shot scale/size and movement. Possible scale labels: Extreme Close-Up, Close-Up, Medium, Full, Long; Possible movement labels: Static, Motion, Push, Pull",
-        "timeline_name_scale": "Shot Scales",
-        "timeline_name_movement": "Shot Movements"
+      "whisper_x": {
+        "plugin_name": "Speech & Speaker Recognition (WhisperX, deprecated)",
+        "plugin_description": "<p>This plugin uses a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/m-bain/whisperX\">faster version of OpenAI&#39;s Whisper model with speaker diarization</a> to automatically provide a transcription of the spoken language in the video (differentiated by the speaker). It supports more than 100 languages. A list of supported languages can be found <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/openai/whisper?tab=readme-ov-file#available-models-and-languages\">here</a>.</p>",
+        "language_code_name": "Language Code",
+        "language_code_hint": "If not provided, the spoken language is detected automatically",
+        "timeline_name": "WhisperX Transcript"
       },
-      "invert": {
-        "plugin_name": "Invert Timeline",
-        "plugin_description": "Inverts a timeline by calculating 1-y. If the original timeline was greater than 1 or less than 0, the values are normalized to [0,1] beforehand.",
-        "timeline_name": "Inverted Timeline"
+      "whisper_x_origin": {
+        "plugin_name": "Speech & Speaker Recognition (WhisperX)",
+        "plugin_description": "<p>This plugin transcribes the speech in the video and determines who speaks when. It uses <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/m-bain/whisperX\">WhisperX</a>, which combines three steps:</p>\n<ol>\n<li><strong>Speech recognition:</strong> OpenAI&#39;s <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/openai/whisper\">Whisper</a> model (large-v3) transcribes the audio. Passages without speech are detected and skipped first, which reduces text being invented during music or silence.</li>\n<li><strong>Word alignment:</strong> a <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://arxiv.org/abs/2006.11477\">wav2vec 2.0</a> model for the spoken language aligns every word precisely with the audio.</li>\n<li><strong>Speaker diarization:</strong> <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://github.com/pyannote/pyannote-audio\">pyannote.audio</a> computes a voice profile for short sections of speech and groups similar voices into speakers. Each phrase is then assigned to one speaker.</li>\n</ol>\n<p>The result is a group of two timelines: &quot;Speech Transcript&quot; contains each phrase together with its speaker, and &quot;Speaker&quot; shows when each speaker talks. Speakers are numbered (SPEAKER_00, SPEAKER_01, …) separately for each video; they are not identified by name.</p>\n<h4>Parameters</h4>\n<ul>\n<li><strong>Language Code:</strong> the language spoken in the video as a two-letter code, e.g., <code>en</code> or <code>de</code>. Keep <code>none</code> to detect the language automatically. Entering it is more reliable for short videos or videos with a lot of music. Only languages for which WhisperX provides an alignment model are supported; for other languages, the plugin fails.</li>\n<li><strong>Speaker clustering threshold</strong> (advanced option): how similar two voices must be to be treated as the same speaker in a first grouping step. Lower values separate voices more strictly and produce more speakers; higher values merge more voices and produce fewer speakers.</li>\n<li><strong>Speaker regularization (Fb)</strong> (advanced option): how strongly the refinement step that follows prefers a small number of speakers. Higher values merge similar voices more readily and produce fewer speakers; lower values allow more speakers.</li>\n<li><strong>Acoustic scaling (Fa)</strong> (advanced option): how much weight the refinement step gives to differences between voices compared with the speaker regularization. Higher values let small differences in a voice count more, which tends to produce more speakers. In most cases, this value does not need to be changed.</li>\n</ul>",
+        "timeline_name": "Transcription",
+        "language_code_name": "Language Code",
+        "threshold": "VAD Threshold",
+        "fb": "Speaker regularization (Fb)",
+        "fa": "Acoustic scaling (Fa)"
+      },
+      "x_clip": {
+        "plugin_name": "Action Search (X-CLIP)",
+        "plugin_description": "<p>This plugin searches the video for visual concepts and actions you describe in words, e.g., <em>people dancing</em>, <em>a person playing guitar</em>, or <em>someone running</em>. It uses <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://arxiv.org/abs/2207.07285\">X-CLIP</a>, a video version of CLIP that analyzes short video clips instead of single frames, and can therefore recognize what happens over time. The model was trained on the <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://arxiv.org/abs/1705.06950\">Kinetics</a> dataset of human actions and works best for everyday and sports activities.</p>\n<p>Frames are taken from the video at the selected rate and grouped into clips of eight frames. X-CLIP compares each clip with your description, and the timeline shows for each clip how well it matches.</p>\n<p>The values are scaled per timeline, so the best-matching clip is always 1, even if the action does not occur in the video at all. Read the timeline as &quot;where the action most likely happens&quot;, not as a yes/no answer.</p>\n<p>For concepts that can be recognized in a single frame, such as objects or places, the &quot;Visual Concept Search (CLIP)&quot; plugin is usually more precise.</p>\n<h4>Parameters</h4>\n<ul>\n<li><strong>Action Description:</strong> the action you are looking for, in English and in simple, unambiguous terms, e.g., <em>people dancing</em> or <em>a person riding a bicycle</em>. Short descriptions of the activity usually work best.</li>\n<li><strong>Frames per Second (FPS)</strong> (advanced option): how many frames per second are used. Because each clip always consists of eight frames, this value also determines how long each clip is: lower values give longer clips, which suit slow or long actions; higher values give shorter clips with a finer time resolution, but longer actions may then be split into fragments.</li>\n</ul>",
+        "timeline_name": "Action Search",
+        "search_term": "Action Description"
       }
     },
     "shortcut": {
       "title": "Shortcuts",
-      "annotation": "Annotation",
-      "shortcut": "Shortcut",
-      "create": "Create",
       "update": "Update",
       "close": "Close"
     },
@@ -490,7 +464,6 @@
       "visualization": {
         "title": "Change Visualization",
         "link": "Visualization",
-        "name": "Timeline Name",
         "update": "OK",
         "close": "Close",
         "description": "The color map of the timeline can be changed to one of the following maps:",
@@ -510,6 +483,29 @@
       "new_cluster": "New Cluster",
       "move_existing": "Move to existing Cluster"
     }
+  },
+  "plugin": {
+    "menu": {
+      "title": "Pipelines"
+    }
+  },
+  "terms": {
+    "title": "TERMS OF USE",
+    "content": "<p><strong>1. Introduction</strong></p>\n<p>These Terms of Use (&quot;Terms&quot;) govern access to and use of the video portal (&quot;Portal&quot;) of TIB-AV-A. By using the Portal, you agree to the following Terms of Use.</p>\n<p><strong>2. Rights to Upload</strong></p>\n<p>2.1. By uploading content (&quot;Content&quot;) to the Portal, you grant TIB-AV-A the non-exclusive right to store, process, analyze, and use the Content in order to provide the Portal&#39;s services.<br>2.2. You confirm that you have the necessary rights to upload the Content, including copyrights, trademark rights, and other rights required for the use of the Content.</p>\n<p><strong>3. Processing and Analysis</strong></p>\n<p>3.1. TIB-AV-A processes and analyzes the Content to provide the Portal&#39;s services, including the analysis of usage data and the optimization of the Content.<br>3.2. By using the Portal, you agree that TIB-AV-A may process and analyze the Content to provide the Portal&#39;s services.</p>\n<p><strong>4. Data Protection</strong></p>\n<p>4.1. TIB-AV-A treats your personal data confidentially and in accordance with data protection regulations.<br>4.2. By using the Portal, you agree that TIB-AV-A may process your personal data to provide the Portal&#39;s services.</p>\n<p><strong>5. Liability</strong></p>\n<p>5.1. TIB-AV-A is not liable for damages resulting from the use of the Portal, including the infringement of third-party rights.<br>5.2. By using the Portal, you agree that TIB-AV-A cannot be held liable for damages resulting from the use of the Portal.</p>\n<p><strong>6. Changes</strong></p>\n<p>6.1. TIB-AV-A may change these Terms of Use at any time.<br>6.2. By continuing to use the Portal after changes to the Terms of Use, you agree to the modified Terms of Use.</p>\n<p><strong>7. Final Provisions</strong></p>\n<p>7.1. These Terms of Use govern the entire contractual relationship between you and TIB-AV-A.<br>7.2. By using the Portal, you agree to these Terms of Use and confirm that you accept the following terms.</p>"
+  },
+  "timelineSegment": {
+    "title": "Title",
+    "close": "Close",
+    "update": "Update",
+    "delete": "Delete",
+    "annotate": {
+      "selection": "Annotate selected segment(s)",
+      "range": "Annotate selected range"
+    },
+    "split": "Create cut",
+    "merge": "Merge selected range",
+    "mergeleft": "Merge with left segment",
+    "mergeright": "Merge with right segment"
   },
   "user": {
     "name": "Username",
@@ -537,5 +533,29 @@
         "max": "Max. 50 characters."
       }
     }
+  },
+  "views": {
+    "home": {
+      "new_video": "Upload new video"
+    }
+  },
+  "visualization": {
+    "title": "Create Visualization",
+    "controls": {
+      "plotTypes": {
+        "linePlot": "Line Plot",
+        "scatterPlot": "Scatter Plot",
+        "constellationGraph": "Constellation Graph"
+      }
+    }
+  },
+  "welcome": {
+    "title": "TIB AV-Analytics",
+    "text": "Welcome to the TIB AV-Analytics (TIB-AV-A) video analysis platform for systematic film and video analysis.",
+    "demo_title": "Video Demonstration",
+    "login_title": "How to create an account?",
+    "login_text": "<p>If you do not have an account yet, you can create an account at the top right (&quot;Login&quot; -&gt; &quot;Register&quot;).<br>New users can upload a maximum number of ten videos with a maximum file size of 500 MB.</p>\n<p>If you have questions regarding account creation or if you want to analyze more or larger video files, please write an email to <a href=\"mailto:matthias.springstein@tib.eu\">matthias.springstein@tib.eu</a> with a short explanation of your intended use case</p>",
+    "format_title": "Video File Support",
+    "format_text": "<p>Please note that TIB-AV-A currently only supports the analysis of mp4 video files to avoid long processing times due to transcoding videos on our server. Please transcode them before uploading. If you have questions, feel free to contact us: <a href=\"mailto:matthias.springstein@tib.eu\">matthias.springstein@tib.eu</a></p>"
   }
 }

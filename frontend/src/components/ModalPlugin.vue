@@ -34,7 +34,7 @@
         <v-tabs-items v-model="tab">
           <v-tab-item class="scroll">
             <h1 class="mt-2">{{ $t("terms.title") }}</h1>
-            <p v-html="$t('terms.content')"></p>
+            <div v-html="$t('terms.content')"></div>
             <v-form class="terms-input">
               <v-checkbox
                 v-model="checkbox"
@@ -213,7 +213,7 @@ export default {
                   value: 8000,
                   step: 1000,
                   name: "sr",
-                  text: this.$t("modal.plugin.audio_waveform.sr"),
+                  text: this.$t("modal.plugin.audio_rms.sr"),
                 },
               ],
             },
