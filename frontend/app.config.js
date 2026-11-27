@@ -1,4 +1,4 @@
 module.exports = {
-  API_LOCATION: "http://localhost:8000",
-  THUMBNAIL_LOCATION: "http://localhost/thumbnails",
+  API_LOCATION: '/backend',
+  THUMBNAIL_LOCATION: '/thumbnails',
 };

@@ -67,6 +67,36 @@ sudo docker-compose exec frontend npm run serve
 ```
 
 
+## HPC setup (Apptainer + SLURM, no Docker)
+
+### Requirements
+* [apptainer](https://apptainer.org/docs/user/latest/quick_start.html)
+* [uv](https://docs.astral.sh/uv/getting-started/installation/)
+* SLURM with a GPU partition
+
+### Setup process
+1. Clone the repository and download the models (steps 1–2 above).
+
+2. Build the runtime image, Python environment and frontend (once):
+    ```sh
+    bash hpc/setup.sh
+    ```
+
+3. Start all services in a GPU job (set `--partition` in `hpc/tibava.sbatch` to match your cluster):
+    ```sh
+    sbatch hpc/tibava.sbatch
+    ```
+
+4. Find the node and port in `data/logs/slurm-<jobid>.out`, then open a tunnel from your local machine:
+    ```sh
+    ssh -N -L <port>:localhost:<port> <user>@<node>
+    ```
+
+5. Go to `http://localhost:<port>/`.
+
+Logs are written to `data/logs/`. Stop with `scancel <jobid>`.
+
+
 <!-- ## About the project
 
 iART was funded by the [DFG](https://gepris.dfg.de/gepris/projekt/415796915) from 2019 to 2021. Our team consists of [Matthias Springstein](https://www.tib.eu/de/forschung-entwicklung/visual-analytics/mitarbeiterinnen-und-mitarbeiter/matthias-springstein/), [Stefanie Schneider](https://www.kunstgeschichte.uni-muenchen.de/personen/wiss_ma/schneider/index.html), [Javad Rahnama](https://www.hni.uni-paderborn.de/ism/mitarbeiter/155385986504753/), [Ralph Ewerth](https://www.tib.eu/de/forschung-entwicklung/visual-analytics/mitarbeiterinnen-und-mitarbeiter/ralph-ewerth/), [Hubertus Kohle](https://www.kunstgeschichte.uni-muenchen.de/personen/professoren_innen/kohle/index.html), and [Eyke Hüllermeier](https://www.hni.uni-paderborn.de/ism/mitarbeiter/112491383000284/).
